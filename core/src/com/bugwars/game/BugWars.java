@@ -1,28 +1,33 @@
 package com.bugwars.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class BugWars extends ApplicationAdapter {
+public class BugWars extends Game {
 	SpriteBatch batch;
 	Texture img;
+	public BitmapFont font;
 	private SplashWorker splashWorker;
 	
 	@Override
 	public void create () {
 		splashWorker.closeSplashScreen();
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		font = new BitmapFont(); // use libGDX's default Arial font
+		this.setScreen(new MainMenuScreen((this)));
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		super.render();
+		/*ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
 		batch.draw(img, 0, 0);
-		batch.end();
+		batch.end();*/
 	}
 	
 	@Override
