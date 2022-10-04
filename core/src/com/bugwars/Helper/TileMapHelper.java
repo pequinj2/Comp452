@@ -30,7 +30,7 @@ public class TileMapHelper {
     // Load our level 1 map
     public OrthogonalTiledMapRenderer setupMap1(){
         tiledMap = new TmxMapLoader().load("maps/level1.tmx");
-        parseMapObjects(tiledMap.getLayers().get("Sprites").getObjects());
+        //parseMapObjects(tiledMap.getLayers().get("Sprites").getObjects());
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
 
@@ -49,6 +49,7 @@ public class TileMapHelper {
                             rectangle.getY() + rectangle.getHeight(),
                             rectangle.getWidth(),
                             rectangle.getHeight(),
+                            0,
                             false,
                             gameWorld.getWorld());
                     gameWorld.setSpider(new Spider(rectangle.getWidth(), rectangle.getHeight(), body));

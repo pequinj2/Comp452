@@ -41,7 +41,7 @@ public class MainMenuScreen implements Screen {
 
         if (Gdx.input.isTouched()) {
             this.hide();
-            game.setScreen(new Assignment1(camera));
+            game.setScreen(new SpiderIntro(camera, game));
             dispose();
         }
 

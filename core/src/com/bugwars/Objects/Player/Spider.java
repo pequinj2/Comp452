@@ -35,8 +35,8 @@ public class Spider extends Entity implements Health, Damage {
 
     @Override
     public void update() {
-        x = body.getPosition().x; // Will be the center of the body
-        y = body.getPosition().y;
+        x = body.getPosition().x - getWidth() /2; // Will be the center of the body
+        y = body.getPosition().y - getHeight() /2;
         //System.out.println("Print floats " + x + "  " + y);
         checkUserInput();
 
@@ -54,27 +54,32 @@ public class Spider extends Entity implements Health, Damage {
 
         velX = 0;
         velY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(608-width)){
             velX = 100;
             direcLR = false;
             position = -90;
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x>width){
             velX = -100;
             direcLR = true;
             direcUD = false;
             position = 90;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(448-height)){
             velY = 100;
             direcUD = false;
             position = 0;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+        if(Gdx.input.isKeyPressed(Input.Keys.S)&&body.getPosition().y>height){
             velY = -100;
             direcUD = true;
             position = -180;
+        }
+
+        // Web shooter
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            // Fire web shooter in the direction character is facing
         }
         body.setLinearVelocity(velX * speed, velY * speed);
 
@@ -103,7 +108,7 @@ public class Spider extends Entity implements Health, Damage {
         return height;
     }
 
-    public int postion(){
+    public int position(){
         return position;
     }
 }
