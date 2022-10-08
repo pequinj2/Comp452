@@ -63,6 +63,12 @@ public class Centipede extends Entity implements Health, Damage {
 
     }
 
+    /**
+     * Vector explanation for game dev:
+     * https://www.youtube.com/watch?v=m7VY1T6f8Ak
+     * @param target players current position
+     * @param enemy enemy AIs current position
+     */
     public void seekTarget(Vector2 target, Vector2 enemy){
         float maxSpeed = 80;
         int speedTime = ranNum.nextInt(3);
