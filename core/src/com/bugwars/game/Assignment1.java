@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -23,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.BodyHelperService;
+import com.bugwars.Helper.CollisionListenerHelper;
 import com.bugwars.Helper.TileMapHelper;
 import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Player.Spider;
@@ -30,16 +30,17 @@ import com.bugwars.Objects.Player.Spider;
 public class Assignment1 implements Screen {
 
     private Texture bugWarsImage;
-    private SpriteBatch batch; //To render our sprites
+    private SpriteBatch batch, hudBatch, pauseBatch; //To render our sprites
     private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
     private Box2DDebugRenderer box2DBug;
-    private OrthographicCamera camera;
+    private OrthographicCamera camera, hudCamera;
     private OrthographicCamera cam;
     private int viewPortWidth = 300;
     private int viewPortHeight = 350;
     private int screenWidth = 1216;
     private int screenHeight = 896;
     private float stateTime;
+    private boolean isPaused = false;
 
     // Objects for our tile map
     private OrthogonalTiledMapRenderer orthoTileRender;
@@ -58,15 +59,18 @@ public class Assignment1 implements Screen {
     private TextureAtlas allTextures;
 
     // Character AI
-    float targetPosition, enemyPosition, velocity;
+    private float targetPosition, enemyPosition, velocity;
+
+    // Player Hud
+    private PlayerHud hud;
 
 
 
     public Assignment1(OrthographicCamera camera){
-        //this.game = game;
+
         this.camera = camera;
-        camera.setToOrtho(false, viewPortWidth, viewPortHeight); // Camera is effecting the size of the tile map shown,
         this.batch = new SpriteBatch();
+        hudBatch = new SpriteBatch();
         this.world = new World(new Vector2(0,0), false); //Gravity is the Vector2
         this.box2DBug = new Box2DDebugRenderer();
 
@@ -77,6 +81,13 @@ public class Assignment1 implements Screen {
          */
         this.orthoTileRender = tileMapHelper.setupMap1();
 
+        // Instantiate the collision listener
+        createCollisionListener();
+
+        //*********** PAUSE SCREEN ***************************************************
+        bugWarsImage = new Texture(Gdx.files.internal("bugwarssplash2.png"));
+        pauseBatch = new SpriteBatch();
+
         // Create Spider character ***************************************************
         Body body = BodyHelperService.createBody(
                 100 + 16, // Position
@@ -86,7 +97,7 @@ public class Assignment1 implements Screen {
                 0,
                 false,
                 world);
-        setSpider(new Spider(16, 16, body));
+        setSpider(new Spider(16, 16, body, 100));
         // **************************************************************************
 
         // Create Centipede enemy ***************************************************
@@ -99,7 +110,7 @@ public class Assignment1 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede(16, 16, bodyEnemyHead));
+        setCentipede(new Centipede(16, 16, bodyEnemyHead, 150));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();
@@ -121,31 +132,34 @@ public class Assignment1 implements Screen {
         BodyHelperService.createGameBorder(world);
         stateTime = 0f;
 
+        //set Cameras
+        camera.setToOrtho(false, viewPortWidth, viewPortHeight); // Camera is effecting the size of the tile map shown
+        hudCamera = new OrthographicCamera();
+        hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Camera is effecting the size of the tile map shown,
+
+        // Initialize player HUD
+        hud = new PlayerHud(spiderPlayer.getHealth(),centipedeEnemy.getHealth());
+
     }
 
     /**
      * This is where we'll update our game
      */
     private void update(){
+
         handleInput();
-        /**
-         * World.step explanation
-         * tells the physics engine that 1/60th of a second has passed every time you call it.
-         * If your game loop is being called more than 60 times a second it will go fast; less than
-         * 60 times a second and it'll be slow. The number of times it gets called per second will
-         * depend on the speed of the underlying hardware, so this method will end up in different
-         * behavior on different devices.
-         * https://gamedev.stackexchange.com/questions/144847/box2d-world-step-on-android-game-using-libgdx
-         */
-        world.step(1/60f, 6, 2);
+
 
         camera.update();
+        hudCamera.update();
         /**
          * https://stackoverflow.com/questions/33703663/understanding-the-libgdx-projection-matrix
          * Call setProjectionMatrix whenever you have moved the camera or resized the screen.
          * Camera.combined describes where things in your game world should be rendered onto the screen
          */
         batch.setProjectionMatrix(camera.combined);
+        hudBatch.setProjectionMatrix(hudCamera.combined);
+
         orthoTileRender.setView(camera); // << Why are we doing this?
 
         spiderPlayer.update();
@@ -157,7 +171,7 @@ public class Assignment1 implements Screen {
         Vector2 enemy = new Vector2(centipedeEnemy.getX() , centipedeEnemy.getY());
         centipedeEnemy.seekTarget(target,enemy);
 
-
+        hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
         if (Gdx.input.isTouched(Input.Keys.ESCAPE)) {
             this.hide();
             System.out.println("back........");
@@ -176,21 +190,13 @@ public class Assignment1 implements Screen {
         position.x = Math.round(spiderPlayer.getBody().getPosition().x);
         position.y = Math.round(spiderPlayer.getBody().getPosition().y);
         camera.position.set(position);
-        /*// Translate viewport camera depending on where the player is moving
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.translate(-3, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.translate(3, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.translate(0, 3, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.translate(0, -3, 0);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            isPaused = !isPaused;
+            System.out.println(isPaused);
+
         }
 
-         */
         // Stop the camera position so it doesn't go out of bounds
         camera.position.x = MathUtils.clamp(camera.position.x, viewPortWidth/2f, 608-viewPortWidth/2f );
         camera.position.y = MathUtils.clamp(camera.position.y, viewPortHeight/2f, 448-viewPortHeight/2f );
@@ -205,76 +211,102 @@ public class Assignment1 implements Screen {
 
     @Override
     public void render(float delta) {
-        this.update();
+        if(isPaused){
+            delta =0;
+            pause();
+        }else {
 
-        Gdx.gl.glClearColor(0,0,0,1); // Clear the previous screen of anything
-        /**
-         * https://stackoverflow.com/questions/34164309/gl-color-buffer-bit-regenerating-which-memory
-         * Explains why clearing the color buffer is important
-         */
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stateTime += Gdx.graphics.getDeltaTime();
-        // Render our tile map before the game objects
-        orthoTileRender.render();
 
-        // Get current frame of animation for the current stateTime
-        TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true);
-        TextureRegion centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
-        batch.begin();
-        //Draw centipede animation
-        batch.draw(centipedeFrame,
-                centipedeEnemy.getX(), // Position
-                centipedeEnemy.getY(), // Position
-                16, // Center of character
-                16, // Center of character
-                centipedeFrame.getRegionWidth(),
-                centipedeFrame.getRegionHeight(),
-                2, //Resize
-                2,
-                0); // Rotation
-        // Draw centipede body
+            /**
+             * World.step explanation
+             * tells the physics engine that 1/60th of a second has passed every time you call it.
+             * If your game loop is being called more than 60 times a second it will go fast; less than
+             * 60 times a second and it'll be slow. The number of times it gets called per second will
+             * depend on the speed of the underlying hardware, so this method will end up in different
+             * behavior on different devices.
+             * https://gamedev.stackexchange.com/questions/144847/box2d-world-step-on-android-game-using-libgdx
+             */
+            world.step(delta, 6, 2);
+            this.update();
 
-        for (Body centipede : centipedeBodies){
+            Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
+            /**
+             * https://stackoverflow.com/questions/34164309/gl-color-buffer-bit-regenerating-which-memory
+             * Explains why clearing the color buffer is important
+             */
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+            stateTime += Gdx.graphics.getDeltaTime();
+            // Render our tile map before the game objects
+            orthoTileRender.render();
 
-            batch.draw(centipedeBody,
-                    centipede.getPosition().x, // Position
-                    centipede.getPosition().y, // Position
+            // Get current frame of animation for the current stateTime
+            TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true);
+
+            TextureRegion centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
+            batch.begin();
+
+            //Draw centipede animation
+            batch.draw(centipedeFrame,
+                    centipedeEnemy.getX(), // Position
+                    centipedeEnemy.getY(), // Position
                     16, // Center of character
                     16, // Center of character
-                    centipedeBody.getRegionWidth(),
-                    centipedeBody.getRegionHeight(),
+                    centipedeFrame.getRegionWidth(),
+                    centipedeFrame.getRegionHeight(),
+                    2, //Resize
+                    2,
+                    0); // Rotation
+            // Draw centipede body
+
+            for (Body centipede : centipedeBodies) {
+
+                batch.draw(centipedeBody,
+                        centipede.getPosition().x, // Position
+                        centipede.getPosition().y, // Position
+                        16, // Center of character
+                        16, // Center of character
+                        centipedeBody.getRegionWidth(),
+                        centipedeBody.getRegionHeight(),
+                        2, //Resize
+                        2,
+                        0); // Rotation
+
+            }
+            // Draw centipede butt
+            batch.draw(centipedeButt,
+                    centipedeEnemy.getCentipedeButt().getPosition().x, // Position
+                    centipedeEnemy.getCentipedeButt().getPosition().y, // Position
+                    16, // Center of character
+                    16, // Center of character
+                    centipedeButt.getRegionWidth(),
+                    centipedeButt.getRegionHeight(),
                     2, //Resize
                     2,
                     0); // Rotation
 
+            // Draw spider player
+            int position = spiderPlayer.position(); // Holds the rotation value so the player sprite is facing the right way
+            batch.draw(spiderFrame,
+                    spiderPlayer.getX(), // Position
+                    spiderPlayer.getY(), // Position
+                    spiderPlayer.getWidth() / 2, // Center of character
+                    spiderPlayer.getHeight() / 2, // Center of character
+                    spiderFrame.getRegionWidth(),
+                    spiderFrame.getRegionHeight(),
+                    2, //Resize
+                    2,
+                    position); // Rotation
+
+
+            batch.end();
+            // ********* COMMENT THIS LINE OUT WHEN IN PROD ***********
+            // commenting out will remove collision boxes
+            box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
+
+            hudBatch.begin();
+            hud.render(hudBatch);
+            hudBatch.end();
         }
-        // Draw centipede butt
-        batch.draw(centipedeButt,
-                centipedeEnemy.getCentipedeButt().getPosition().x, // Position
-                centipedeEnemy.getCentipedeButt().getPosition().y, // Position
-                16, // Center of character
-                16, // Center of character
-                centipedeButt.getRegionWidth(),
-                centipedeButt.getRegionHeight(),
-                2, //Resize
-                2,
-                0); // Rotation
-
-        // Draw spider player
-        int position = spiderPlayer.position(); // Holds the rotation value so the player sprite is facing the right way
-        batch.draw(spiderFrame,
-                spiderPlayer.getX(), // Position
-                spiderPlayer.getY(), // Position
-                spiderPlayer.getWidth()/2, // Center of character
-                spiderPlayer.getHeight()/2, // Center of character
-                spiderFrame.getRegionWidth(),
-                spiderFrame.getRegionHeight(),
-                2, //Resize
-                2,
-                position); // Rotation
-
-        batch.end();
-        box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
 
 
     }
@@ -286,6 +318,10 @@ public class Assignment1 implements Screen {
 
     @Override
     public void pause() {
+        handleInput();
+        pauseBatch.begin();
+        pauseBatch.draw(bugWarsImage, 150, 150, 300, 300);
+        pauseBatch.end();
 
     }
 
@@ -315,5 +351,17 @@ public class Assignment1 implements Screen {
 
     public void setCentipede (Centipede centipede){
         this.centipedeEnemy = centipede;
+    }
+
+
+    /**
+     * Helper function that will initiate the creation of Box2D's contact listener
+     * How to setup Box2D's contact listener:
+     * https://stackoverflow.com/questions/15453176/how-to-use-the-libgdx-contactlistener by Rod Hyde
+     * Thorough explanation of Box2D's contact box listener:
+     * https://www.youtube.com/watch?v=pJ_M_fACtB8 by The Coding Train
+     */
+    private void createCollisionListener(){
+        CollisionListenerHelper colListen = new CollisionListenerHelper(world);
     }
 }

@@ -39,6 +39,7 @@ public class BodyHelperService {
             // Create a fixture definition to apply our shape to
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.shape = shape;
+            //fixtureDef.filter.groupIndex = 1;
 
             // Create our fixture and attach it to the body
             Fixture fixture = body.createFixture(fixtureDef);
@@ -54,6 +55,11 @@ public class BodyHelperService {
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.density = 10;
             fixtureDef.shape = shape;
+            // By setting the group index to -1 these specific objects won't collide
+            // This works in our scenario because all circles are going to be the centipede body
+            // If we have more circles we'd have to change how this is created
+            // https://www.iforce2d.net/b2dtut/collision-filtering
+            //fixtureDef.filter.groupIndex = -1;
 
             // Create our fixture and attach it to the body
             Fixture fixture = body.createFixture(fixtureDef);
@@ -77,6 +83,7 @@ public class BodyHelperService {
 
         bodyDef.fixedRotation = false;
         Body body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(0, 448);
@@ -99,6 +106,7 @@ public class BodyHelperService {
 
         bodyDef.fixedRotation = false;
         body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
 
         shape = new PolygonShape();
         shape.setAsBox(608, 0);
@@ -121,6 +129,7 @@ public class BodyHelperService {
 
         bodyDef.fixedRotation = false;
         body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
 
         shape = new PolygonShape();
         shape.setAsBox(0, 608);
@@ -143,6 +152,7 @@ public class BodyHelperService {
 
         bodyDef.fixedRotation = false;
         body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
 
         shape = new PolygonShape();
         shape.setAsBox(608, 0);

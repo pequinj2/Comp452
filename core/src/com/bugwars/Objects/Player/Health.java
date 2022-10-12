@@ -5,6 +5,7 @@ public interface Health {
     public int baseHealth = 0;
 
     public void recoverHealth();
+    public void removeHealth(float amount);
 
 
     

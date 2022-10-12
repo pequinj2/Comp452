@@ -15,12 +15,16 @@ public class Spider extends Entity implements Health, Damage {
     private int position = 0;
 
     // Implement constructor
-    public Spider(float width, float height, Body body) {
+    public Spider(float width, float height, Body body, float health) {
         super(width, height, body);
         this.speed = 40f;
         this.width = width;
         this.height = height;
+        this.setHealth(health);
         texture = new Texture(Gdx.files.internal("Spider_Sprite_0.png"));
+        body.setUserData(this); // This is used for the identification of the body object for box2Ds collision detection
+        System.out.println(health);
+
     }
 
     @Override
@@ -31,6 +35,12 @@ public class Spider extends Entity implements Health, Damage {
     @Override
     public void recoverHealth() {
 
+    }
+
+    @Override
+    public void removeHealth(float damage) {
+        float newHealth = health - damage;
+        setHealth(newHealth);
     }
 
     @Override
@@ -111,4 +121,6 @@ public class Spider extends Entity implements Health, Damage {
     public int position(){
         return position;
     }
+
+
 }

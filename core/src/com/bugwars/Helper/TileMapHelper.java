@@ -52,7 +52,7 @@ public class TileMapHelper {
                             0,
                             false,
                             gameWorld.getWorld());
-                    gameWorld.setSpider(new Spider(rectangle.getWidth(), rectangle.getHeight(), body));
+                    gameWorld.setSpider(new Spider(rectangle.getWidth(), rectangle.getHeight(), body, 100));
                 }
 
 

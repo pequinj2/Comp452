@@ -1,11 +1,10 @@
 package com.bugwars.game;
 
-import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -15,8 +14,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
 
-import sun.font.TrueTypeFont;
-
+/**
+ * This class will give the player the introduction to the game and a simple player objective
+ * - Destroy the evil centipede!!
+ */
 public class SpiderIntro implements Screen {
 
     private String text1 = "Hello world!!";
@@ -49,11 +50,13 @@ public class SpiderIntro implements Screen {
     private boolean nextFlag2 = false;
 
     // Audio
-    private Sound spiderVoice1, spiderVoice2, spiderVoice3, spiderVoice4;
     private Music spiderV;
 
-
-
+    /**
+     * Initialize and play Assignment 1 game intro
+     * @param camera
+     * @param game
+     */
     public SpiderIntro (OrthographicCamera camera, BugWars game){
         this.game = game;
         spiderImg = new Texture(Gdx.files.internal("SpiderMainPageCrop.png"));
@@ -98,7 +101,7 @@ public class SpiderIntro implements Screen {
             }, 2);
 
         }
-
+        batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(spid, 0, 200);
         batch.draw(boarderImg, 0, 0);
@@ -115,7 +118,7 @@ public class SpiderIntro implements Screen {
                 nextFlag = true;
 
             }
-            spiderV.play();
+            spiderV.play(); // Start playing spider voice
             font.draw(batch, string1.substring(subStrintStart, numOfChars), textStartX, 160);
 
         }
@@ -145,7 +148,7 @@ public class SpiderIntro implements Screen {
                 }
             }
             if(numOfChars3 == string3.length()){
-                spiderV.stop();
+                spiderV.stop(); // Text is done, stop playing spider voice
             }
 
             font.draw(batch, string3.substring(subStrintStart,numOfChars3), textStartX, 80);
@@ -154,10 +157,12 @@ public class SpiderIntro implements Screen {
 
         batch.end();
 
+        // When user hits SPACE, start the game!
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            //spiderV.stop();
             this.hide();
-            game.setScreen(new Assignment1(camera));
-            dispose();
+            game.setScreen(new FadeScreen(game, this,new Assignment1(camera) ));
+            //dispose();
         }
 
     }
@@ -180,11 +185,12 @@ public class SpiderIntro implements Screen {
     @Override
     public void hide() {
 
+
     }
 
     @Override
     public void dispose() {
-        spiderVoice1.dispose();
+        spiderV.dispose();
         spiderImg.dispose();
         boarderImg.dispose();
         batch.dispose();

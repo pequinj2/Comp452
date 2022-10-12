@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Player.Damage;
@@ -27,15 +28,19 @@ public class Centipede extends Entity implements Health, Damage {
     private Array<Body> centipedeBody = new Array<Body>();
     private DistanceJointDef joint1, joint2, joint3, joint4, joint5;
     Random ranNum;
+    private boolean delayStarting = true;
 
     // Implement constructor
-    public Centipede(float width, float height, Body body) {
+    public Centipede(float width, float height, Body body, float health) {
         super(width, height, body);
         this.speed = 40f;
         this.width = width;
         this.height = height;
+        this.setHealth(health);
         texture = new Texture(Gdx.files.internal("Centipede_Head_0.png"));
         ranNum = new Random();
+        body.setUserData(this);
+
 
     }
 
@@ -63,21 +68,38 @@ public class Centipede extends Entity implements Health, Damage {
 
     }
 
+    @Override
+    public void removeHealth(float amount) {
+
+    }
+
     /**
      * Vector explanation for game dev:
      * https://www.youtube.com/watch?v=m7VY1T6f8Ak
+     * Delay the initial AI start time when game loads then seek out player.
      * @param target players current position
      * @param enemy enemy AIs current position
      */
     public void seekTarget(Vector2 target, Vector2 enemy){
         float maxSpeed = 80;
-        int speedTime = ranNum.nextInt(3);
-        Vector2 newPosition = target.sub(enemy);
-        newPosition.nor();
-        newPosition.scl(maxSpeed);
+        if(delayStarting == true) {
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    delayStarting = false;
+                }
+            }, 3);
 
-        body.setLinearVelocity(newPosition); // Head toward the targets position at max speed
-        butt.setLinearDamping(1.5f); // Damping placed to keep the end body somewhat in line with the head
+        }else{
+            Vector2 newPosition = target.sub(enemy);
+            newPosition.nor();
+            newPosition.scl(maxSpeed);
+
+            body.setLinearVelocity(newPosition); // Head toward the targets position at max speed
+            butt.setLinearDamping(1.5f); // Damping placed to keep the end body somewhat in line with the head
+
+        }
+
 
     }
 
@@ -90,6 +112,7 @@ public class Centipede extends Entity implements Health, Damage {
                 1,
                 false,
                 world);
+        body1.setUserData(this);
         body2 = BodyHelperService.createBody(
                 220 + 16, // Position
                 220 + 16, // Position
@@ -98,6 +121,7 @@ public class Centipede extends Entity implements Health, Damage {
                 1,
                 false,
                 world);
+        body2.setUserData(this);
         body3 = BodyHelperService.createBody(
                 230 + 16, // Position
                 230 + 16, // Position
@@ -106,6 +130,7 @@ public class Centipede extends Entity implements Health, Damage {
                 1,
                 false,
                 world);
+        body3.setUserData(this);
         body4 = BodyHelperService.createBody(
                 240 + 16, // Position
                 240 + 16, // Position
@@ -114,6 +139,7 @@ public class Centipede extends Entity implements Health, Damage {
                 1,
                 false,
                 world);
+        body4.setUserData(this);
         butt = BodyHelperService.createBody(
                 250 + 16, // Position
                 250 + 16, // Position
@@ -122,6 +148,7 @@ public class Centipede extends Entity implements Health, Damage {
                 1,
                 false,
                 world);
+        butt.setUserData(this);
         //centipedeBody.add(body);
         centipedeBody.add(body1);
         centipedeBody.add(body2);

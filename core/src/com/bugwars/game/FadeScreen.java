@@ -65,9 +65,12 @@ public class FadeScreen implements Screen {
 
         if (change > 1){
             fade = false;
+            current.dispose(); // Dispose of previous screen asset
         }
         else if (change <= 0 && fade == false) {
+
             game.setScreen(next); // fade is done, set screen to next screen
+
         }
         change += fade == true ? 0.02 : -0.02;
 
@@ -98,6 +101,8 @@ public class FadeScreen implements Screen {
 
     @Override
     public void dispose() {
+
         shapeRenderer.dispose();
+
     }
 }
