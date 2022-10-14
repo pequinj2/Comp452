@@ -25,6 +25,7 @@ import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Helper.CollisionListenerHelper;
 import com.bugwars.Helper.TileMapHelper;
 import com.bugwars.Objects.Enemy.Centipede;
+import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
 
 public class Assignment1 implements Screen {
@@ -64,6 +65,9 @@ public class Assignment1 implements Screen {
     // Player Hud
     private PlayerHud hud;
 
+    // Web Sac Pickups
+    private WebSac webPickup1, webPickup2, webPickup3;
+
 
 
     public Assignment1(OrthographicCamera camera){
@@ -97,7 +101,7 @@ public class Assignment1 implements Screen {
                 0,
                 false,
                 world);
-        setSpider(new Spider(16, 16, body, 100));
+        setSpider(new Spider(16, 16, body, 100, world));
         // **************************************************************************
 
         // Create Centipede enemy ***************************************************
@@ -122,7 +126,7 @@ public class Assignment1 implements Screen {
         Animator ani = new Animator();
         walkAnimation = ani.AnimatorSpider();
         centipedeMouthAnimation = ani.CentipedeMouthAnimator();
-        //Texture texture = new Texture(Gdx.files.internal("Assignment1TexturePack.png"));
+
         allTextures = new TextureAtlas(Gdx.files.internal("maps/Assignment1TexturePack.atlas"));
         centipedeBody = new TextureRegion(allTextures.findRegion("Centipede_Body"));
         centipedeButt = new TextureRegion(allTextures.findRegion("Centipede_Butt"));
@@ -139,6 +143,15 @@ public class Assignment1 implements Screen {
 
         // Initialize player HUD
         hud = new PlayerHud(spiderPlayer.getHealth(),centipedeEnemy.getHealth());
+
+        // Generate Web Sac pickups
+        Body bodyWebSac1 = BodyHelperService.createWebSac(world);
+        Body bodyWebSac2 = BodyHelperService.createWebSac(world);
+        Body bodyWebSac3 = BodyHelperService.createWebSac(world);
+
+        webPickup1 = new WebSac(bodyWebSac1, world);
+        webPickup2 = new WebSac(bodyWebSac2, world);
+        webPickup3 = new WebSac(bodyWebSac3, world);
 
     }
 
@@ -162,6 +175,7 @@ public class Assignment1 implements Screen {
 
         orthoTileRender.setView(camera); // << Why are we doing this?
 
+        // Getting and passing the positions of the Spider to the Centipede for Seeking Algorithm
         spiderPlayer.update();
         targetPosition = spiderPlayer.getX() + spiderPlayer.getY();
         Vector2 target = new Vector2(spiderPlayer.getX() , spiderPlayer.getY());
@@ -170,8 +184,13 @@ public class Assignment1 implements Screen {
         enemyPosition = enemyPosition + targetPosition;
         Vector2 enemy = new Vector2(centipedeEnemy.getX() , centipedeEnemy.getY());
         centipedeEnemy.seekTarget(target,enemy);
+        //****************************************************************************************
 
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+
+        // Generate missing web sacs
+
+
         if (Gdx.input.isTouched(Input.Keys.ESCAPE)) {
             this.hide();
             System.out.println("back........");
@@ -240,10 +259,17 @@ public class Assignment1 implements Screen {
             orthoTileRender.render();
 
             // Get current frame of animation for the current stateTime
-            TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true);
-
+            TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true); // Spider Animation Walking
             TextureRegion centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
+
             batch.begin();
+            // Draw Web Sac Pickups
+            webPickup1.render(batch);
+            webPickup2.render(batch);
+            webPickup3.render(batch);
+
+            // Web shooter spawn
+            spiderPlayer.render(batch);
 
             //Draw centipede animation
             batch.draw(centipedeFrame,
@@ -285,7 +311,7 @@ public class Assignment1 implements Screen {
                     0); // Rotation
 
             // Draw spider player
-            int position = spiderPlayer.position(); // Holds the rotation value so the player sprite is facing the right way
+            int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
             batch.draw(spiderFrame,
                     spiderPlayer.getX(), // Position
                     spiderPlayer.getY(), // Position

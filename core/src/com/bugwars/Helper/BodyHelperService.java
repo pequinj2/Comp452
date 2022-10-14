@@ -12,6 +12,8 @@ public class BodyHelperService {
 
     /**
      * Helper class that will create either Static or Dynamic bodies and return the newly created body.
+     * Reminder of Box2D body coordinates:
+     * https://stackoverflow.com/questions/53987670/libgdx-box2d-body-is-being-place-at-the-wrong-y-coordinate
      * @param x position to be rendered on map
      * @param y position to be rendered on map
      * @param width of sprite
@@ -73,6 +75,10 @@ public class BodyHelperService {
         return body;
     }
 
+    /**
+     * Create the game boarder boundaries
+     * @param world
+     */
     public static void createGameBorder(World world){
 
         // ***** Left border
@@ -170,4 +176,79 @@ public class BodyHelperService {
 
 
     }
+
+    /**
+     * Create the web sac pickup bodies
+     * @param world
+     * @return
+     */
+    public static Body createWebSac(World world){
+        BodyDef bodyDef = new BodyDef();
+        // Create a static body that stays still or dynamic body so it moves around and is affected by forces
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set((int)(Math.random()*592), (int)(Math.random()*432));
+
+        // If the Body is NOT dynamic then turn rotation off
+        bodyDef.fixedRotation = true;
+        Body body = world.createBody(bodyDef); // Create the body in our world
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(10, 10);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+
+        fixtureDef.shape = shape;
+        // By setting the group index to -1 these specific objects won't collide
+        // This works in our scenario because all circles are going to be the centipede body
+        // If we have more circles we'd have to change how this is created
+        // https://www.iforce2d.net/b2dtut/collision-filtering
+        //fixtureDef.filter.groupIndex = -1;
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+
+        return body;
+
+    }
+
+    /**
+     * Create SENSOR objects
+     * @param world
+     * @return
+     */
+    public static Body createWebShooter(World world, float x, float y) {
+        BodyDef bodyDef = new BodyDef();
+        // Create a static body that stays still or dynamic body so it moves around and is affected by forces
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(x, y);
+
+        // If the Body is NOT dynamic then turn rotation off
+        bodyDef.fixedRotation = true;
+        Body body = world.createBody(bodyDef); // Create the body in our world
+        CircleShape shape = new CircleShape();
+        shape.setRadius(8  );
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.density = 10;
+        fixtureDef.shape = shape;
+        fixtureDef.isSensor = true;
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+        return body;
+    }
+
+
 }

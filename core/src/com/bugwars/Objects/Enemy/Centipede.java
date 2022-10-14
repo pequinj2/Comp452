@@ -27,7 +27,7 @@ public class Centipede extends Entity implements Health, Damage {
     private Body body1, body2, body3, body4, butt;
     private Array<Body> centipedeBody = new Array<Body>();
     private DistanceJointDef joint1, joint2, joint3, joint4, joint5;
-    Random ranNum;
+    private Random ranNum;
     private boolean delayStarting = true;
 
     // Implement constructor
