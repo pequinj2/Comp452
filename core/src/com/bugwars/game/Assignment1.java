@@ -114,7 +114,7 @@ public class Assignment1 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede(16, 16, bodyEnemyHead, 150));
+        setCentipede(new Centipede(16, 16, bodyEnemyHead, 100));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();

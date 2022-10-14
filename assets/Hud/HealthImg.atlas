@@ -1,0 +1,27 @@
+
+HealthImg.png
+size: 2048, 128
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Enemy_Health
+  rotate: false
+  xy: 404, 2
+  size: 400, 100
+  orig: 400, 100
+  offset: 0, 0
+  index: -1
+Health_Bar
+  rotate: false
+  xy: 2, 2
+  size: 400, 100
+  orig: 400, 100
+  offset: 0, 0
+  index: -1
+Player_Health
+  rotate: false
+  xy: 806, 2
+  size: 400, 100
+  orig: 400, 100
+  offset: 0, 0
+  index: -1
