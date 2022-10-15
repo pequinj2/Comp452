@@ -222,7 +222,7 @@ public class BodyHelperService {
      * @param world
      * @return
      */
-    public static Body createWebShooter(World world, float x, float y) {
+    public static Body createWebShooter(World world, float x, float y, float radius) {
         BodyDef bodyDef = new BodyDef();
         // Create a static body that stays still or dynamic body so it moves around and is affected by forces
         bodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -233,7 +233,7 @@ public class BodyHelperService {
         bodyDef.fixedRotation = true;
         Body body = world.createBody(bodyDef); // Create the body in our world
         CircleShape shape = new CircleShape();
-        shape.setRadius(8  );
+        shape.setRadius(radius  );
         // Create a fixture definition to apply our shape to
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 10;

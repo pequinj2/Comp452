@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Timer;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Pickups.WebSac;
@@ -23,9 +24,11 @@ public class Spider extends Entity implements Health, Damage {
     private World world;
 
     // Web Shooters
-    private ArrayList<WebShooter> webShots;
+    private WebShooter webShots;
     private int webFlag = 0; // Flag that is used to indicate player web pickup
     private WebSac sac;
+
+
 
     // Implement constructor
     public Spider(float width, float height, Body body, float health, World world) {
@@ -37,8 +40,10 @@ public class Spider extends Entity implements Health, Damage {
         this.world = world;
         texture = new Texture(Gdx.files.internal("Spider_Sprite_0.png"));
         body.setUserData(this); // This is used for the identification of the body object for box2Ds collision detection
-        System.out.println(health);
-        webShots = new ArrayList<WebShooter>();
+
+        // Initialize the Web Shooter (think of this as the 'Gun')
+        webShots = new WebShooter(world, this);
+
 
     }
 
@@ -60,6 +65,7 @@ public class Spider extends Entity implements Health, Damage {
 
     @Override
     public void update() {
+
         x = body.getPosition().x - getWidth() /2; // Will be the center of the body
         y = body.getPosition().y - getHeight() /2;
         //System.out.println("Print floats " + x + "  " + y);
@@ -69,13 +75,20 @@ public class Spider extends Entity implements Health, Damage {
 
     @Override
     public void render(SpriteBatch batch) {
-        //texture = new Texture(Gdx.files.internal("Spider_Sprite_0.png"));
-        if(webFlag == 1) {
-            addWebShot();
+
+        //smallRadii.setTransform(body.getPosition(), 0);
+        if(webFlag == 1 ) {
+            webFlag = 0;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    addWebShot();
+                }
+            }, 3);
+
         }
-        for(WebShooter webbing : webShots){
-            webbing.render(batch);
-        }
+        webShots.render(batch); // Render Web Shooter
+
 
 
     }
@@ -110,6 +123,8 @@ public class Spider extends Entity implements Health, Damage {
         // Web shooter
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             // Fire web shooter in the direction character is facing
+            webShots.fireWebbing();
+
         }
         body.setLinearVelocity(velX * speed, velY * speed);
 
@@ -123,7 +138,9 @@ public class Spider extends Entity implements Health, Damage {
         return y;
     }
 
-    public int getRotation(){ return rotation; }
+    public int getRotation(){
+        return rotation;
+    }
 
     public float getWidth(){
         return width;
@@ -141,13 +158,22 @@ public class Spider extends Entity implements Health, Damage {
         webFlag = 1;
     }
 
+    /**
+     * Get the number of webs available ~ get the # of 'bullets' our web shooter has
+     * @return
+     */
+    public int getArraySize(){
+        return webShots.getArraySize();
+    }
+
+    /**
+     * Picked-up ammo, load up the web shooter
+     */
     public void addWebShot(){
-        Body webBod = BodyHelperService.createWebShooter(world, sac.getBody().getPosition().x, sac.getBody().getPosition().y);
-        web = new WebShooter(world, webBod);
-        web.followPlayer(this, sac);
-        webShots.add(web);
+        webShots.loadWeb(world, sac);
         webFlag = 0;
     }
+
 
 
 

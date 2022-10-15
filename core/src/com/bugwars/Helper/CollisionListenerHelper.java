@@ -40,43 +40,35 @@ public class CollisionListenerHelper {
 
 
                 /**
-                 * Check if the objects that collided are a spider and centipede,
-                 * if so,
-                 *  deduct health from Spider
-                 * if not,
-                 *  do nothing
+                 * Check if the objects that collided are a spider and resolve events having to
+                 * do with this object
                  */
                 if ((o1.getClass() == Spider.class || o2.getClass() == Spider.class)){
-                    if(o1.getClass() == Centipede.class ) {
+                    if(o1.getClass() == Centipede.class ) { // Player takes damage
                         // Centipede hit - player takes damage
                         Spider sp = (Spider) o2;
                         sp.removeHealth(10);
-
                     }
-                    else if(o2.getClass() == Centipede.class){
+                    else if(o2.getClass() == Centipede.class){  // Player takes damage
                         // Centipede hit - player takes damage
                         Spider sp = (Spider) o1;
                         sp.removeHealth(10);
                     }
-                    else if(o1.getClass() == WebSac.class){
+                    else if(o1.getClass() == WebSac.class){ // Player gets a web shooter
                         // Pick up web shooter
                         Spider sp = (Spider) o2;
                         WebSac wb = (WebSac) o1;
                         WebSac.SacState check = wb.getState();
-                        if (check == WebSac.SacState.LVL_3) {
+                        if (check == WebSac.SacState.LVL_3 && sp.getArraySize() != 3) { // Get the pickup IF player does not have 3 webshooters
                             sp.setWebFlag(wb);
                             wb.removeSac();
-
-
                         }
-
-
-                    }else if(o2.getClass() == WebSac.class ){
+                    }else if(o2.getClass() == WebSac.class ){ // Player gets a web shooter
                         // Pick up web shooter
                         Spider sp = (Spider) o1;
                         WebSac wb = (WebSac) o2;
                         WebSac.SacState check = wb.getState();
-                        if (check == WebSac.SacState.LVL_3) {
+                        if (check == WebSac.SacState.LVL_3 && sp.getArraySize() != 3) { // Get the pickup IF player does not have 3 webshooters
                             sp.setWebFlag(wb);
                             wb.removeSac();
 
@@ -86,12 +78,22 @@ public class CollisionListenerHelper {
                     }
 
                 }
-                else if(o2.getClass() == WebSac.class || o1.getClass() == WebSac.class){
+                /**
+                 *  Check if the objects that collided are a centipede and resolve events having to
+                 *  do with this object
+                 */
+                else if(o2.getClass() == Centipede.class || o1.getClass() == Centipede.class){
+                    if(o1.getClass() == WebShooter.class){  // Centipede takes damage
+
+                    }
+                    else if(o1.getClass() == WebShooter.class){ // Centipede takes damage
+
+                    }
 
 
                 }
                 else{
-                    //System.out.println("Its a boarder");
+                    // Web Shot hits boarder
                 }
 
 

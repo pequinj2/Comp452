@@ -41,7 +41,7 @@ public class Assignment1 implements Screen {
     private int screenWidth = 1216;
     private int screenHeight = 896;
     private float stateTime;
-    private boolean isPaused = false;
+
 
     // Objects for our tile map
     private OrthogonalTiledMapRenderer orthoTileRender;
@@ -67,6 +67,11 @@ public class Assignment1 implements Screen {
 
     // Web Sac Pickups
     private WebSac webPickup1, webPickup2, webPickup3;
+
+    // Pause Menu
+    private boolean isPaused = false;
+    private PauseMenu pauseMenu = new PauseMenu();
+
 
 
 
@@ -117,6 +122,7 @@ public class Assignment1 implements Screen {
         setCentipede(new Centipede(16, 16, bodyEnemyHead, 100));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
+        centipedeBodies = centipedeEnemy.getCentipede();
         centipedeBodies = centipedeEnemy.getCentipede();
 
         // *************************************************************************
@@ -183,7 +189,7 @@ public class Assignment1 implements Screen {
         enemyPosition = centipedeEnemy.getX() + centipedeEnemy.getY();
         enemyPosition = enemyPosition + targetPosition;
         Vector2 enemy = new Vector2(centipedeEnemy.getX() , centipedeEnemy.getY());
-        centipedeEnemy.seekTarget(target,enemy);
+        //centipedeEnemy.seekTarget(target,enemy);
         //****************************************************************************************
 
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
@@ -345,9 +351,7 @@ public class Assignment1 implements Screen {
     @Override
     public void pause() {
         handleInput();
-        pauseBatch.begin();
-        pauseBatch.draw(bugWarsImage, 150, 150, 300, 300);
-        pauseBatch.end();
+        pauseMenu.render();
 
     }
 

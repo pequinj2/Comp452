@@ -52,7 +52,7 @@ public class PlayerHud {
         font.draw(batch, enemyName, 1000, 870);// Display Name
         batch.draw(enemyHealthBar, 900, 800, 300, 50);// Base Health Bar
         batch.draw(enemyHealthBarColor, 900, 800, 300 * (enemyHealth/100), 50);// Color in Health Bar
-        font.draw(batch, enemyNumHealth, 1000, 790);// Number Representation of Health
+        font.draw(batch, enemyNumHealth, 1050, 790);// Number Representation of Health
 
 
 

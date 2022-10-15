@@ -91,8 +91,8 @@ public class Centipede extends Entity implements Health, Damage {
             }, 3);
 
         }else{
-            Vector2 newPosition = target.sub(enemy);
-            newPosition.nor();
+            Vector2 newPosition = target.sub(enemy); // Displacement distance from enemy to target
+            newPosition.nor(); // Give the vector a proper direction
             newPosition.scl(maxSpeed);
 
             body.setLinearVelocity(newPosition); // Head toward the targets position at max speed
