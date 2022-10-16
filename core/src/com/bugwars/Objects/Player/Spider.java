@@ -78,14 +78,8 @@ public class Spider extends Entity implements Health, Damage {
 
         //smallRadii.setTransform(body.getPosition(), 0);
         if(webFlag == 1 ) {
+            addWebShot();
             webFlag = 0;
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    addWebShot();
-                }
-            }, 3);
-
         }
         webShots.render(batch); // Render Web Shooter
 
@@ -123,7 +117,9 @@ public class Spider extends Entity implements Health, Damage {
         // Web shooter
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             // Fire web shooter in the direction character is facing
-            webShots.fireWebbing();
+            if(webShots.getArraySize() != 0){
+                webShots.fireWebbing();
+            }
 
         }
         body.setLinearVelocity(velX * speed, velY * speed);
@@ -171,7 +167,7 @@ public class Spider extends Entity implements Health, Damage {
      */
     public void addWebShot(){
         webShots.loadWeb(world, sac);
-        webFlag = 0;
+
     }
 
 

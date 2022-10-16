@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
+import com.bugwars.Objects.Projectiles.Web;
 import com.bugwars.Objects.Projectiles.WebShooter;
 
 public class CollisionListenerHelper {
@@ -21,12 +22,15 @@ public class CollisionListenerHelper {
 
 
         world.setContactListener(new ContactListener() {
+
+            private World world;
             /**
              * When 2 objets collide, get their information and run code based on that collision
              * @param contact
              */
             @Override
             public void beginContact(Contact contact) {
+                this.world = world;
                 // Get which Fixtures collided
                 Fixture f1 = contact.getFixtureA();
                 Fixture f2 = contact.getFixtureB();
@@ -83,17 +87,29 @@ public class CollisionListenerHelper {
                  *  do with this object
                  */
                 else if(o2.getClass() == Centipede.class || o1.getClass() == Centipede.class){
-                    if(o1.getClass() == WebShooter.class){  // Centipede takes damage
+                    if(o1.getClass() == Web.class){  // Centipede takes damage
 
                     }
-                    else if(o1.getClass() == WebShooter.class){ // Centipede takes damage
+                    else if(o1.getClass() == Web.class){ // Centipede takes damage
 
                     }
 
 
                 }
-                else{
-                    // Web Shot hits boarder
+                else if( o1.getClass() == Web.class || o2.getClass() == Web.class){
+                    if(o1.equals("Boarder")){  // Web Shot hits boarder and is destroyed
+                        Web web = (Web) o2;
+                        web.setStateKill();
+
+
+                    }
+                    else if(o2.equals("Boarder")){
+                        Web web = (Web) o1;
+                        web.setStateKill();
+
+
+                    }
+
                 }
 
 

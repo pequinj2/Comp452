@@ -1,5 +1,7 @@
 package com.bugwars.Objects.Projectiles;
 
+import static java.lang.Math.abs;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -27,6 +29,7 @@ public class WebShooter {
 
     //Bullets
     private ArrayList<Web> webs;
+    private ArrayList<Web> websFired;
 
 
     public WebShooter(World world, Spider body){
@@ -45,6 +48,9 @@ public class WebShooter {
         // Bullet array
         webs = new ArrayList<Web>();
 
+        // Bullets fired
+        websFired = new ArrayList<Web>();
+
 
     }
 
@@ -53,44 +59,51 @@ public class WebShooter {
      */
     public void fireWebbing(){
 
-        int count = 0;
-        /*if(radiiBodies.size() == 0){ // ERROR: no webs to fire
-            return;
-        }*/
         Web fireWeb = webs.get(0);
+        websFired.add(fireWeb);
+        webs.remove(0);
         fireWeb.current = Web.WebState.FIRE;
         world.destroyBody(radiiBodies.get(0));
         radiiBodies.remove(0);
         Vector2 temp;
+        Vector2 curr;
 
         switch(body.getRotation()){
-            case(-90):
-                temp = new Vector2(1216, body.getY());
-                temp.nor();
-                temp.scl(500);
+            case(-90): // Shoot RIGHT
+                temp = new Vector2(610, body.getY());
+
+                //temp.nor();
+                //temp.scl(500);
                 fireWeb.setResult(temp);
+                System.out.println("Fire RIGHT: " + temp + "  " + webs);
 
                 break;
-            case(90):
+            case(90): // Shoot LEFT -- shoots up
                 //fireWeb.getBody().setLinearVelocity(0, body.getY());
-                temp = new Vector2(0, body.getY());
-                temp.nor();
-                temp.scl(500);
+                temp = new Vector2(-1, body.getY());
+                //temp.nor();
+                //temp.scl(500);
                 fireWeb.setResult(temp);
+                System.out.println("Fire LEFT: " + temp + "  " + webs);
+
                 break;
-            case(0):
+            case(0): // Shoot UP -- Diagonal
                 //fireWeb.getBody().setLinearVelocity(body.getX(),800 );
-                temp = new Vector2(body.getX(),800);
-                temp.nor();
-                temp.scl(500);
+                temp = new Vector2(body.getX(),450);
+                //temp.nor();
+                //temp.scl(500);
                 fireWeb.setResult(temp);
+                System.out.println("Fire UP: " + temp + "  " + webs);
+
                 break;
-            case(-180):
+            case(-180): // Shoot DOWN -- went right
                 //fireWeb.getBody().setLinearVelocity(body.getX(),0 );
-                temp = new Vector2(body.getX(),0 );
-                temp.nor();
-                temp.scl(500);
+                temp = new Vector2(body.getX(),-1 );
+                //temp.nor();
+               // temp.scl(500);
                 fireWeb.setResult(temp);
+                System.out.println("Fire DOWN: " + temp + "  " + webs);
+
                 break;
         }
 
@@ -147,12 +160,32 @@ public class WebShooter {
      */
     public void render(SpriteBatch batch){
         update();
-        for(Web wb : webs){
-            if(wb.current == Web.WebState.FOLLOW){
-                wb.followPlayer(); // get the last element added to the list and tell it to follow the player
+        //System.out.println("webs size " +webs.size());
+        for(int i =0; i < webs.size(); i++ ){
+            //System.out.println("New Webs " +webs.get(i).current );
+            if(webs.get(i).current == Web.WebState.KILL){
+                world.destroyBody(webs.get(i).getBody());
+                webs.remove(i);
+                System.out.println("Destroyed " +webs);
+            } else if(webs.get(i).current == Web.WebState.FOLLOW){
+                webs.get(i).followPlayer(); // get the last element added to the list and tell it to follow the player
             }
-            wb.render(batch);
+            webs.get(i).render(batch);
+
         }
+        for(int i =0; i < websFired.size(); i++ ){
+            //System.out.println("New Webs " +webs.get(i).current );
+            if(websFired.get(i).current == Web.WebState.KILL) {
+                world.destroyBody(websFired.get(i).getBody());
+                websFired.remove(i);
+                System.out.println("Destroyed " + websFired);
+            }
+            if(websFired.size() != 0) {
+                websFired.get(i).render(batch);
+            }
+
+        }
+
 
 
     }
@@ -161,7 +194,7 @@ public class WebShooter {
         return radiiBodies.size();
     }
 
-    public void setSac(WebSac web){
+    public void destroyWeb(){
 
 
     }
@@ -171,7 +204,7 @@ public class WebShooter {
         smallRadii = BodyHelperService.createWebShooter(world, body.getX(), body.getY(), 4f);
         smallRadii.setUserData("radius");
         radiiBodies.add(smallRadii);
-        webs.add(new Web(world, sac, smallRadii)); // add a new web object
+        webs.add(new Web(world, sac, smallRadii, webs)); // add a new web object
 
 
     }

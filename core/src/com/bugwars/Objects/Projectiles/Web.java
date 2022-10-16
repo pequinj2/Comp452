@@ -11,6 +11,8 @@ import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
 
+import java.util.ArrayList;
+
 public class Web {
 
     private TextureAtlas textures = new TextureAtlas(Gdx.files.internal("maps/WebbingTexures.atlas"));
@@ -22,13 +24,17 @@ public class Web {
     private World world;
     public enum WebState{
         FOLLOW,
-        FIRE
+        FIRE,
+        KILL
     }
     public WebState current;
     private Vector2 result;
+    private ArrayList<Web> webs;
 
-    public Web(World world, WebSac sac, Body radii){
+    public Web(World world, WebSac sac, Body radii, ArrayList<Web> webs){
         this.radii = radii;
+        this.world = world;
+        this.webs = webs; // Passing the address because we only want the one list
         web = BodyHelperService.createWebShooter(world, sac.getBody().getPosition().x, sac.getBody().getPosition().y, 4f);
         web.setUserData(this);
         this.sac = sac;
@@ -127,5 +133,19 @@ public class Web {
 
     public void setResult(Vector2 result) {
         this.result = result;
+    }
+
+    public void setStateKill(){
+        current = WebState.KILL;
+    }
+
+    public void removeWeb(Web w){
+        if(w.getBody() == null){
+            System.out.println("BITCH ITS NULL");
+        }
+        System.out.println("BITCH ITS NOT NULL "+w.getBody());
+        webs.remove(0);
+        world.destroyBody(w.getBody());
+
     }
 }
