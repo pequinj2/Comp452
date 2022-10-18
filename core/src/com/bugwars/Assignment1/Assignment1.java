@@ -1,4 +1,6 @@
-package com.bugwars.game;
+package com.bugwars.Assignment1;
+
+import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -20,6 +22,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Helper.CollisionListenerHelper;
@@ -42,15 +45,12 @@ public class Assignment1 implements Screen {
     private int screenHeight = 896;
     private float stateTime;
 
-
     // Objects for our tile map
     private OrthogonalTiledMapRenderer orthoTileRender;
     private TileMapHelper tileMapHelper;
     private Spider spiderPlayer;
     private Centipede centipedeEnemy;
     private Array<Body> centipedeBodies;
-    private RectangleMapObject rectangleMap;
-    private Rectangle spiderRect;
 
     //Animations
     private Animation<TextureRegion> walkAnimation, centipedeMouthAnimation; // Must declare frame type (TextureRegion)
@@ -60,7 +60,8 @@ public class Assignment1 implements Screen {
     private TextureAtlas allTextures;
 
     // Character AI
-    private float targetPosition, enemyPosition, velocity;
+    private float targetPosition, enemyPosition;
+    private long timerBurstShot, currentTime;
 
     // Player Hud
     private PlayerHud hud;
@@ -159,22 +160,24 @@ public class Assignment1 implements Screen {
         webPickup2 = new WebSac(bodyWebSac2, world);
         webPickup3 = new WebSac(bodyWebSac3, world);
 
+        // Centipede burst shot
+        timerBurstShot = millis() + (10*1000);
+
     }
 
     /**
-     * This is where we'll update our game
+     * This is where we'll update our Assignment1
      */
     private void update(){
 
         handleInput();
-
 
         camera.update();
         hudCamera.update();
         /**
          * https://stackoverflow.com/questions/33703663/understanding-the-libgdx-projection-matrix
          * Call setProjectionMatrix whenever you have moved the camera or resized the screen.
-         * Camera.combined describes where things in your game world should be rendered onto the screen
+         * Camera.combined describes where things in your Assignment1 world should be rendered onto the screen
          */
         batch.setProjectionMatrix(camera.combined);
         hudBatch.setProjectionMatrix(hudCamera.combined);
@@ -183,25 +186,18 @@ public class Assignment1 implements Screen {
 
         // Getting and passing the positions of the Spider to the Centipede for Seeking Algorithm
         spiderPlayer.update();
-        targetPosition = spiderPlayer.getX() + spiderPlayer.getY();
-        Vector2 target = new Vector2(spiderPlayer.getX() , spiderPlayer.getY());
         centipedeEnemy.update();
-        enemyPosition = centipedeEnemy.getX() + centipedeEnemy.getY();
-        enemyPosition = enemyPosition + targetPosition;
-        Vector2 enemy = new Vector2(centipedeEnemy.getX() , centipedeEnemy.getY());
-        //centipedeEnemy.seekTarget(target,enemy);
+
+        centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(),centipedeEnemy.getBody().getPosition());
         //****************************************************************************************
+        currentTime = millis();
+        if(currentTime > timerBurstShot){
+            centipedeEnemy.burstShot();
+            timerBurstShot = millis() + (10*1000);
+        }
 
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
 
-        // Generate missing web sacs
-
-
-        if (Gdx.input.isTouched(Input.Keys.ESCAPE)) {
-            this.hide();
-            System.out.println("back........");
-            //game.setScreen(new MainMenuScreen(game));
-        }
 
     }
 
@@ -245,7 +241,7 @@ public class Assignment1 implements Screen {
             /**
              * World.step explanation
              * tells the physics engine that 1/60th of a second has passed every time you call it.
-             * If your game loop is being called more than 60 times a second it will go fast; less than
+             * If your Assignment1 loop is being called more than 60 times a second it will go fast; less than
              * 60 times a second and it'll be slow. The number of times it gets called per second will
              * depend on the speed of the underlying hardware, so this method will end up in different
              * behavior on different devices.
@@ -261,7 +257,7 @@ public class Assignment1 implements Screen {
              */
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             stateTime += Gdx.graphics.getDeltaTime();
-            // Render our tile map before the game objects
+            // Render our tile map before the Assignment1 objects
             orthoTileRender.render();
 
             // Get current frame of animation for the current stateTime
@@ -279,15 +275,15 @@ public class Assignment1 implements Screen {
 
             //Draw centipede animation
             batch.draw(centipedeFrame,
-                    centipedeEnemy.getX(), // Position
-                    centipedeEnemy.getY(), // Position
-                    16, // Center of character
-                    16, // Center of character
-                    centipedeFrame.getRegionWidth(),
-                    centipedeFrame.getRegionHeight(),
+                    centipedeEnemy.getX()-8, // Position
+                    centipedeEnemy.getY()-8, // Position
+                    8, // Center of character
+                    8, // Center of character
+                    16,
+                    16,
                     2, //Resize
                     2,
-                    0); // Rotation
+                    spiderPlayer.getRotation()); // Rotation
             // Draw centipede body
 
             for (Body centipede : centipedeBodies) {

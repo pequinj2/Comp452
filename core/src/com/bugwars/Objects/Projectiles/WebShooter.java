@@ -60,50 +60,43 @@ public class WebShooter {
     public void fireWebbing(){
 
         Web fireWeb = webs.get(0);
-        websFired.add(fireWeb);
-        webs.remove(0);
+        websFired.add(fireWeb); // Add 'fired' web to new list, this list will be run later to destroy these bodies
+        webs.remove(0); // Remove web shot from webs attached to player
         fireWeb.current = Web.WebState.FIRE;
         world.destroyBody(radiiBodies.get(0));
         radiiBodies.remove(0);
         Vector2 temp;
-        Vector2 curr;
+        Vector2 curr = fireWeb.getBody().getPosition();
+        Vector2 newPos;
 
         switch(body.getRotation()){
             case(-90): // Shoot RIGHT
-                temp = new Vector2(610, body.getY());
-
-                //temp.nor();
-                //temp.scl(500);
-                fireWeb.setResult(temp);
-                System.out.println("Fire RIGHT: " + temp + "  " + webs);
-
+                temp = new Vector2(608,body.getY()  );
+                newPos = temp.sub(curr);
+                newPos.nor();
+                newPos.scl(1000);
+                fireWeb.setResult(newPos);
                 break;
-            case(90): // Shoot LEFT -- shoots up
-                //fireWeb.getBody().setLinearVelocity(0, body.getY());
-                temp = new Vector2(-1, body.getY());
-                //temp.nor();
-                //temp.scl(500);
-                fireWeb.setResult(temp);
-                System.out.println("Fire LEFT: " + temp + "  " + webs);
-
+            case(90): // Shoot LEFT
+                temp = new Vector2(0,body.getY() );
+                newPos = temp.sub(curr);
+                newPos.nor();
+                newPos.scl(1000);
+                fireWeb.setResult(newPos);
                 break;
-            case(0): // Shoot UP -- Diagonal
-                //fireWeb.getBody().setLinearVelocity(body.getX(),800 );
-                temp = new Vector2(body.getX(),450);
-                //temp.nor();
-                //temp.scl(500);
-                fireWeb.setResult(temp);
-                System.out.println("Fire UP: " + temp + "  " + webs);
-
+            case(0): // Shoot UP
+                temp = new Vector2(body.getX(),448 );
+                newPos = temp.sub(curr);
+                newPos.nor();
+                newPos.scl(1000);
+                fireWeb.setResult(newPos);
                 break;
-            case(-180): // Shoot DOWN -- went right
-                //fireWeb.getBody().setLinearVelocity(body.getX(),0 );
-                temp = new Vector2(body.getX(),-1 );
-                //temp.nor();
-               // temp.scl(500);
-                fireWeb.setResult(temp);
-                System.out.println("Fire DOWN: " + temp + "  " + webs);
-
+            case(-180): // Shoot DOWN
+                temp = new Vector2(body.getX(),0 );
+                newPos = temp.sub(curr);
+                newPos.nor();
+                newPos.scl(1000);
+                fireWeb.setResult(newPos);
                 break;
         }
 
@@ -162,32 +155,22 @@ public class WebShooter {
         update();
         //System.out.println("webs size " +webs.size());
         for(int i =0; i < webs.size(); i++ ){
-            //System.out.println("New Webs " +webs.get(i).current );
-            if(webs.get(i).current == Web.WebState.KILL){
-                world.destroyBody(webs.get(i).getBody());
-                webs.remove(i);
-                System.out.println("Destroyed " +webs);
-            } else if(webs.get(i).current == Web.WebState.FOLLOW){
+            if(webs.get(i).current == Web.WebState.FOLLOW){
                 webs.get(i).followPlayer(); // get the last element added to the list and tell it to follow the player
             }
             webs.get(i).render(batch);
 
         }
-        for(int i =0; i < websFired.size(); i++ ){
-            //System.out.println("New Webs " +webs.get(i).current );
+        for(int i =0; i < websFired.size(); i++ ){ // Go through and destroy any web bodies that may need to be
             if(websFired.get(i).current == Web.WebState.KILL) {
                 world.destroyBody(websFired.get(i).getBody());
                 websFired.remove(i);
                 System.out.println("Destroyed " + websFired);
             }
-            if(websFired.size() != 0) {
+            else if(websFired.size() != 0) {
                 websFired.get(i).render(batch);
             }
-
         }
-
-
-
     }
 
     public int getArraySize(){

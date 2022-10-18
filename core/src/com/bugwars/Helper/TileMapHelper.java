@@ -8,9 +8,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
-import com.bugwars.Objects.Player.Spider;
-import com.bugwars.game.Assignment1;
+import com.bugwars.Assignment1.Assignment1;
 
 /**
  * This helper class will load the maps created in Tiled to build our levels.

@@ -32,10 +32,10 @@ public class Web {
     private ArrayList<Web> webs;
 
     public Web(World world, WebSac sac, Body radii, ArrayList<Web> webs){
-        this.radii = radii;
+        this.radii = radii; // This is the sensor attached to the spider to indicate where the web projectile needs to go
         this.world = world;
         this.webs = webs; // Passing the address because we only want the one list
-        web = BodyHelperService.createWebShooter(world, sac.getBody().getPosition().x, sac.getBody().getPosition().y, 4f);
+        web = BodyHelperService.createProjectiles(world, sac.getBody().getPosition().x, sac.getBody().getPosition().y, 4f);
         web.setUserData(this);
         this.sac = sac;
         current = WebState.FOLLOW;
@@ -99,11 +99,7 @@ public class Web {
 
             }
 
-
-
         }
-
-
 
     }
 

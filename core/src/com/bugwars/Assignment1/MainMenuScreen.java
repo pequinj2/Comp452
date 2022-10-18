@@ -1,4 +1,4 @@
-package com.bugwars.game;
+package com.bugwars.Assignment1;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

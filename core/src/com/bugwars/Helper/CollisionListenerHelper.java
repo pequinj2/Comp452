@@ -42,7 +42,6 @@ public class CollisionListenerHelper {
                 Object o1 = b1.getUserData();
                 Object o2 = b2.getUserData();
 
-
                 /**
                  * Check if the objects that collided are a spider and resolve events having to
                  * do with this object
@@ -88,9 +87,22 @@ public class CollisionListenerHelper {
                  */
                 else if(o2.getClass() == Centipede.class || o1.getClass() == Centipede.class){
                     if(o1.getClass() == Web.class){  // Centipede takes damage
+                        Centipede cent = (Centipede) o2;
+                        Web web = (Web) o1;
+                        if(web.current == Web.WebState.FIRE){ // Only damage the Centipede if the shot has been fired
+                            cent.removeHealth(10);
+                            web.setStateKill();
+                        }
+
 
                     }
-                    else if(o1.getClass() == Web.class){ // Centipede takes damage
+                    else if(o2.getClass() == Web.class){ // Centipede takes damage
+                        Centipede cent = (Centipede) o1;
+                        Web web = (Web) o2;
+                        if(web.current == Web.WebState.FIRE){ // Only damage the Centipede if the shot has been fired
+                            cent.removeHealth(10);
+                            web.setStateKill();
+                        }
 
                     }
 
@@ -109,6 +121,7 @@ public class CollisionListenerHelper {
 
 
                     }
+
 
                 }
 

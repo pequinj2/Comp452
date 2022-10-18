@@ -1,4 +1,4 @@
-package com.bugwars.game;
+package com.bugwars.Assignment1;
 
 
 import com.badlogic.gdx.Gdx;
@@ -66,6 +66,12 @@ public class PlayerHud {
     public void update(float playerHealth, float enemyHealth){
         health = playerHealth;
         this.enemyHealth = enemyHealth;
+        if(health < 0){ // Stop health from showing negative values
+            health = 0;
+        }
+        if (this.enemyHealth < 0){
+            this.enemyHealth = 0;
+        }
         String newHealth = (int)health + tempHealth;
         String newEnemyHealth = (int)this.enemyHealth + tempHealth;
         playerNumHealth = newHealth;

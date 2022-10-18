@@ -1,8 +1,7 @@
-package com.bugwars.game;
+package com.bugwars.Assignment1;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
 
 /**
- * This class will give the player the introduction to the game and a simple player objective
+ * This class will give the player the introduction to the Assignment1 and a simple player objective
  * - Destroy the evil centipede!!
  */
 public class SpiderIntro implements Screen {
@@ -53,7 +52,7 @@ public class SpiderIntro implements Screen {
     private Music spiderV;
 
     /**
-     * Initialize and play Assignment 1 game intro
+     * Initialize and play Assignment 1 Assignment1 intro
      * @param camera
      * @param game
      */
@@ -139,7 +138,7 @@ public class SpiderIntro implements Screen {
             font.draw(batch, string2.substring(subStrintStart,numOfChars2), textStartX, 120);
         }
         if (nextFlag2 == true){
-
+            spiderV.stop(); // Text is done, stop playing spider voice
             if (numOfChars3 < string3.length()){
                 currentCharTime3 += delta;
                 if(currentCharTime3 >= charTimer){
@@ -148,7 +147,7 @@ public class SpiderIntro implements Screen {
                 }
             }
             if(numOfChars3 == string3.length()){
-                spiderV.stop(); // Text is done, stop playing spider voice
+               // spiderV.stop(); // Text is done, stop playing spider voice
             }
 
             font.draw(batch, string3.substring(subStrintStart,numOfChars3), textStartX, 80);
@@ -157,7 +156,7 @@ public class SpiderIntro implements Screen {
 
         batch.end();
 
-        // When user hits SPACE, start the game!
+        // When user hits SPACE, start the Assignment1!
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             //spiderV.stop();
             this.hide();

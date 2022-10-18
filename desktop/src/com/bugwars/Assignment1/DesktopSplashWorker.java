@@ -1,4 +1,4 @@
-package com.bugwars.game;
+package com.bugwars.Assignment1;
 
 import java.awt.SplashScreen;
 

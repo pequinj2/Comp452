@@ -76,7 +76,7 @@ public class BodyHelperService {
     }
 
     /**
-     * Create the game boarder boundaries
+     * Create the Assignment1 boarder boundaries
      * @param world
      */
     public static void createGameBorder(World world){
@@ -219,10 +219,13 @@ public class BodyHelperService {
 
     /**
      * Create SENSOR objects
+     * Objects made:
+     *  - Web
+     *  - Projectile
      * @param world
      * @return
      */
-    public static Body createWebShooter(World world, float x, float y, float radius) {
+    public static Body createProjectiles(World world, float x, float y, float radius) {
         BodyDef bodyDef = new BodyDef();
         // Create a static body that stays still or dynamic body so it moves around and is affected by forces
         bodyDef.type = BodyDef.BodyType.DynamicBody;
