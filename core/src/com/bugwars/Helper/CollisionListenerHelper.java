@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
+import com.bugwars.Objects.Projectiles.Projectile;
 import com.bugwars.Objects.Projectiles.Web;
 import com.bugwars.Objects.Projectiles.WebShooter;
 
@@ -52,7 +53,7 @@ public class CollisionListenerHelper {
                         Spider sp = (Spider) o2;
                         sp.removeHealth(10);
                     }
-                    else if(o2.getClass() == Centipede.class){  // Player takes damage
+                    else if(o2.getClass() == Centipede.class ){  // Player takes damage
                         // Centipede hit - player takes damage
                         Spider sp = (Spider) o1;
                         sp.removeHealth(10);
@@ -76,6 +77,27 @@ public class CollisionListenerHelper {
                             wb.removeSac();
 
 
+                        }
+
+                    }else if(o1.getClass() == Projectile.class){
+                        // Centipede hit - player takes damage
+                        Spider sp = (Spider) o2;
+                        Projectile p = (Projectile) o1;
+                        if(p.getState() == Projectile.ProjState.FIRE) {
+                            sp.removeHealth(5);
+                            // Destroy Projectile
+                            p.setProjState();
+                        }
+
+                    }
+                    else if(o2.getClass() == Projectile.class){
+                        // Centipede hit - player takes damage
+                        Spider sp = (Spider) o1;
+                        Projectile p = (Projectile) o2;
+                        if(p.getState() == Projectile.ProjState.FIRE) {
+                            sp.removeHealth(5);
+                            // Destroy Projectile
+                            p.setProjState();
                         }
 
                     }
@@ -124,6 +146,22 @@ public class CollisionListenerHelper {
 
 
                 }
+                /*else if( o1.getClass() == Projectile.class || o2.getClass() == Projectile.class){
+                    if(o1.equals("Boarder")){  // Projectile hits boarder and is destroyed
+                        Projectile p = (Projectile) o2;
+                        p.setProjState();
+
+
+                    }
+                    else if(o2.equals("Boarder")){
+                        Projectile p = (Projectile) o1;
+                        p.setProjState();
+
+
+                    }
+
+
+                }*/
 
 
             }
@@ -154,6 +192,10 @@ public class CollisionListenerHelper {
                 Object o1 = b1.getUserData();
                 Object o2 = b2.getUserData();
 
+                /**
+                 * This will make the WebSac pickups NON-CONTACTABLE, meaning the player can walk across
+                 * them until they reach their final LVL 3 stage - then the player can run into them.
+                 */
                 if(o1 != null && o1.getClass() == WebSac.class ) {
                     WebSac wb = (WebSac) o1;
                     WebSac.SacState check = wb.getState();

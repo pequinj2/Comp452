@@ -13,7 +13,7 @@ import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Player.Damage;
 import com.bugwars.Objects.Player.Health;
-import com.bugwars.Objects.Projectiles.BurstShot;
+import com.bugwars.Objects.Projectiles.SwarmShot;
 
 import java.util.Random;
 
@@ -29,11 +29,11 @@ public class Centipede extends Entity implements Health, Damage {
     private float linearDamping = 1.5f;
 
     // Burst Shot
-    private BurstShot aoeAttack;
+    private SwarmShot aoeAttack;
 
 
     // Implement constructor
-    public Centipede(float width, float height, Body body, float health) {
+    public Centipede(World world,float width, float height, Body body, float health) {
         super(width, height, body);
         this.speed = 40f;
         this.width = width;
@@ -41,7 +41,7 @@ public class Centipede extends Entity implements Health, Damage {
         this.body = body;
         this.setHealth(health);
         body.setUserData(this);
-        aoeAttack = new BurstShot();
+        aoeAttack = new SwarmShot(world,body);
 
 
     }
@@ -54,6 +54,7 @@ public class Centipede extends Entity implements Health, Damage {
 
     @Override
     public void render(SpriteBatch batch) {
+        aoeAttack.render(batch);
 
     }
 
@@ -105,8 +106,8 @@ public class Centipede extends Entity implements Health, Damage {
 
     }
 
-    public void burstShot(){
-        aoeAttack.fireBurst(); // Fire off the AOE attack
+    public void aoeShot(){
+        aoeAttack.fireSwarm(); // Fire off the AOE attack
 
     }
 

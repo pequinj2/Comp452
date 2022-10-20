@@ -12,10 +12,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -69,6 +67,9 @@ public class Assignment1 implements Screen {
     // Web Sac Pickups
     private WebSac webPickup1, webPickup2, webPickup3;
 
+    // Centtipede AOE
+    private boolean aoeDelay = false;
+
     // Pause Menu
     private boolean isPaused = false;
     private PauseMenu pauseMenu = new PauseMenu();
@@ -120,7 +121,7 @@ public class Assignment1 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede(16, 16, bodyEnemyHead, 100));
+        setCentipede(new Centipede(world,16, 16, bodyEnemyHead, 100));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();
@@ -188,12 +189,27 @@ public class Assignment1 implements Screen {
         spiderPlayer.update();
         centipedeEnemy.update();
 
-        centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(),centipedeEnemy.getBody().getPosition());
+
         //****************************************************************************************
         currentTime = millis();
         if(currentTime > timerBurstShot){
-            centipedeEnemy.burstShot();
+            centipedeEnemy.aoeShot();
             timerBurstShot = millis() + (10*1000);
+            aoeDelay=true;
+        }else{
+            if(aoeDelay == true) { // Stop the centipede from moving so it can fire off its aoe
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        //centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
+                        aoeDelay=false;
+                    }
+                }, 3);
+            }
+            else{
+                centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
+            }
+
         }
 
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
@@ -272,6 +288,9 @@ public class Assignment1 implements Screen {
 
             // Web shooter spawn
             spiderPlayer.render(batch);
+
+            // Centipede aoe Shot
+            centipedeEnemy.render(batch);
 
             //Draw centipede animation
             batch.draw(centipedeFrame,

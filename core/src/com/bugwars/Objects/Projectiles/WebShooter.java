@@ -37,7 +37,7 @@ public class WebShooter {
         this.world = world;
         //web.setUserData(this);
 
-        smallRadii = BodyHelperService.createWebShooter(world, body.getX(), body.getY(), 4f);
+        smallRadii = BodyHelperService.createProjectiles(world, body.getX(), body.getY(), 4f);
         smallRadii.setUserData("radius");
 
         // Arraylist of the radius position sensors, these sensors will flag the ai that the 'WebShooter'
@@ -177,14 +177,10 @@ public class WebShooter {
         return radiiBodies.size();
     }
 
-    public void destroyWeb(){
-
-
-    }
 
     public void loadWeb(World world, WebSac sac){
         this.sac = sac;
-        smallRadii = BodyHelperService.createWebShooter(world, body.getX(), body.getY(), 4f);
+        smallRadii = BodyHelperService.createProjectiles(world, body.getX(), body.getY(), 4f);
         smallRadii.setUserData("radius");
         radiiBodies.add(smallRadii);
         webs.add(new Web(world, sac, smallRadii, webs)); // add a new web object

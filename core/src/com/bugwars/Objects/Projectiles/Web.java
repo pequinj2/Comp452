@@ -9,7 +9,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Pickups.WebSac;
-import com.bugwars.Objects.Player.Spider;
 
 import java.util.ArrayList;
 
@@ -135,13 +134,4 @@ public class Web {
         current = WebState.KILL;
     }
 
-    public void removeWeb(Web w){
-        if(w.getBody() == null){
-            System.out.println("BITCH ITS NULL");
-        }
-        System.out.println("BITCH ITS NOT NULL "+w.getBody());
-        webs.remove(0);
-        world.destroyBody(w.getBody());
-
-    }
 }
