@@ -55,8 +55,10 @@ public class SwarmShot {
             for (Projectile p : projArray) {
                 //System.out.println(p.getState());
                 if(p.getState() == Projectile.ProjState.FIRE){
-                    p.render(batch);
                     p.flock(projArray);
+                    p.render(batch);
+
+
                 }
             }
         }

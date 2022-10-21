@@ -194,7 +194,7 @@ public class Assignment1 implements Screen {
         currentTime = millis();
         if(currentTime > timerBurstShot){
             centipedeEnemy.aoeShot();
-            timerBurstShot = millis() + (10*1000);
+            timerBurstShot = millis() + (20*1000);
             aoeDelay=true;
         }else{
             if(aoeDelay == true) { // Stop the centipede from moving so it can fire off its aoe

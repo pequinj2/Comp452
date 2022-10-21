@@ -17,13 +17,13 @@ public class Projectile {
     private TextureAtlas textures = new TextureAtlas(Gdx.files.internal("maps/WebbingTexures.atlas"));
     private TextureRegion projTexture = new TextureRegion(textures.findRegion("Projectile"));
     private Body projBod;
-    private Vector2 velocity = new Vector2(10,10);
+    private Vector2 velocity = new Vector2(1,1);
     public enum ProjState{
         FIRE,
         KILL
     }
     private ProjState currentState;
-    private int maxSpeed = 50;
+    private int maxSpeed = 75;
     private int id;
     private Vector2 acceleration = new Vector2(0,0);
 
@@ -39,6 +39,8 @@ public class Projectile {
     private void update(){
         velocity.add(acceleration);
         projBod.setLinearVelocity(velocity);
+        acceleration.scl(0);
+
     }
 
     public void render(SpriteBatch batch){
@@ -64,20 +66,22 @@ public class Projectile {
      * @param projArray
      */
     public void flock(ArrayList<Projectile> projArray){
+        //acceleration.scl(0);
         // Return the vectors so it;s easier to multiply different weights to get different behaviors
         Vector2 sep = separate(projArray);
         Vector2 ali = align(projArray);
         Vector2 coh = cohesion(projArray);
 
         // Multiply by a weight to get a different behavior
-        sep.scl(5);
-        ali.scl(2);
-        coh.scl(.7f);
+        sep.scl(2);
+        ali.scl(.7f);
+        coh.scl(1);
 
         // Add all the effects to acceleration
         acceleration.add(sep);
         acceleration.add(ali);
         acceleration.add(coh);
+
 
 
     }
@@ -97,13 +101,16 @@ public class Projectile {
             // Check if the 2 projectiles are at the SAME spot and NOT the same one (id)
             if(distanceDiff.len() == 0.0 && id != p.id){
                 // push projectiles away at random positions and velocity
-                velocity.x = (float)Math.random() * 10;
-                velocity.y = (float)Math.random() * 10;
+                velocity.x = (float)Math.random() * 21 - 10;
+                velocity.y = (float)Math.random() * 21 - 10;
+
             }
             // Check if the 2 projectiles are close together and NOT the same one (id)
-            else if(distanceDiff.len() < 25.0 && id != p.id){
+            else if(distanceDiff.len() < 16.0 && id != p.id){
                 Vector2 getNewPos = distanceDiff;
                 getNewPos.nor(); // New vector that is away from the 'other'
+                getNewPos.x = getNewPos.x / distanceDiff.len();
+                getNewPos.y = getNewPos.y / distanceDiff.len();
                 current.add(getNewPos);
                 count++;
             }
@@ -111,8 +118,8 @@ public class Projectile {
 
         // Only do this if there are projectiles close together
         if (count > 0){
-            current.x = current.x/count;
-            current.y = current.y/count;
+            current.x = current.x/(float)count;
+            current.y = current.y/(float)count;
 
             current.scl(maxSpeed); // new Desired velocity and direction is the average velocity of its neighbors
 
@@ -127,7 +134,6 @@ public class Projectile {
      */
     private Vector2 align(ArrayList<Projectile> projArray){
         Vector2 sumVelocities = new Vector2(0,0);
-        int sizeArr = projArray.size();
         int count = 0;
         // Go through projectile list and add up all the different velocities
         for(Projectile p : projArray){
@@ -135,7 +141,7 @@ public class Projectile {
             Vector2 distanceDiff = projBod.getPosition().sub(p.projBod.getPosition());
 
             // Check if the 2 projectiles are close together and NOT the same one (id)
-            if(distanceDiff.len() < 5.0 && id != p.id && distanceDiff.len() > 0.0){
+            if(distanceDiff.len() > 10.0 && id != p.id && distanceDiff.len() > 0.0){
                 sumVelocities.add(p.velocity);
                 count++;
             }
@@ -143,8 +149,8 @@ public class Projectile {
         }
 
         if (count > 0) {
-            sumVelocities.x = sumVelocities.x / count; // Average velocity
-            sumVelocities.y = sumVelocities.y / count;
+            sumVelocities.x = sumVelocities.x / (float)count; // Average velocity
+            sumVelocities.y = sumVelocities.y / (float)count;
             sumVelocities.nor(); // Normalize to get the direction
             sumVelocities.scl(maxSpeed); // Go in this direction at maxSpeed
             sumVelocities.sub(velocity);
@@ -173,7 +179,7 @@ public class Projectile {
             Vector2 distanceDiff = projBod.getPosition().sub(p.projBod.getPosition());
 
             // Check if the 2 projectiles are close together and NOT the same one (id)
-            if(distanceDiff.len() < 5.0 && id != p.id  && distanceDiff.len() > 0.0){
+            if(distanceDiff.len() > 5.0 && id != p.id  && distanceDiff.len() > 0.0){
                 sumLocations.add(p.getBody().getPosition());
                 count++;
             }
@@ -219,4 +225,6 @@ public class Projectile {
     public Body getBody(){
         return projBod;
     }
+
+
 }
