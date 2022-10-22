@@ -52,6 +52,7 @@ public class Assignment1 implements Screen {
 
     //Animations
     private Animation<TextureRegion> walkAnimation, centipedeMouthAnimation; // Must declare frame type (TextureRegion)
+    private TextureRegion centipedeFrame;
 
     // Textures
     private TextureRegion centipedeBody, centipedeButt;
@@ -73,6 +74,10 @@ public class Assignment1 implements Screen {
     // Pause Menu
     private boolean isPaused = false;
     private PauseMenu pauseMenu = new PauseMenu();
+
+    // End Game
+    private EndState currentState;
+    private boolean isEndGame = false;
 
 
 
@@ -121,7 +126,7 @@ public class Assignment1 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede(world,16, 16, bodyEnemyHead, 100));
+        setCentipede(new Centipede(world,16, 16, bodyEnemyHead, 10));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();
@@ -163,6 +168,9 @@ public class Assignment1 implements Screen {
 
         // Centipede burst shot
         timerBurstShot = millis() + (10*1000);
+
+        // Initialize the End Game
+        currentState = new EndState();
 
     }
 
@@ -264,7 +272,7 @@ public class Assignment1 implements Screen {
              * https://gamedev.stackexchange.com/questions/144847/box2d-world-step-on-android-game-using-libgdx
              */
             world.step(delta, 6, 2);
-            this.update();
+
 
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
             /**
@@ -278,74 +286,60 @@ public class Assignment1 implements Screen {
 
             // Get current frame of animation for the current stateTime
             TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true); // Spider Animation Walking
-            TextureRegion centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
+            centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
 
-            batch.begin();
-            // Draw Web Sac Pickups
-            webPickup1.render(batch);
-            webPickup2.render(batch);
-            webPickup3.render(batch);
 
-            // Web shooter spawn
-            spiderPlayer.render(batch);
 
-            // Centipede aoe Shot
-            centipedeEnemy.render(batch);
 
-            //Draw centipede animation
-            batch.draw(centipedeFrame,
-                    centipedeEnemy.getX()-8, // Position
-                    centipedeEnemy.getY()-8, // Position
-                    8, // Center of character
-                    8, // Center of character
-                    16,
-                    16,
-                    2, //Resize
-                    2,
-                    spiderPlayer.getRotation()); // Rotation
-            // Draw centipede body
+            if(spiderPlayer.getHealth() <= 0.0){ // Player lost, run end game screen
+                hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+                centipedeEnemy.updateStop();
+                batch.begin();
+                centipedeRender();
+                batch.end();
+                currentState.loseStateRender();
+                handleEndGameInput();
 
-            for (Body centipede : centipedeBodies) {
+            }else if(centipedeEnemy.getHealth() <= 0.0){ // Player wins, run end game screen
+                hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+                centipedeEnemy.updateStop();
+                currentState.winStateRender(centipedeEnemy, centipedeBodies, camera.combined, stateTime);
+                handleEndGameInput();
 
-                batch.draw(centipedeBody,
-                        centipede.getPosition().x, // Position
-                        centipede.getPosition().y, // Position
-                        16, // Center of character
-                        16, // Center of character
-                        centipedeBody.getRegionWidth(),
-                        centipedeBody.getRegionHeight(),
+
+            }else {
+                this.update();
+                batch.begin();
+                // Draw Web Sac Pickups
+                webPickup1.render(batch);
+                webPickup2.render(batch);
+                webPickup3.render(batch);
+
+                // Web shooter spawn
+                spiderPlayer.render(batch);
+
+                // Centipede aoe Shot
+                centipedeEnemy.render(batch);
+
+                // Render the Centipede (used in more then 1 location, therefore, made into a helper method
+                centipedeRender();
+
+                // Draw spider player
+                int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
+                batch.draw(spiderFrame,
+                        spiderPlayer.getX(), // Position
+                        spiderPlayer.getY(), // Position
+                        spiderPlayer.getWidth() / 2, // Center of character
+                        spiderPlayer.getHeight() / 2, // Center of character
+                        spiderFrame.getRegionWidth(),
+                        spiderFrame.getRegionHeight(),
                         2, //Resize
                         2,
-                        0); // Rotation
-
+                        position); // Rotation
+                batch.end();
             }
-            // Draw centipede butt
-            batch.draw(centipedeButt,
-                    centipedeEnemy.getCentipedeButt().getPosition().x, // Position
-                    centipedeEnemy.getCentipedeButt().getPosition().y, // Position
-                    16, // Center of character
-                    16, // Center of character
-                    centipedeButt.getRegionWidth(),
-                    centipedeButt.getRegionHeight(),
-                    2, //Resize
-                    2,
-                    0); // Rotation
-
-            // Draw spider player
-            int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
-            batch.draw(spiderFrame,
-                    spiderPlayer.getX(), // Position
-                    spiderPlayer.getY(), // Position
-                    spiderPlayer.getWidth() / 2, // Center of character
-                    spiderPlayer.getHeight() / 2, // Center of character
-                    spiderFrame.getRegionWidth(),
-                    spiderFrame.getRegionHeight(),
-                    2, //Resize
-                    2,
-                    position); // Rotation
 
 
-            batch.end();
             // ********* COMMENT THIS LINE OUT WHEN IN PROD ***********
             // commenting out will remove collision boxes
             box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
@@ -408,5 +402,55 @@ public class Assignment1 implements Screen {
      */
     private void createCollisionListener(){
         CollisionListenerHelper colListen = new CollisionListenerHelper(world);
+    }
+
+    private void centipedeRender(){
+        //Draw centipede animation
+        batch.draw(centipedeFrame,
+                centipedeEnemy.getX() - 8, // Position
+                centipedeEnemy.getY() - 8, // Position
+                8, // Center of character
+                8, // Center of character
+                16,
+                16,
+                2, //Resize
+                2,
+                spiderPlayer.getRotation()); // Rotation
+        // Draw centipede body
+
+        for (Body centipede : centipedeBodies) {
+
+            batch.draw(centipedeBody,
+                    centipede.getPosition().x, // Position
+                    centipede.getPosition().y, // Position
+                    16, // Center of character
+                    16, // Center of character
+                    centipedeBody.getRegionWidth(),
+                    centipedeBody.getRegionHeight(),
+                    2, //Resize
+                    2,
+                    0); // Rotation
+
+        }
+        // Draw centipede butt
+        batch.draw(centipedeButt,
+                centipedeEnemy.getCentipedeButt().getPosition().x, // Position
+                centipedeEnemy.getCentipedeButt().getPosition().y, // Position
+                16, // Center of character
+                16, // Center of character
+                centipedeButt.getRegionWidth(),
+                centipedeButt.getRegionHeight(),
+                2, //Resize
+                2,
+                0); // Rotation
+    }
+
+    private void handleEndGameInput(){
+        if(Gdx.input.isTouched() && isEndGame==false) {
+            isEndGame = true;
+        }
+        if(isEndGame){
+            pauseMenu.endScreenMenu();
+        }
     }
 }

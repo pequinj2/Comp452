@@ -1,7 +1,5 @@
 package com.bugwars.Objects.Enemy;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,7 +13,6 @@ import com.bugwars.Objects.Player.Damage;
 import com.bugwars.Objects.Player.Health;
 import com.bugwars.Objects.Projectiles.SwarmShot;
 
-import java.util.Random;
 
 public class Centipede extends Entity implements Health, Damage {
 
@@ -48,6 +45,11 @@ public class Centipede extends Entity implements Health, Damage {
 
     @Override
     public void update() {
+        x = body.getPosition().x; // Will be the center of the body
+        y = body.getPosition().y;
+    }
+    public void updateStop() {
+        body.setLinearVelocity(0,0);
         x = body.getPosition().x; // Will be the center of the body
         y = body.getPosition().y;
     }

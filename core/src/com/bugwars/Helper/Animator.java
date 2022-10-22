@@ -12,13 +12,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
  */
 
 public class Animator {
-    // Objects used
-    Animation<TextureRegion> spiderAnimation; // Must declare frame type (TextureRegion)
-    Texture walk;
+
     TextureAtlas atlas;
 
     public Animation<TextureRegion> walkingAnimation;
     public Animation<TextureRegion> centipedeMouthAnimation;
+    public Animation<TextureRegion> endGameTextures;
 
 
     public Animation<TextureRegion> AnimatorSpider() {
@@ -52,6 +51,28 @@ public class Animator {
     public void setCentipedeMouthAtlas(){
         this.atlas = new TextureAtlas(Gdx.files.internal("maps/CentipedeHead.atlas"));
 
+    }
+
+    /**
+     * Small end game animation for when the player wins
+     * @return
+     */
+    public Animation<TextureRegion> winGameAnimator() {
+        this.atlas = new TextureAtlas(Gdx.files.internal("End Game/EndState.atlas"));
+        endGameTextures = new Animation<TextureRegion>(0.33f, atlas.findRegions("You_Win_Happy"), Animation.PlayMode.LOOP);
+
+        return endGameTextures;
+    }
+
+    /**
+     * Small end game animation for when the player loses
+     * @return
+     */
+    public Animation<TextureRegion> loseGameAnimator() {
+        this.atlas = new TextureAtlas(Gdx.files.internal("End Game/EndState.atlas"));
+        endGameTextures = new Animation<TextureRegion>(0.33f, atlas.findRegions("You_Died_Ghost"), Animation.PlayMode.LOOP);
+
+        return endGameTextures;
     }
 
 }

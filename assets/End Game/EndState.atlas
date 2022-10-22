@@ -1,0 +1,76 @@
+
+EndState.png
+size: 1024, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Centipede_Dead_Body
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Centipede_Dead_Butt
+  rotate: false
+  xy: 220, 320
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Centipede_Dead_Head
+  rotate: false
+  xy: 537, 876
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+You_Died_Ghost
+  rotate: false
+  xy: 2, 20
+  size: 216, 353
+  orig: 216, 353
+  offset: 0, 0
+  index: 2
+You_Died_Spider
+  rotate: false
+  xy: 220, 338
+  size: 244, 174
+  orig: 244, 174
+  offset: 0, 0
+  index: -1
+You_Died_Start
+  rotate: false
+  xy: 883, 1360
+  size: 54, 153
+  orig: 54, 153
+  offset: 0, 0
+  index: -1
+You_Win_Happy
+  rotate: false
+  xy: 220, 1191
+  size: 661, 322
+  orig: 661, 322
+  offset: 0, 0
+  index: 1
+You_Win_Happy
+  rotate: false
+  xy: 220, 894
+  size: 654, 295
+  orig: 654, 295
+  offset: 0, 0
+  index: 2
+You_Win_Spider
+  rotate: false
+  xy: 220, 514
+  size: 315, 378
+  orig: 315, 378
+  offset: 0, 0
+  index: -1
+You_Win_Web
+  rotate: false
+  xy: 2, 375
+  size: 216, 1138
+  orig: 216, 1138
+  offset: 0, 0
+  index: -1
