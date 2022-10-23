@@ -12,6 +12,10 @@ import com.bugwars.Objects.Pickups.WebSac;
 
 import java.util.ArrayList;
 
+/**
+ * Web objects that are used as the 'bullets' for the Spider's web shooter to inflict damage to the
+ * Centipede
+ */
 public class Web {
 
     private TextureAtlas textures = new TextureAtlas(Gdx.files.internal("maps/WebbingTexures.atlas"));
@@ -51,13 +55,6 @@ public class Web {
         float x1 = web.getPosition().x;
         float y1 = web.getPosition().y;
 
-        /**
-         * Use players 'position' variable to know which way player is facing
-         *  -90  : RIGHT
-         *   90  : LEFT
-         *    0  : UP
-         *  -180 : DOWN
-         */
         float timeToTarget = 0.1f;
         Vector2 radiiPos = new Vector2(x, y); // Make coordinates proper Vector2s
         Vector2 currentPos = new Vector2(x1, y1);

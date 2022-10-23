@@ -218,8 +218,8 @@ public class Centipede extends Entity implements Health, Damage {
      */
     public void initBody(World world){
         body1 = BodyHelperService.createBody(
-                210 + 16, // Position
-                210 + 16, // Position
+                610 + 16, // Position
+                610 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -227,8 +227,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body1.setUserData(this);
         body2 = BodyHelperService.createBody(
-                220 + 16, // Position
-                220 + 16, // Position
+                620 + 16, // Position
+                620 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -236,8 +236,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body2.setUserData(this);
         body3 = BodyHelperService.createBody(
-                230 + 16, // Position
-                230 + 16, // Position
+                630 + 16, // Position
+                630 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -245,8 +245,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body3.setUserData(this);
         body4 = BodyHelperService.createBody(
-                240 + 16, // Position
-                240 + 16, // Position
+                640 + 16, // Position
+                640 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -254,8 +254,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body4.setUserData(this);
         butt = BodyHelperService.createBody(
-                250 + 16, // Position
-                250 + 16, // Position
+                650 + 16, // Position
+                650 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,

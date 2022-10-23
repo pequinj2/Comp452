@@ -29,14 +29,16 @@ import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
 
+/**
+ * This is the main hub of the game that controls most of what happens including camera controls,
+ * world and some sprite rendering
+ */
 public class Assignment1 implements Screen {
 
-    private Texture bugWarsImage;
-    private SpriteBatch batch, hudBatch, pauseBatch; //To render our sprites
+    private SpriteBatch batch, hudBatch; //To render our sprites
     private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
     private Box2DDebugRenderer box2DBug;
     private OrthographicCamera camera, hudCamera;
-    private OrthographicCamera cam;
     private int viewPortWidth = 300;
     private int viewPortHeight = 350;
     private int screenWidth = 1216;
@@ -59,7 +61,6 @@ public class Assignment1 implements Screen {
     private TextureAtlas allTextures;
 
     // Character AI
-    private float targetPosition, enemyPosition;
     private long timerBurstShot, currentTime;
 
     // Player Hud
@@ -68,7 +69,7 @@ public class Assignment1 implements Screen {
     // Web Sac Pickups
     private WebSac webPickup1, webPickup2, webPickup3;
 
-    // Centtipede AOE
+    // Centipede AOE
     private boolean aoeDelay = false;
 
     // Pause Menu
@@ -86,7 +87,7 @@ public class Assignment1 implements Screen {
 
         this.camera = camera;
         this.batch = new SpriteBatch();
-        hudBatch = new SpriteBatch();
+        hudBatch = new SpriteBatch(); // player and enemy health bars
         this.world = new World(new Vector2(0,0), false); //Gravity is the Vector2
         this.box2DBug = new Box2DDebugRenderer();
 
@@ -99,10 +100,6 @@ public class Assignment1 implements Screen {
 
         // Instantiate the collision listener
         createCollisionListener();
-
-        //*********** PAUSE SCREEN ***************************************************
-        bugWarsImage = new Texture(Gdx.files.internal("bugwarssplash2.png"));
-        pauseBatch = new SpriteBatch();
 
         // Create Spider character ***************************************************
         Body body = BodyHelperService.createBody(
@@ -118,8 +115,8 @@ public class Assignment1 implements Screen {
 
         // Create Centipede enemy ***************************************************
         Body bodyEnemyHead = BodyHelperService.createBody(
-                200 + 16, // Position
-                200 + 16, // Position
+                600 + 16, // Position
+                600 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -134,7 +131,6 @@ public class Assignment1 implements Screen {
 
         // *************************************************************************
 
-        bugWarsImage = new Texture(Gdx.files.internal("bugwarssplash.png"));
         // Get Sprite animations
         Animator ani = new Animator();
         walkAnimation = ani.AnimatorSpider();
@@ -175,7 +171,7 @@ public class Assignment1 implements Screen {
     }
 
     /**
-     * This is where we'll update our Assignment1
+     * Update sprites, camera locations and any further character actions - such as the Centipede AOE
      */
     private void update(){
 
@@ -198,7 +194,7 @@ public class Assignment1 implements Screen {
         centipedeEnemy.update();
 
 
-        //****************************************************************************************
+        //Centipede AOE timer and call ******************************************************
         currentTime = millis();
         if(currentTime > timerBurstShot){
             centipedeEnemy.aoeShot();
@@ -209,7 +205,6 @@ public class Assignment1 implements Screen {
                 Timer.schedule(new Timer.Task() {
                     @Override
                     public void run() {
-                        //centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
                         aoeDelay=false;
                     }
                 }, 3);
@@ -219,7 +214,7 @@ public class Assignment1 implements Screen {
             }
 
         }
-
+        // update hud visuals
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
 
 
@@ -254,9 +249,14 @@ public class Assignment1 implements Screen {
 
     }
 
+    /**
+     * Main render method for the player and enemy sprites, also checks if pause is requested and
+     * if game end state has been reached
+     * @param delta
+     */
     @Override
     public void render(float delta) {
-        if(isPaused){
+        if(isPaused){ // check if game is paused
             delta =0;
             pause();
         }else {
@@ -287,9 +287,6 @@ public class Assignment1 implements Screen {
             // Get current frame of animation for the current stateTime
             TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true); // Spider Animation Walking
             centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
-
-
-
 
             if(spiderPlayer.getHealth() <= 0.0){ // Player lost, run end game screen
                 hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
@@ -344,6 +341,7 @@ public class Assignment1 implements Screen {
             // commenting out will remove collision boxes
             box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
 
+            // Render player and enemy health bars
             hudBatch.begin();
             hud.render(hudBatch);
             hudBatch.end();
@@ -357,6 +355,9 @@ public class Assignment1 implements Screen {
 
     }
 
+    /**
+     * Pause menu caller
+     */
     @Override
     public void pause() {
         handleInput();
@@ -404,6 +405,10 @@ public class Assignment1 implements Screen {
         CollisionListenerHelper colListen = new CollisionListenerHelper(world);
     }
 
+    /**
+     * The centipede is rendered in a couple of different places depending on what state the game is
+     * in (RUNNING or LOSE). code put in helper method to unclog 'render' function
+     */
     private void centipedeRender(){
         //Draw centipede animation
         batch.draw(centipedeFrame,
@@ -445,6 +450,9 @@ public class Assignment1 implements Screen {
                 0); // Rotation
     }
 
+    /**
+     * Check if user has reached the end of the game - if so get 'Retry or Quit' screen ready
+     */
     private void handleEndGameInput(){
         if(Gdx.input.isTouched() && isEndGame==false) {
             isEndGame = true;

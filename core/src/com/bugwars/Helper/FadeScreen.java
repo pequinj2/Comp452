@@ -1,4 +1,4 @@
-package com.bugwars.Assignment1;
+package com.bugwars.Helper;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

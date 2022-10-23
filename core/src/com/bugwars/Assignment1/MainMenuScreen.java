@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.bugwars.Helper.FadeScreen;
 
 /**
  * Main menu screen implimentation. Code was modified from LibGDX tutorial

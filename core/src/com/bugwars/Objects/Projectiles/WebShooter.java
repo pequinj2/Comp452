@@ -1,25 +1,21 @@
 package com.bugwars.Objects.Projectiles;
 
-import static java.lang.Math.abs;
-
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Timer;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
 
 import java.util.ArrayList;
 
+/**
+ * WebShooter object that acts as the "Gun" for the Spider, it will handle the events of the character
+ * picking up Web objects (bullets) and track how many the Spider has to fire off.
+ */
 public class WebShooter {
 
-
-    private int speed = 100;
     private WebSac sac;
     private Spider body;
     private Body smallRadii;
@@ -35,7 +31,6 @@ public class WebShooter {
     public WebShooter(World world, Spider body){
         this.body = body;
         this.world = world;
-        //web.setUserData(this);
 
         smallRadii = BodyHelperService.createProjectiles(world, body.getX(), body.getY(), 4f);
         smallRadii.setUserData("radius");
@@ -43,7 +38,6 @@ public class WebShooter {
         // Arraylist of the radius position sensors, these sensors will flag the ai that the 'WebShooter'
         // object is within range of the Spider Player
         radiiBodies = new ArrayList<Body>();
-        //radiiBodies.add(smallRadii);
 
         // Bullet array
         webs = new ArrayList<Web>();
@@ -55,7 +49,8 @@ public class WebShooter {
     }
 
     /**
-     * Set the velocity and vector of where the web shot is going
+     * Set the velocity and vector of where the web shot is going, remove Web from arraylist of
+     * available webs to fire and put it in the 'websFired' array for later body disposal
      */
     public void fireWebbing(){
 
@@ -149,11 +144,11 @@ public class WebShooter {
     }
 
     /**
-     * Render the visual of the webbing
+     * Render the visual of the webbing and destroy any already fired shots
      */
     public void render(SpriteBatch batch){
         update();
-        //System.out.println("webs size " +webs.size());
+
         for(int i =0; i < webs.size(); i++ ){
             if(webs.get(i).current == Web.WebState.FOLLOW){
                 webs.get(i).followPlayer(); // get the last element added to the list and tell it to follow the player
@@ -165,7 +160,6 @@ public class WebShooter {
             if(websFired.get(i).current == Web.WebState.KILL) {
                 world.destroyBody(websFired.get(i).getBody());
                 websFired.remove(i);
-                System.out.println("Destroyed " + websFired);
             }
             else if(websFired.size() != 0) {
                 websFired.get(i).render(batch);
@@ -178,6 +172,11 @@ public class WebShooter {
     }
 
 
+    /**
+     * Load webbing
+     * @param world
+     * @param sac
+     */
     public void loadWeb(World world, WebSac sac){
         this.sac = sac;
         smallRadii = BodyHelperService.createProjectiles(world, body.getX(), body.getY(), 4f);

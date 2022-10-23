@@ -2,33 +2,33 @@ package com.bugwars.Objects.Player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Timer;
-import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Projectiles.WebShooter;
 
-import java.util.ArrayList;
-
+/**
+ * Main playable character of the game - 'Spider Dude'
+ * This class will extend from entity and use the Health and Damage interfaces for guides.
+ * This playable object class will handle the input from the user to control it as well as
+ * instantiate a 'WebShooter' object
+ */
 public class Spider extends Entity implements Health, Damage {
 
-    private Texture texture;
     private float velX, velY, x, y, width, height;
     private boolean direcLR, direcUD;
     private int rotation = 0;
-    private WebShooter web;
     private World world;
 
     // Web Shooters
     private WebShooter webShots;
-    private int webFlag = 0; // Flag that is used to indicate player web pickup
+    private int webFlag = 0; // Flag that is used to indicate player web pickup has been grabbed
     private WebSac sac;
 
-
+    // Damage buffer
+    private float clock = 0;
 
     // Implement constructor
     public Spider(float width, float height, Body body, float health, World world) {
@@ -38,7 +38,6 @@ public class Spider extends Entity implements Health, Damage {
         this.height = height;
         this.setHealth(health);
         this.world = world;
-        texture = new Texture(Gdx.files.internal("Spider_Sprite_0.png"));
         body.setUserData(this); // This is used for the identification of the body object for box2Ds collision detection
 
         // Initialize the Web Shooter (think of this as the 'Gun')
@@ -57,26 +56,39 @@ public class Spider extends Entity implements Health, Damage {
 
     }
 
+    /**
+     * Health will only be removed after a 2 second cooldown to help with the player not being insta killed
+     * @param damage
+     */
     @Override
     public void removeHealth(float damage) {
-        float newHealth = health - damage;
-        setHealth(newHealth);
+
+        System.out.println(clock);
+        if(clock > 2) { // 2 second cooldown from the when the user takes damage so the user doesn't get insta killed
+            float newHealth = health - damage;
+            setHealth(newHealth);
+            clock = 0;
+        }
     }
 
+    /**
+     * Update body position, check user's input for character control and increment damage clock
+     */
     @Override
     public void update() {
-
+        clock += Gdx.graphics.getDeltaTime();
         x = body.getPosition().x - getWidth() /2; // Will be the center of the body
         y = body.getPosition().y - getHeight() /2;
-        //System.out.println("Print floats " + x + "  " + y);
         checkUserInput();
 
     }
 
+    /**
+     * If a
+     * @param batch
+     */
     @Override
     public void render(SpriteBatch batch) {
-
-        //smallRadii.setTransform(body.getPosition(), 0);
         if(webFlag == 1 ) {
             addWebShot();
             webFlag = 0;
@@ -87,6 +99,9 @@ public class Spider extends Entity implements Health, Damage {
 
     }
 
+    /**
+     * Get user input and direction for proper character texture animation and rotation
+     */
     private void checkUserInput() {
 
         velX = 0;
@@ -146,9 +161,6 @@ public class Spider extends Entity implements Health, Damage {
         return height;
     }
 
-    public WebShooter getWeb(){
-        return web;
-    }
     public void setWebFlag(WebSac sac){
         this.sac = sac;
         webFlag = 1;
