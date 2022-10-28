@@ -2,12 +2,12 @@ package com.bugwars.Assignment1;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -55,6 +55,7 @@ public class Assignment1 implements Screen {
     //Animations
     private Animation<TextureRegion> walkAnimation, centipedeMouthAnimation; // Must declare frame type (TextureRegion)
     private TextureRegion centipedeFrame;
+    private Animator ani;
 
     // Textures
     private TextureRegion centipedeBody, centipedeButt;
@@ -73,8 +74,9 @@ public class Assignment1 implements Screen {
     private boolean aoeDelay = false;
 
     // Pause Menu
+    private Game game;
     private boolean isPaused = false;
-    private PauseMenu pauseMenu = new PauseMenu();
+    private PauseMenu pauseMenu;
 
     // End Game
     private EndState currentState;
@@ -83,14 +85,14 @@ public class Assignment1 implements Screen {
 
 
 
-    public Assignment1(OrthographicCamera camera){
-
+    public Assignment1(OrthographicCamera camera, Game game){
+        this.game = game;
         this.camera = camera;
         this.batch = new SpriteBatch();
         hudBatch = new SpriteBatch(); // player and enemy health bars
         this.world = new World(new Vector2(0,0), false); //Gravity is the Vector2
         this.box2DBug = new Box2DDebugRenderer();
-
+        this.pauseMenu = new PauseMenu(this, game, camera);
         this.tileMapHelper = new TileMapHelper(this);
         /**
          * Getting the map we've loaded from TileMapHelper, may need to pass in String name to
@@ -123,7 +125,7 @@ public class Assignment1 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede(world,16, 16, bodyEnemyHead, 10));
+        setCentipede(new Centipede(world,16, 16, bodyEnemyHead, 100));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();
@@ -132,7 +134,7 @@ public class Assignment1 implements Screen {
         // *************************************************************************
 
         // Get Sprite animations
-        Animator ani = new Animator();
+        ani = new Animator();
         walkAnimation = ani.AnimatorSpider();
         centipedeMouthAnimation = ani.CentipedeMouthAnimator();
 
@@ -339,7 +341,7 @@ public class Assignment1 implements Screen {
 
             // ********* COMMENT THIS LINE OUT WHEN IN PROD ***********
             // commenting out will remove collision boxes
-            box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
+            //box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
 
             // Render player and enemy health bars
             hudBatch.begin();
@@ -377,6 +379,17 @@ public class Assignment1 implements Screen {
 
     @Override
     public void dispose() {
+        batch.dispose();
+        spiderPlayer.dispose();
+        centipedeEnemy.dispose();
+        ani.dispose();
+        tileMapHelper.dispose();
+        allTextures.dispose();
+        webPickup1.dispose();
+        webPickup2.dispose();
+        webPickup3.dispose();
+        hudBatch.dispose();
+        pauseMenu.dispose();
 
     }
 
@@ -461,4 +474,6 @@ public class Assignment1 implements Screen {
             pauseMenu.endScreenMenu();
         }
     }
+
+
 }

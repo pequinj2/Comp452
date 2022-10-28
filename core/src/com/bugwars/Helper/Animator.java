@@ -1,19 +1,18 @@
 package com.bugwars.Helper;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 /**
  * ***** SELF NOTE *****
- * Dont initialize all these seperatly just put them all in one class - may need to change
+ * Dont initialize all these separately just put them all in one class - may need to change
  */
 
 public class Animator {
 
-    TextureAtlas atlas;
+    private TextureAtlas atlas;
 
     public Animation<TextureRegion> walkingAnimation;
     public Animation<TextureRegion> centipedeMouthAnimation;
@@ -75,4 +74,9 @@ public class Animator {
         return endGameTextures;
     }
 
+
+    public void dispose(){
+        atlas.dispose();
+
+    }
 }

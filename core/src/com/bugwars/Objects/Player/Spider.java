@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Pickups.WebSac;
+import com.bugwars.Objects.Projectiles.Web;
 import com.bugwars.Objects.Projectiles.WebShooter;
 
 /**
@@ -63,7 +64,6 @@ public class Spider extends Entity implements Health, Damage {
     @Override
     public void removeHealth(float damage) {
 
-        System.out.println(clock);
         if(clock > 2) { // 2 second cooldown from the when the user takes damage so the user doesn't get insta killed
             float newHealth = health - damage;
             setHealth(newHealth);
@@ -180,6 +180,10 @@ public class Spider extends Entity implements Health, Damage {
     public void addWebShot(){
         webShots.loadWeb(world, sac);
 
+    }
+
+    public void dispose(){
+        webShots.dispose();
     }
 
 

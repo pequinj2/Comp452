@@ -22,16 +22,13 @@ public class BugWars extends Game {
 	@Override
 	public void render () {
 		super.render();
-		/*ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();*/
+
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+
 	}
 
 

@@ -269,4 +269,8 @@ public class Centipede extends Entity implements Health, Damage {
         centipedeBody.add(body4);
 
     }
+
+    public void dispose(){
+        aoeAttack.dispose();
+    }
 }

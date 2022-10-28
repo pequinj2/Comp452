@@ -1,17 +1,20 @@
 package com.bugwars.Objects.Projectiles;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-
 import java.util.ArrayList;
 
+/**
+ * This class works as the controller for the Centipede's AOE burst shot attack.
+ * It will call and destroy Projectile objects every 20 seconds
+ */
 public class SwarmShot {
 
     private ArrayList<Projectile> projArray, killProj;
     private World world;
     private Body origin;
+    private Projectile p;
 
     public SwarmShot(World world, Body origin){
         this.world = world;
@@ -22,6 +25,10 @@ public class SwarmShot {
 
     }
 
+    /**
+     * Create 100 projectiles that will act as a swarm to surround and inflict damage to the Spider.
+     * Projectile.java is called to create the projectiles which are stored in projArray
+     */
     public void fireSwarm(){
         int count = 100;
 
@@ -30,24 +37,17 @@ public class SwarmShot {
         }
         for(int i=0; i<count; i++){
 
-            Projectile p = new Projectile(world, origin.getPosition().x, origin.getPosition().y, i);
+            p = new Projectile(world, origin.getPosition().x, origin.getPosition().y, i);
             projArray.add(p);
         }
 
     }
 
-    private void update(){
-        if(projArray.size() > 0) { // if there are projectiles fired
-            for (Projectile p : projArray) {
-                if(p.getState() == Projectile.ProjState.KILL){
-                    killProj.add(p);
-                    projArray.remove(p);
-                }
-
-            }
-        }
-    }
-
+    /**
+     * Go through the projArray and get each state of the projectiles in there - if they're labelled
+     * as FIRE then run the flock algorithm on them and render them on the screen
+     * @param batch
+     */
     public void render(SpriteBatch batch){
 
         if(projArray.size() > 0) { // if there are projectiles fired
@@ -75,13 +75,9 @@ public class SwarmShot {
         projArray.clear();
     }
 
-
-
-    private void align(){
-
-    }
-
-    private void seek(){
-
+    public void dispose(){
+        if(p != null) {
+            p.dispose();
+        }
     }
 }

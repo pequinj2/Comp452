@@ -161,7 +161,7 @@ public class SpiderIntro implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             //spiderV.stop();
             this.hide();
-            game.setScreen(new FadeScreen(game, this,new Assignment1(camera) ));
+            game.setScreen(new FadeScreen(game, this,new Assignment1(camera, game) ));
             //dispose();
         }
 

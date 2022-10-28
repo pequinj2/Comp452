@@ -32,7 +32,7 @@ public class TileMapHelper {
         return new OrthogonalTiledMapRenderer(tiledMap);
     }
 
-    // Load our objects
+    // Not used but kept for future reference
     private void parseMapObjects(MapObjects mapObjects){
         for(MapObject mapObject: mapObjects){
 
@@ -57,5 +57,9 @@ public class TileMapHelper {
             }
 
         }
+    }
+
+    public void dispose(){
+        tiledMap.dispose();
     }
 }

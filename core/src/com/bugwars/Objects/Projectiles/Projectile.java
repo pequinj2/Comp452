@@ -11,6 +11,9 @@ import com.bugwars.Helper.BodyHelperService;
 
 import java.util.ArrayList;
 
+/**
+ * These are the projectiles that burst from the Evil Centipede when it does its Burst Shot (SwarmShot)
+ */
 public class Projectile {
 
     private float x, y;
@@ -224,6 +227,10 @@ public class Projectile {
 
     public Body getBody(){
         return projBod;
+    }
+
+    public void dispose() {
+        textures.dispose();
     }
 
 

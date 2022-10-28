@@ -100,7 +100,8 @@ public class WebShooter {
 
 
     /**
-     * Check if webbing collides
+     * Rotate Web Shots based on Player's rotation - whichever way the player is facing position
+     * the target radii the opposite way
      */
     private void update(){
         /** Use players 'rotation' variable to know which way player is facing
@@ -109,9 +110,17 @@ public class WebShooter {
          *    0  : UP
          *  -180 : DOWN
          */
-        switch(body.getRotation()){
+        switch(body.getRotation()){ // Get Player's rotation
             case(-90):
+                // Get all target radii attached to the player
                 for(Body rad : radiiBodies){
+                    /** Move the target radii to the opposite side the player is facing by getting the
+                     * player's current position and subtracting or adding either the X or Y coordinate.
+                     * If the Player is facing RIGHT, subtract X coordinate by rotateRadii variable.
+                     * This variable has a default value of 24, thats how far away we want the first
+                     * web shot object away from the Spider, then add 16 pixels for all additional
+                     * web shots attached.
+                      */
                     rad.setTransform(body.getBody().getPosition().sub(rotateRadii,0),0);
                     rotateRadii += 16;
                 }
@@ -119,6 +128,7 @@ public class WebShooter {
                 break;
             case(90):
                 for(Body rad : radiiBodies){
+                    // If the Player is facing LEFT, add X coordinate.
                     rad.setTransform(body.getBody().getPosition().add(rotateRadii,0),0);
                     rotateRadii += 16;
                 }
@@ -126,6 +136,7 @@ public class WebShooter {
                 break;
             case(0):
                 for(Body rad : radiiBodies){
+                    // If the Player is facing UP, subtract Y coordinate.
                     rad.setTransform(body.getBody().getPosition().sub(0,rotateRadii),0);
                     rotateRadii += 16;
                 }
@@ -133,6 +144,7 @@ public class WebShooter {
                 break;
             case(-180):
                 for(Body rad : radiiBodies){
+                    // If the Player is facing DOWN, add Y coordinate.
                     rad.setTransform(body.getBody().getPosition().add(0,rotateRadii),0);
                     rotateRadii += 16;
                 }
@@ -185,6 +197,17 @@ public class WebShooter {
         webs.add(new Web(world, sac, smallRadii, webs)); // add a new web object
 
 
+    }
+
+    public void dispose(){
+        for(Web wb: webs){
+            wb.dispose();
+
+        }
+        for(Web wb: websFired){
+            wb.dispose();
+
+        }
     }
 
 

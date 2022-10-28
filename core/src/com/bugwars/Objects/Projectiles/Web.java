@@ -131,4 +131,8 @@ public class Web {
         current = WebState.KILL;
     }
 
+    public void dispose(){
+        textures.dispose();
+
+    }
 }

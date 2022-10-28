@@ -12,8 +12,10 @@ import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
 import com.bugwars.Objects.Projectiles.Projectile;
 import com.bugwars.Objects.Projectiles.Web;
-import com.bugwars.Objects.Projectiles.WebShooter;
 
+/**
+ * Collision controller of all Box2D objects and sensors
+ */
 public class CollisionListenerHelper {
 
     private World world;
@@ -133,37 +135,17 @@ public class CollisionListenerHelper {
                 else if( o1.getClass() == Web.class || o2.getClass() == Web.class){
                     if(o1.equals("Boarder")){  // Web Shot hits boarder and is destroyed
                         Web web = (Web) o2;
-                        web.setStateKill();
-
-
+                        if(web.current != Web.WebState.FOLLOW){
+                            web.setStateKill();
+                        }
                     }
                     else if(o2.equals("Boarder")){
                         Web web = (Web) o1;
-                        web.setStateKill();
-
-
+                        if(web.current != Web.WebState.FOLLOW){
+                            web.setStateKill();
+                        }
                     }
-
-
                 }
-                /*else if( o1.getClass() == Projectile.class || o2.getClass() == Projectile.class){
-                    if(o1.equals("Boarder")){  // Projectile hits boarder and is destroyed
-                        Projectile p = (Projectile) o2;
-                        p.setProjState();
-
-
-                    }
-                    else if(o2.equals("Boarder")){
-                        Projectile p = (Projectile) o1;
-                        p.setProjState();
-
-
-                    }
-
-
-                }*/
-
-
             }
 
             @Override

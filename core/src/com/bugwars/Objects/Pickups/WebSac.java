@@ -3,19 +3,21 @@ package com.bugwars.Objects.Pickups;
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Helper.BodyHelperService;
 
+/**
+ * Player pickup object that will give the player a web to shoot at the centipede.
+ * There are 4 levels of a Web Sac pickup, only at LVL 3 can the player pick it up
+ */
 public class WebSac {
 
     public enum SacState{
-        LVL_0,
+        LVL_0,//Sac has been picked up
         LVL_1,
         LVL_2,
         LVL_3
@@ -131,6 +133,8 @@ public class WebSac {
 
     public Body getBody(){ return sac; }
 
-
+    public void dispose(){
+        textures.dispose();
+    }
 
 }
