@@ -187,7 +187,7 @@ public class BodyHelperService {
         // Create a static body that stays still or dynamic body so it moves around and is affected by forces
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
-        bodyDef.position.set((int)(Math.random()*592+16), (int)(Math.random()*432 + 16));
+        bodyDef.position.set((int)(Math.random()*592 + 8), (int)(Math.random()*432 + 8));
 
         // If the Body is NOT dynamic then turn rotation off
         bodyDef.fixedRotation = true;

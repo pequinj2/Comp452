@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class SwarmShot {
 
-    private ArrayList<Projectile> projArray, killProj;
+    private ArrayList<Projectile> projArray;
     private World world;
     private Body origin;
     private Projectile p;
@@ -20,9 +20,6 @@ public class SwarmShot {
         this.world = world;
         this.origin = origin;
         this.projArray = new ArrayList<Projectile>();
-        this.killProj = new ArrayList<Projectile>();
-
-
     }
 
     /**

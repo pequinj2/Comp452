@@ -41,8 +41,6 @@ public class Assignment1 implements Screen {
     private OrthographicCamera camera, hudCamera;
     private int viewPortWidth = 300;
     private int viewPortHeight = 350;
-    private int screenWidth = 1216;
-    private int screenHeight = 896;
     private float stateTime;
 
     // Objects for our tile map

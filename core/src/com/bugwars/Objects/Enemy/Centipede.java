@@ -78,8 +78,6 @@ public class Centipede extends Entity implements Health, Damage {
     }
 
     /**
-     * Vector explanation for Assignment1 dev:
-     * https://www.youtube.com/watch?v=m7VY1T6f8Ak
      * Delay the initial AI start time when Assignment1 loads then seek out player.
      * @param target players current position
      * @param enemy enemy AIs current position
