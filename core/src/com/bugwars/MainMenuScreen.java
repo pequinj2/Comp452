@@ -30,11 +30,11 @@ public class MainMenuScreen implements Screen {
 
     private SpriteBatch pauseBatch;
 
-    private TextButton retry, quit;
+    private TextButton assignment1, assignment2, assignment2Game1, assignment2Game2, back;
     private BitmapFont font;
 
     private Stage stg;
-    private Table tbl;
+    private Table tbl, tbl2;
     private Skin skin;
     private TextureAtlas buttons;
 
@@ -47,9 +47,12 @@ public class MainMenuScreen implements Screen {
         mainMenu = this;
         stg = new Stage();
         tbl = new Table();
+        tbl2 = new Table();
         stg.addActor(tbl);
         tbl.setDebug(true);
         tbl.setFillParent(true);
+        tbl2.setDebug(true);
+        tbl2.setFillParent(true);
         skin = new Skin();
         pauseBatch = new SpriteBatch();
 
@@ -67,21 +70,49 @@ public class MainMenuScreen implements Screen {
         style.up = skin.getDrawable("Button_Up");
         style.down = skin.getDrawable("Button_Down");
 
-        retry = new TextButton("Assignment 1",style);
-        quit = new TextButton("Assignment 2",style);
-        tbl.add(retry).width(150).padRight(20);
-        tbl.add(quit).width(150).padLeft(20);
+        assignment1 = new TextButton("Assignment 1",style);
+        assignment2 = new TextButton("Assignment 2",style);
+        assignment2Game1 = new TextButton("Game 1",style);
+        assignment2Game2 = new TextButton("Game 2",style);
+        back = new TextButton("Back",style);
+
+        // The main menu buttons
+        tbl.add(assignment1).width(320).padBottom(20);
+        tbl.row();
+        tbl.add(assignment2).width(320).padTop(20);
+
+        tbl2.add(assignment2Game1).width(320).padBottom(20);
+        tbl2.row();
+        tbl2.add(assignment2Game2).width(320).padTop(20).padBottom(20);
+        tbl2.row();
+        tbl2.add(back).width(320).padTop(20);
 
         Gdx.input.setInputProcessor(stg);
 
-        retry.addListener(new ChangeListener() {
+        assignment1.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //this.hide();
                 game.setScreen(new FadeScreen(game, mainMenu, new SpiderIntro(camera, game) ));
             }
         });
+
+        assignment2.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setAssignment2Buttons();
+            }
+        });
+
+        back.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setAssignment1Buttons();
+            }
+        });
     }
+
+
 
     @Override
     public void show() {
@@ -100,11 +131,8 @@ public class MainMenuScreen implements Screen {
         game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
         game.batch.end();
 
-        if (Gdx.input.isTouched()) {
-            this.hide();
-            game.setScreen(new FadeScreen(game, this,new SpiderIntro(camera, game) ));
-            dispose();
-        }
+        stg.act(Gdx.graphics.getDeltaTime());
+        stg.draw();
 
 
     }
@@ -131,6 +159,22 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        buttons.dispose();
+    }
 
+    /**
+     * Show the assignment 2 game option buttons
+     */
+    private void setAssignment2Buttons(){
+        tbl.remove();
+        stg.addActor(tbl2);
+    }
+
+    /**
+     * Show assignment option buttons
+     */
+    private void setAssignment1Buttons() {
+        tbl2.remove();
+        stg.addActor(tbl);
     }
 }
