@@ -2,6 +2,7 @@ package com.bugwars.Assignment1;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import com.bugwars.BugWars;
 
 // This is where the program starts
 public class DesktopLauncher {

@@ -1,6 +1,7 @@
-package com.bugwars.Assignment1;
+package com.bugwars;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,43 +14,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.bugwars.BugWars;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.bugwars.Assignment1.Assignment1;
+import com.bugwars.Assignment1.SpiderIntro;
 import com.bugwars.Helper.FadeScreen;
-import com.bugwars.MainMenuScreen;
 
 /**
- * Pause menu and also end game menu that will have the buttons 'Retry and 'Quit'
+ * Main menu screen implementation. Code was modified from LibGDX tutorial
+ * https://libgdx.com/wiki/start/simple-game-extended
  */
-public class PauseMenu {
+public class MainMenuScreen implements Screen {
 
-    private Texture bugWarsImage, endGameBackground;
+    final BugWars game;
+    private OrthographicCamera camera;
+
     private SpriteBatch pauseBatch;
 
-    private TextButton retry, quit, mainMenuReturn;
+    private TextButton retry, quit;
     private BitmapFont font;
 
     private Stage stg;
     private Table tbl;
     private Skin skin;
-
     private TextureAtlas buttons;
 
-    private BugWars game;
-    private OrthographicCamera camera;
+    public MainMenuScreen mainMenu;
 
-    public PauseMenu(final Assignment1 assign, final BugWars game, final OrthographicCamera camera){
-        this.camera = camera;
+    public MainMenuScreen (final BugWars game) {
         this.game = game;
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 1200, 900);
+        mainMenu = this;
         stg = new Stage();
         tbl = new Table();
         stg.addActor(tbl);
-        //tbl.setDebug(true);
+        tbl.setDebug(true);
         tbl.setFillParent(true);
         skin = new Skin();
         pauseBatch = new SpriteBatch();
 
-        bugWarsImage = new Texture(Gdx.files.internal("Hud/Pause_Menu.png"));
-        endGameBackground = new Texture(Gdx.files.internal("Hud/Blank_Background.png"));
         buttons = new TextureAtlas((Gdx.files.internal("Hud/Buttons.atlas")));
         skin.addRegions(buttons);
 
@@ -64,9 +67,8 @@ public class PauseMenu {
         style.up = skin.getDrawable("Button_Up");
         style.down = skin.getDrawable("Button_Down");
 
-        retry = new TextButton("Retry",style);
-        quit = new TextButton("Quit",style);
-        mainMenuReturn = new TextButton("Main Menu",style);
+        retry = new TextButton("Assignment 1",style);
+        quit = new TextButton("Assignment 2",style);
         tbl.add(retry).width(150).padRight(20);
         tbl.add(quit).width(150).padLeft(20);
 
@@ -76,47 +78,59 @@ public class PauseMenu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //this.hide();
-                game.setScreen(new FadeScreen(game, assign ,new Assignment1(camera, game) ));
+                game.setScreen(new FadeScreen(game, mainMenu, new SpiderIntro(camera, game) ));
             }
         });
+    }
 
-        quit.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
-            }
-        });
+    @Override
+    public void show() {
 
-        mainMenuReturn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new FadeScreen(game, assign , new MainMenuScreen(game)));
-            }
-        });
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(0,0,0.2f,1);
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+
+        game.batch.begin();
+        game.font.draw(game.batch, "Welcome to Bug Wars!!! ", 100, 150);
+        game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
+        game.batch.end();
+
+        if (Gdx.input.isTouched()) {
+            this.hide();
+            game.setScreen(new FadeScreen(game, this,new SpiderIntro(camera, game) ));
+            dispose();
+        }
 
 
     }
 
+    @Override
+    public void resize(int width, int height) {
 
-    public void render(){
-        pauseBatch.begin();
-        pauseBatch.draw(bugWarsImage, 260, 130, 700, 700);
-        pauseBatch.end();
-        stg.act(Gdx.graphics.getDeltaTime());
-        stg.draw();
     }
 
-    public void endScreenMenu(){
-        pauseBatch.begin();
-        pauseBatch.draw(endGameBackground, 260, 130, 700, 700);
-        pauseBatch.end();
-        stg.act(Gdx.graphics.getDeltaTime());
-        stg.draw();
+    @Override
+    public void pause() {
+
     }
 
-    public void dispose(){
-        bugWarsImage.dispose();
-        endGameBackground.dispose();
-        buttons.dispose();
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }

@@ -1,9 +1,11 @@
-package com.bugwars.Assignment1;
+package com.bugwars;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.bugwars.MainMenuScreen;
+import com.bugwars.SplashWorker;
 
 public class BugWars extends Game {
 	SpriteBatch batch;
@@ -48,5 +50,9 @@ public class BugWars extends Game {
 	 */
 	public void setSplashWorker (SplashWorker splashWorker){
 		this.splashWorker = splashWorker;
+	}
+
+	public BugWars getBugWars(){
+		return this;
 	}
 }

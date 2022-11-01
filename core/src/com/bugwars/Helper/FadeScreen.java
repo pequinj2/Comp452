@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.bugwars.BugWars;
 
 
 /**
@@ -25,7 +26,7 @@ public class FadeScreen implements Screen {
     private float change = 0;
 
 
-    public FadeScreen(Game game, Screen current, Screen next){
+    public FadeScreen(BugWars game, Screen current, Screen next){
         this.game = game;
         this.current = current;
         this.next = next;

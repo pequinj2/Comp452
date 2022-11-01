@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
+import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
 
 /**

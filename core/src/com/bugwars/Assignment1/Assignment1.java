@@ -2,7 +2,6 @@ package com.bugwars.Assignment1;
 
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -21,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.bugwars.BugWars;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Helper.CollisionListenerHelper;
@@ -72,7 +72,7 @@ public class Assignment1 implements Screen {
     private boolean aoeDelay = false;
 
     // Pause Menu
-    private Game game;
+    private BugWars game;
     private boolean isPaused = false;
     private PauseMenu pauseMenu;
 
@@ -83,7 +83,7 @@ public class Assignment1 implements Screen {
 
 
 
-    public Assignment1(OrthographicCamera camera, Game game){
+    public Assignment1(OrthographicCamera camera, BugWars game){
         this.game = game;
         this.camera = camera;
         this.batch = new SpriteBatch();

@@ -1,4 +1,4 @@
-package com.bugwars.Assignment1;
+package com.bugwars;
 
 /**
  * Abstract class for Splash image
