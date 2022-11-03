@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.bugwars.Assignment1.Assignment1;
 import com.bugwars.Assignment1.SpiderIntro;
+import com.bugwars.Assignment2.Game1.Game1;
 import com.bugwars.Helper.FadeScreen;
 
 /**
@@ -110,6 +111,15 @@ public class MainMenuScreen implements Screen {
                 setAssignment1Buttons();
             }
         });
+
+        assignment2Game1.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //this.hide();
+                game.setScreen(new FadeScreen(game, mainMenu, new Game1(camera, game) ));
+            }
+        });
+
     }
 
 

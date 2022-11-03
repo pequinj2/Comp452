@@ -28,6 +28,7 @@ import com.bugwars.Helper.TileMapHelper;
 import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
+import com.bugwars.PauseMenu;
 
 /**
  * This is the main hub of the game that controls most of what happens including camera controls,

@@ -45,7 +45,6 @@ public class SpiderIntro implements Screen {
     private int numOfChars3 = 0;
     private boolean delayStartingText = true;
     private int textStartX = 40;
-    private int textStartY = 160;
     private int subStrintStart = 0;
     private boolean nextFlag = false;
     private boolean nextFlag2 = false;

@@ -1,0 +1,69 @@
+
+GameOneTiles.png
+size: 512, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Berry
+  rotate: false
+  xy: 238, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Dirt_Tile
+  rotate: false
+  xy: 408, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Dirt_Tile_Highlight
+  rotate: false
+  xy: 306, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Grass
+  rotate: false
+  xy: 374, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Grass_Highlight
+  rotate: false
+  xy: 272, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Poison_Ground
+  rotate: false
+  xy: 204, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Rock_Tile
+  rotate: false
+  xy: 340, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Swamp_Tile
+  rotate: false
+  xy: 442, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+TextBoarderSmall
+  rotate: false
+  xy: 2, 2
+  size: 200, 32
+  orig: 200, 32
+  offset: 0, 0
+  index: -1

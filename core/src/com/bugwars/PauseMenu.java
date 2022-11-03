@@ -1,6 +1,7 @@
-package com.bugwars.Assignment1;
+package com.bugwars;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.bugwars.Assignment1.Assignment1;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
 import com.bugwars.MainMenuScreen;
@@ -37,7 +39,7 @@ public class PauseMenu {
     private BugWars game;
     private OrthographicCamera camera;
 
-    public PauseMenu(final Assignment1 assign, final BugWars game, final OrthographicCamera camera){
+    public PauseMenu(final Screen assign, final BugWars game, final OrthographicCamera camera){
         this.camera = camera;
         this.game = game;
         stg = new Stage();
