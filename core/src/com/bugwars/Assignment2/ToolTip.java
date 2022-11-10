@@ -10,10 +10,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector3;
 
+/**
+ * This class is used to show the small message to the user, specifically used for when selecting the
+ * tiles for the tile map, a small message will pop up saying which each tile's cost is. Once a tile
+ * is selected a small picture of the tile will show up by the user's mouse to visually confirm the
+ * tile they're placing on the map.
+ */
 public class ToolTip {
 
     private Texture tooltipLabel;
-    private float x, y, height, width;
+    private float height, width;
     private OrthographicCamera camera;
     private Vector3 mouse;
     private BitmapFont font;
@@ -37,21 +43,32 @@ public class ToolTip {
         generator.dispose(); // Once font is generated dispose of the generator
     }
 
+    /**
+     * Update for new mouse position
+     */
     private void update(){
         mouse = new Vector3(Gdx.input.getX(), Gdx.input.getY(),0);
         camera.unproject(mouse);
 
     }
 
+    /**
+     * Render tooltip label and text with the box
+     * @param batch
+     */
     public void render(SpriteBatch batch){
         update();
 
         batch.begin();
-        batch.draw(tooltipLabel, mouse.x, mouse.y);
-        font.draw(batch, text,mouse.x + width/5, mouse.y+height/1.4f);
+        batch.draw(tooltipLabel, mouse.x, mouse.y-35);
+        font.draw(batch, text,mouse.x + width/5, (mouse.y+height/1.4f) - 35);
         batch.end();
     }
 
+    /**
+     * Render small Tile example of what the user selected
+     * @param batch
+     */
     public void renderTileLabel(SpriteBatch batch){
         update();
 
@@ -60,11 +77,19 @@ public class ToolTip {
         batch.end();
     }
 
+    /**
+     * Get tile description
+     * @param newText
+     */
     public void setText(String newText){
         text = newText;
 
     }
 
+    /**
+     * Create the small example tile that appears by the mouse
+     * @param newLabel
+     */
     public void setLabel(TextureRegion newLabel){
         text = "";
         selectedTile = newLabel;
