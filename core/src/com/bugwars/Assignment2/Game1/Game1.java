@@ -41,6 +41,7 @@ public class Game1 implements Screen {
     private PriorityQueue<Tile> queue;
 
     private Boolean run = false;
+    private Boolean mapCreated = false;
 
     public Game1(OrthographicCamera camera, BugWars game){
         this.game = game;
@@ -58,16 +59,7 @@ public class Game1 implements Screen {
          */
         queue = new PriorityQueue<>(256, new TileCompare());
 
-        InputAdapter test = new InputAdapter() {
-            @Override
-            public boolean touchDown (int screenX, int x, int y, int pointer) {
 
-
-                return true;
-            }
-        };
-        InputMultiplexer iM = new InputMultiplexer(test,stg );
-        //Gdx.input.setInputProcessor(iM);
 
     }
 
@@ -78,6 +70,7 @@ public class Game1 implements Screen {
     }
 
     private void update(){
+        // Get status of Run button
         run = tileSelector.getRun();
     }
 
@@ -87,8 +80,16 @@ public class Game1 implements Screen {
 
         if(isPaused){ // check if game is paused
             pause();
-        }if(run) { // User is done making the tile map run algorithm on created map
-            tileSelector.render(batch);
+        }if(run) { // If true, user is done making the tile map
+            // There is a problem with the map, issue warning
+            if(tileSelector.getWarningText() != "") {
+                tileSelector.render(batch);
+            }
+            else{ // No problem with map found, create the priority queue and generate map with algorithm
+                if(!mapCreated) {
+                    map = tileSelector.getMap();
+                }
+            }
 
         }else {
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything

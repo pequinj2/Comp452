@@ -13,28 +13,28 @@ Berry
   index: -1
 Berry_Highlight
   rotate: false
-  xy: 374, 2
+  xy: 442, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile
   rotate: false
-  xy: 476, 2
+  xy: 544, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile_Highlight
   rotate: false
-  xy: 340, 2
+  xy: 374, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Grass
   rotate: false
-  xy: 442, 2
+  xy: 510, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -55,21 +55,35 @@ Poison_Ground
   index: -1
 Rock_Tile
   rotate: false
-  xy: 408, 2
+  xy: 476, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rock_Tile_Highlight
   rotate: false
-  xy: 510, 2
+  xy: 578, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Start
+  rotate: false
+  xy: 340, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Start_Highlight
+  rotate: false
+  xy: 408, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Swamp_Tile
   rotate: false
-  xy: 544, 2
+  xy: 612, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

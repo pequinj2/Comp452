@@ -22,9 +22,11 @@ public class Tile extends Button {
     }
     // Intertwine PriorityQueue and node array pg 229
     private Tile nextTile;
-    private Drawable img;
+    private String img;
+    private int tileID;
 
-    public Tile(Drawable img){
+    public Tile(int tileID, String img){
+        this.tileID = tileID;
         this.img = img;
 
     }

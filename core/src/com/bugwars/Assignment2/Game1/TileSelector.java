@@ -3,6 +3,7 @@ package com.bugwars.Assignment2.Game1;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,13 +42,14 @@ public class TileSelector {
     private String text = "";
     private Drawable current;
     private Button[] btnTiles = new Button[16 * 16];
-    private Button startTile, endTile;
 
     private TextureRegion newTextureRegion;
 
     int startCheck = 0;
     int endCheck = 0;
     private Boolean runCheck = false;
+    private String warningText = "";
+    private TileMap map;
 
     public TileSelector(OrthographicCamera camera, Stage stg){
         this.stg = stg;
@@ -69,7 +71,7 @@ public class TileSelector {
         grassland = new Button(skin.getDrawable("Grass"),skin.getDrawable("Grass_Highlight"));
         swampland = new Button(skin.getDrawable("Swamp_Tile"),skin.getDrawable("Swamp_Tile_Highlight"));
         rock = new Button(skin.getDrawable("Rock_Tile"),skin.getDrawable("Rock_Tile_Highlight"));
-        start = new Button(skin.getDrawable("Berry"),skin.getDrawable("Berry_Highlight"));
+        start = new Button(skin.getDrawable("Start"),skin.getDrawable("Start_Highlight"));
         goal = new Button(skin.getDrawable("Berry"),skin.getDrawable("Berry_Highlight"));
 
         tbl.add(openTerrain).width(160).height(110).padTop(20).padBottom(20).padLeft(10);
@@ -85,6 +87,15 @@ public class TileSelector {
         tbl.add(goal).width(160).height(110).padTop(20).padBottom(20).padLeft(10);
         tbl.top().left();
 
+        // If there is a warning displayed clear it
+        tbl.addListener(new ClickListener(){
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                warningText = "";
+
+            }
+        });
+
         Gdx.input.setInputProcessor(stg);
 
         /**
@@ -94,7 +105,7 @@ public class TileSelector {
         grassland.addListener(addClickListerns("Cost = 3","Grass", "Grass_Highlight" ));
         swampland.addListener(addClickListerns("Cost = 4","Swamp_Tile", "Swamp_Tile_Highlight" ));
         rock.addListener(addClickListerns("Block","Rock_Tile", "Rock_Tile_Highlight" ));
-        start.addListener(addClickListerns("Start","Berry", "Berry_Highlight" ));
+        start.addListener(addClickListerns("Start","Start", "Start_Highlight" ));
         goal.addListener(addClickListerns("End","Berry", "Berry_Highlight" ));
 
 
@@ -127,10 +138,21 @@ public class TileSelector {
         topBtnTbl.add(resetBtn).padLeft(200).padTop(20);
         topBtnTbl.top().left();
 
+        // Run button to check the map and run the algorithm
         runBtn.addListener(new ClickListener(){
             @Override
             public void clicked (InputEvent event, float x, float y) {
                 printButtons();
+
+            }
+        });
+
+        // Reset the map to default - everything dirt tile
+        resetBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                resetMap();
+                warningText = "Map has been reset!";
 
             }
         });
@@ -155,12 +177,13 @@ public class TileSelector {
     }
 
     public void render(SpriteBatch batch){
+        Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stg.act(Gdx.graphics.getDeltaTime());
         stg.draw();
-        String neewText = "There are " +endCheck + " on the map.";
         batch.begin();
-        warningFont.draw(batch, "There are too many berries!", 200, 800);
-        warningFont.draw(batch, "There can only be 1 berry on the map, please try again.", 200, 750);
+        warningFont.draw(batch, warningText, 200, 800);
+        //warningFont.draw(batch, "There can only be 1 berry on the map, please try again.", 200, 750);
         batch.end();
 
 
@@ -205,6 +228,15 @@ public class TileSelector {
         // Default Tile Skin
         current = skin.getDrawable("Dirt_Tile");
 
+        // if there is a warning displayed clear it
+        tbl.addListener(new ClickListener(){
+            @Override
+            public void clicked (InputEvent event, float x, float y) {
+                warningText = "";
+
+            }
+        });
+
         // Create a 16x16 tile map by using a Table and an array of Buttons that represent the tiles
         for(int j = 0; j<16; j++ ){
             for(int i=0; i<16; i++) {
@@ -231,8 +263,9 @@ public class TileSelector {
                             // Set the 'up' field to the current image of the tile the user has selected.
                             // Up is used so the user can click and drag the images they want
                             currStyle.up = current;
-                            // AND Set the 'checked' field to the current image of the tile the user has selected.
                             currStyle.checked = current;
+                            // Set the 'checked' field to the current image of the tile the user has selected.
+                            //currStyle.checked = current;
                             // Set this updated style to the current button tile on the map
                             currentBtn.setStyle(currStyle);
 
@@ -249,6 +282,7 @@ public class TileSelector {
                         // Get the current tile's style (button image)
                         Button.ButtonStyle currStyle = currentBtn.getStyle();
                         // Set the 'checked' field to the current image of the tile the user has selected.
+                        currStyle.up = current;
                         currStyle.checked = current;
                         // Set this updated style to the current button tile on the map
                         currentBtn.setStyle(currStyle);
@@ -313,38 +347,80 @@ public class TileSelector {
             for (int i = 0; i < 16; i++) {
                 String currStyle = "";
                 Button tile = btnTiles[(i*16) + j];
+                // Get the current style in each tile to check for Berries and Ants (End and Start points)
                 if(tile.getStyle().up == null){
-                    System.out.println(tile.getStyle().checked);
                     currStyle = tile.getStyle().checked.toString();
 
                 }else{
-                    System.out.println(tile.getStyle().up);
                     currStyle = tile.getStyle().up.toString();
                 }
 
                 if(currStyle == "Berry"){
                     endCheck += 1;
                 }
+                if(currStyle == "Start"){
+                    startCheck += 1;
+                }
 
             }
 
         }
-        System.out.println(endCheck);
 
+        // Check the number of Berries and Ants and issue a warning if there are too many or not enough
         if(endCheck > 1){
-            String neewText = "There are too many berries! There can only be 1 berry on the map, please try again./nThere are " +endCheck + " on the map.";
-            //font.draw(batch, neewText, 300, 400);
-
+            warningText = "There are too many berries!\nThere can only be 1 berry on the map, please try again.";
         }
-        if(endCheck == 0){
-
+        else if(endCheck == 0){
+            warningText = "There is no berry!\nPlace 1 berry on the map to continue.";
         }
+        else if(startCheck > 1){
+            warningText = "There are too many ants!\nThere can only be 1 ant on the map, please try again.";
+        }
+        else if(startCheck == 0){
+            warningText = "There is no ant!\nPlace 1 ant on the map to continue.";
+        }
+        else{
+            warningText = "";
+            TileMap map = new TileMap(btnTiles);
+        }
+
         runCheck = true;
     }
 
+    /**
+     * Helper function that will reset the map to its original Dirt only state
+     */
+    private void resetMap(){
+        for(int j = 0; j<16; j++ ) {
+            for (int i = 0; i < 16; i++) {
+                Button tile = btnTiles[(i*16) + j];
+                // Get the current tile's style (button image)
+                Button.ButtonStyle currStyle = tile.getStyle();
+                // Set the 'checked' field to the Dirt image
+                currStyle.up = skin.getDrawable("Dirt_Tile");
+                currStyle.checked = skin.getDrawable("Dirt_Tile");
+                tile.setStyle(currStyle);
+            }
+        }
+    }
 
+    /**
+     * @return true or false if the run button has been hit or not
+     */
     public Boolean getRun() {
         return runCheck;
+    }
+
+    /**
+     * @return warningText to see if there is a problem with the map
+     */
+    public String getWarningText(){
+        return warningText;
+    }
+
+    public TileMap getMap() {
+
+        return map;
     }
 }
 
