@@ -5,25 +5,40 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 
-public class TileMap {
+/**
+ * This class will generate the graph, a priority queue, of the map the user had just completed.
+ * It will go through the button tiles and create Tile objects adding them to the queue as well as
+ * finding the Start and End Tiles. It will also generated a list of connected to tiles to each tile.
+ */
+public class GenerateGraph {
 
-    private Table tbl;
-    private Stage stg;
-    private Skin skin;
-    private TextureAtlas atlas;
     private Tile[] tiles = new Tile[16 * 16];
-
     private int maxSize = 15;
     private Button[] btnTiles;
+    private Tile newTile, startTile, endTile;
+    private PriorityQueue<Tile> queue;
+    private Map<String, Integer> tileCosts = new HashMap<String, Integer>() {{
+        put("Berry", 0);
+        put("Start", 0);
+        put("Dirt_Tile", 1);
+        put("Grass", 3);
+        put("Swamp_Tile", 4);
+        put("Rock_Tile", -1);
+    }};
 
-
-
-    public TileMap(Button[] btnTiles){
+    public GenerateGraph(Button[] btnTiles){
         this.btnTiles = btnTiles;
+        /**
+         * Implement the priority queue of our nodes, because the map is a 16x16 graph we need a
+         * space of 256. Use TileCompare to sort the nodes properly in a min-Heap structure.
+         */
+        queue = new PriorityQueue<>(256, new TileCompare());
         for(int j = 0; j<16; j++ ) {
             for (int i = 0; i < 16; i++) {
                 String currStyle = "";
@@ -38,35 +53,46 @@ public class TileMap {
                 }
 
                 // Rock obstacle found, no connections or cost, add tile and go to next button in list
-                if(currStyle == "Rock_Tile"){
-                    Tile newTile = new Tile((i*16) + j,currStyle);
-                    tiles[(i*16) + j] = newTile;
-
-                }else{
-                    Tile newTile = new Tile((i*16) + j, currStyle);
-                    System.out.println("First print: "+j +", "+ i);
+                if(currStyle != "Rock_Tile"){
+                    // Get the connections of the current tile (node), these are a simple integer
+                    // list that represent a Tile's ID
                     List<Integer> list = getConnections(j,i);
-                    System.out.println("2nd print: "+j +", "+ i + "Here is the list: " + list);
+                    // Get the cost of the node
+                    float costSoFar = tileCosts.get(currStyle);
+                    // Get the estimate cost
+                    float estimatedCost = 0;
+                    // Generate new Tile object and add it to the priority queue
+                    newTile = new Tile((i*16) + j, currStyle, list, costSoFar, estimatedCost);
+                    queue.add(newTile);
+
+                }
+                // Check if we found the start and end (Berry) tiles
+                if(currStyle == "Start"){
+                    startTile = newTile;
+                    startTile.setStart();
+                }
+                if(currStyle == "Berry"){
+                    endTile = newTile;
+                    endTile.setEnd();
                 }
 
-
-
-                Tile newTile = new Tile((i*16) + j, currStyle);
 
             }
         }
 
+        /*while(!queue.isEmpty()){
+            System.out.println(queue.remove().getID());
+        }*/
 
-    }
 
-    public Table getTable(){
-        return tbl;
     }
 
     /**
      * The helper function below will create a list of connection nodes from the point that was given
-     * to the function. Point = (row, col) which represents the button that was used in the original
+     * to the function. Node = (row, col) which represents the button that was used in the original
      * tile map the user created.
+     * A list of integers is returned that represents tiles connected to the 'From Tile'. This list
+     * is made to exclude tiles that represent rocks since the ant cant go there.
      * @param row
      * @param col
      * @return an array of the connecting Tiles (nodes)
@@ -159,7 +185,10 @@ public class TileMap {
             connections.add(switchCheck("H", row, col));
         }
 
+        // Remove any negative integers from the list
         connections.removeIf(val -> val < 0);
+
+        // return connection list
         return connections;
 
     }
@@ -283,4 +312,16 @@ public class TileMap {
         return tileID;
     }
 
+
+    public PriorityQueue getQueue(){
+        return queue;
+    }
+
+    public Tile getStartTile(){
+        return startTile;
+    }
+
+    public Tile getEndTile(){
+        return endTile;
+    }
 }

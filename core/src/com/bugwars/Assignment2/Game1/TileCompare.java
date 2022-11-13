@@ -1,7 +1,5 @@
 package com.bugwars.Assignment2.Game1;
 
-import com.badlogic.gdx.math.MathUtils;
-
 import java.util.Comparator;
 
 /**
@@ -16,6 +14,12 @@ public class TileCompare implements Comparator<Tile> {
 
     @Override
     public int compare(Tile tile, Tile t1) {
+
+        if(tile.getEstimatedTotalCost() > t1.getEstimatedTotalCost()){
+            return 1;
+        }else if(tile.getEstimatedTotalCost() < t1.getEstimatedTotalCost()){
+            return -1;
+        }
         return 0;
     }
 

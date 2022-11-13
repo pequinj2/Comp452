@@ -49,7 +49,7 @@ public class TileSelector {
     int endCheck = 0;
     private Boolean runCheck = false;
     private String warningText = "";
-    private TileMap map;
+    private GenerateGraph map;
 
     public TileSelector(OrthographicCamera camera, Stage stg){
         this.stg = stg;
@@ -381,7 +381,7 @@ public class TileSelector {
         }
         else{
             warningText = "";
-            TileMap map = new TileMap(btnTiles);
+            GenerateGraph map = new GenerateGraph(btnTiles);
         }
 
         runCheck = true;
@@ -409,6 +409,11 @@ public class TileSelector {
      */
     public Boolean getRun() {
         return runCheck;
+
+    }
+
+    public void setRun(){
+        runCheck = false;
     }
 
     /**
@@ -418,8 +423,7 @@ public class TileSelector {
         return warningText;
     }
 
-    public TileMap getMap() {
-
+    public GenerateGraph getMap() {
         return map;
     }
 }

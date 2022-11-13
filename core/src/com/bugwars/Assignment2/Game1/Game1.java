@@ -1,9 +1,6 @@
 package com.bugwars.Assignment2.Game1;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,14 +31,14 @@ public class Game1 implements Screen {
     private int viewPortHeight = 350;
 
     private TileSelector tileSelector;
-
     private ToolTip tooltip;
-    private TileMap map;
-
-    private PriorityQueue<Tile> queue;
+    private GenerateGraph map;
+    private PriorityQueue queue;
+    private Heuristic hue;
 
     private Boolean run = false;
     private Boolean mapCreated = false;
+    private Boolean runAStar = false;
 
     public Game1(OrthographicCamera camera, BugWars game){
         this.game = game;
@@ -53,11 +50,8 @@ public class Game1 implements Screen {
         tileSelector = new TileSelector(camera, stg);
         batch = new SpriteBatch();
         tooltip = new ToolTip(camera);
-        /**
-         * Implement the priority queue of our nodes, because the map is a 16x16 graph we need a
-         * space of 256. Use TileCompare to sort the nodes properly in a min-Heap structure.
-         */
-        queue = new PriorityQueue<>(256, new TileCompare());
+
+
 
 
 
@@ -84,20 +78,33 @@ public class Game1 implements Screen {
             // There is a problem with the map, issue warning
             if(tileSelector.getWarningText() != "") {
                 tileSelector.render(batch);
+                run = false;
+                tileSelector.setRun();
             }
             else{ // No problem with map found, create the priority queue and generate map with algorithm
                 if(!mapCreated) {
                     map = tileSelector.getMap();
+
+                    runAStar = true;
+                    run = false;
                 }
             }
 
-        }else {
+        } else if(runAStar){
+            // Get the queue and tile connections from the user generated map
+            queue = map.getQueue();
+            Tile srt = map.getStartTile();
+            Tile end = map.getEndTile();
+            hue = new Heuristic(end);
+            PathFindingAStar path = new PathFindingAStar(queue, srt, end, hue);
+        }
+        else {
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             //batch.begin();
             stg.act(Gdx.graphics.getDeltaTime());
             stg.draw();
-
+            tileSelector.render(batch);
             // Show the cost of each of the terrains by getting the Text set in TileSelector
             if(tileSelector.getShowTooltip() == true){
                 tooltip.setText(tileSelector.getText());

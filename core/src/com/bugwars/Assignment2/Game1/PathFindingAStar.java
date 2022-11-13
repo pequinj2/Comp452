@@ -8,11 +8,17 @@ public class PathFindingAStar {
     private Tile start, end;
     private Heuristic hue;
 
+    private PriorityQueue<Tile> open;
+
     public PathFindingAStar(PriorityQueue<Tile> graph, Tile start, Tile end, Heuristic hue){
         this.graph = graph;
         this.start = start;
         this.end = end;
         this.hue = hue;
 
+        open = new PriorityQueue<>(256, new TileCompare());
+
     }
+
+
 }
