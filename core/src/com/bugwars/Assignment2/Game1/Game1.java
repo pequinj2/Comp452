@@ -12,7 +12,7 @@ import com.bugwars.Assignment2.ToolTip;
 import com.bugwars.PauseMenu;
 import com.bugwars.BugWars;
 
-import java.util.PriorityQueue;
+import java.util.HashMap;
 
 public class Game1 implements Screen {
 
@@ -33,12 +33,16 @@ public class Game1 implements Screen {
     private TileSelector tileSelector;
     private ToolTip tooltip;
     private GenerateGraph map;
-    private PriorityQueue queue;
+    private HashMap<Integer, Tile> graph;
     private Heuristic hue;
 
     private Boolean run = false;
     private Boolean mapCreated = false;
     private Boolean runAStar = false;
+    private Boolean aStarSimulation = false;
+
+    private RunMap simulation;
+    private PathFindingAStar path;
 
     public Game1(OrthographicCamera camera, BugWars game){
         this.game = game;
@@ -77,26 +81,32 @@ public class Game1 implements Screen {
         }if(run) { // If true, user is done making the tile map
             // There is a problem with the map, issue warning
             if(tileSelector.getWarningText() != "") {
-                tileSelector.render(batch);
+                tileSelector.render(batch); // Show warning
                 run = false;
-                tileSelector.setRun();
+                tileSelector.setRun(); // To false so user can fix map
             }
             else{ // No problem with map found, create the priority queue and generate map with algorithm
                 if(!mapCreated) {
                     map = tileSelector.getMap();
-
-                    runAStar = true;
+                    runAStar = true; // Set true to run simulation in next world step
                     run = false;
+                    tileSelector.setRun(); // To false because map is ready for simulation
                 }
             }
 
         } else if(runAStar){
-            // Get the queue and tile connections from the user generated map
-            queue = map.getQueue();
+            // Get the graph and tile connections from the user generated map
+            graph = map.getQueue();
             Tile srt = map.getStartTile();
             Tile end = map.getEndTile();
-            hue = new Heuristic(end);
-            PathFindingAStar path = new PathFindingAStar(queue, srt, end, hue);
+            hue = new Heuristic(end); // Ready heuristic with desired end node
+            path = new PathFindingAStar(graph, srt, end, hue);
+            runAStar = false; // Set true to run simulation in next world step
+            simulation = new RunMap(tileSelector.getBtnList(), camera);
+            aStarSimulation = true;
+        }
+        else if(aStarSimulation){
+            simulation.render(batch);
         }
         else {
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything

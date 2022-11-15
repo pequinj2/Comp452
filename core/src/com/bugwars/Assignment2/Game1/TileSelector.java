@@ -57,9 +57,9 @@ public class TileSelector {
         topBtnTbl = new Table();
         stg.addActor(tbl);
         stg.addActor(topBtnTbl);
-        tbl.setDebug(true);
+        //tbl.setDebug(true);
         tbl.setFillParent(true);
-        topBtnTbl.setDebug(true);
+        //topBtnTbl.setDebug(true);
         topBtnTbl.setFillParent(true);
         skin = new Skin();
         tiles = new TextureAtlas((Gdx.files.internal("Assignment2/GameOneTiles.atlas")));
@@ -381,7 +381,7 @@ public class TileSelector {
         }
         else{
             warningText = "";
-            GenerateGraph map = new GenerateGraph(btnTiles);
+            map = new GenerateGraph(btnTiles);
         }
 
         runCheck = true;
@@ -425,6 +425,10 @@ public class TileSelector {
 
     public GenerateGraph getMap() {
         return map;
+    }
+
+    public Button[] getBtnList(){
+        return btnTiles;
     }
 }
 

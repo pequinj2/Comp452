@@ -12,9 +12,17 @@ public class TileCompare implements Comparator<Tile> {
 
     }
 
+    /**
+     * Use the 'F' cost of each tile to compare them and place them in the appropriate order in the
+     * priority queue
+     * @param tile
+     * @param t1
+     * @return
+     */
     @Override
     public int compare(Tile tile, Tile t1) {
 
+        // getEstimatedTotalCost = 'F' cost
         if(tile.getEstimatedTotalCost() > t1.getEstimatedTotalCost()){
             return 1;
         }else if(tile.getEstimatedTotalCost() < t1.getEstimatedTotalCost()){

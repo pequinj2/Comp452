@@ -1,10 +1,7 @@
 package com.bugwars.Assignment2.Game1;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +15,7 @@ import java.util.PriorityQueue;
  */
 public class GenerateGraph {
 
-    private Tile[] tiles = new Tile[16 * 16];
+    private HashMap<Integer, Tile> graph = new HashMap<Integer, Tile>();
     private int maxSize = 15;
     private Button[] btnTiles;
     private Tile newTile, startTile, endTile;
@@ -56,13 +53,14 @@ public class GenerateGraph {
                 if(currStyle != "Rock_Tile"){
                     // Get the connections of the current tile (node), these are a simple integer
                     // list that represent a Tile's ID
-                    List<Integer> list = getConnections(j,i);
+                    List<Integer> list = getConnections(i,j);
                     // Get the cost of the node
                     float costSoFar = tileCosts.get(currStyle);
                     // Get the estimate cost
                     float estimatedCost = 0;
                     // Generate new Tile object and add it to the priority queue
                     newTile = new Tile((i*16) + j, currStyle, list, costSoFar, estimatedCost);
+                    graph.put((i*16) + j, newTile);
                     queue.add(newTile);
 
                 }
@@ -105,21 +103,20 @@ public class GenerateGraph {
         if(row-1 < 0){ // Can't do A, B, C
             if(col-1 <0){
                 // do D, E, F
-                System.out.println("do D, E, F");
+
                 connections.add(switchCheck("D", row, col));
                 connections.add(switchCheck("E", row, col));
                 connections.add(switchCheck("F", row, col));
 
             }else if(col+1 > maxSize){
                 // do F, G, H
-                System.out.println("do F, G, H");
+
                 connections.add(switchCheck("F", row, col));
                 connections.add(switchCheck("G", row, col));
                 connections.add(switchCheck("H", row, col));
 
             }else{
                 // do D, E, F, G, H
-                System.out.println("do D, E, F, G, H");
                 connections.add(switchCheck("D", row, col));
                 connections.add(switchCheck("E", row, col));
                 connections.add(switchCheck("F", row, col));
@@ -130,7 +127,7 @@ public class GenerateGraph {
         }else if(row+1 > maxSize){ // Can't do E, F, G
             if(col-1 <0){
                 // do B, C, D
-                System.out.println("do B, C, D");
+
                 connections.add(switchCheck("B", row, col));
                 connections.add(switchCheck("C", row, col));
                 connections.add(switchCheck("D", row, col));
@@ -139,14 +136,14 @@ public class GenerateGraph {
 
             }else if(col+1 > maxSize){
                 // do A, B, H
-                System.out.println("do A, B, H");
+
                 connections.add(switchCheck("A", row, col));
                 connections.add(switchCheck("B", row, col));
                 connections.add(switchCheck("H", row, col));
 
             }else{
                 // do A, B, C, D, H
-                System.out.println("ddo A, B, C, D, H");
+
                 connections.add(switchCheck("A", row, col));
                 connections.add(switchCheck("B", row, col));
                 connections.add(switchCheck("C", row, col));
@@ -156,6 +153,7 @@ public class GenerateGraph {
 
         }else if(col-1 <0){
             // do B, C, D, E, F
+
             connections.add(switchCheck("B", row, col));
             connections.add(switchCheck("C", row, col));
             connections.add(switchCheck("D", row, col));
@@ -174,7 +172,6 @@ public class GenerateGraph {
         }
         else{
             // do All
-            System.out.println("ALL");
             connections.add(switchCheck("A", row, col));
             connections.add(switchCheck("B", row, col));
             connections.add(switchCheck("C", row, col));
@@ -259,8 +256,6 @@ public class GenerateGraph {
             case "D":
                 tile = btnTiles[(row*16) + col+1];
                 style = getButtonStyle(tile);
-                int idk = (row*16) + col+1;
-                System.out.println(idk + " D " + style);
                 if(style.equals("Rock_Tile")){
                     tileID = -1;
                     break;
@@ -270,7 +265,6 @@ public class GenerateGraph {
             case "E":
                 tile = btnTiles[((row+1)*16) + col+1];
                 style = getButtonStyle(tile);
-                System.out.println(((row+1)*16) + col+1 + " E " + style);
                 if(style.equals("Rock_Tile")){
                     tileID = -1;
                     break;
@@ -280,7 +274,6 @@ public class GenerateGraph {
             case "F":
                 tile = btnTiles[((row+1)*16)+ col];
                 style = getButtonStyle(tile);
-                System.out.println(((row+1)*16)+ col + " F " + style);
                 if(style.equals("Rock_Tile")){
                     tileID = -1;
                     break;
@@ -288,9 +281,8 @@ public class GenerateGraph {
                 tileID = ((row+1)*16)+ col;
                 break;
             case "G":
-                tile = btnTiles[((row*16)+1) + col-1];
+                tile = btnTiles[((row+1)*16)+ col-1];
                 style = getButtonStyle(tile);
-                System.out.println(" G " + style);
                 if(style.equals("Rock_Tile")){
                     tileID = -1;
                     break;
@@ -300,7 +292,6 @@ public class GenerateGraph {
             case "H":
                 tile = btnTiles[(row*16) + col-1];
                 style = getButtonStyle(tile);
-                System.out.println(" H " + style);
                 if(style.equals("Rock_Tile")){
                     tileID = -1;
                     break;
@@ -313,8 +304,8 @@ public class GenerateGraph {
     }
 
 
-    public PriorityQueue getQueue(){
-        return queue;
+    public HashMap<Integer, Tile> getQueue(){
+        return graph;
     }
 
     public Tile getStartTile(){

@@ -1,11 +1,5 @@
 package com.bugwars.Assignment2.Game1;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-
 import java.util.List;
 
 /**
@@ -13,13 +7,13 @@ import java.util.List;
  * on the map to customize the route the "Ant" will take. This class extends the Actor class so
  * it can be used with the Table variable in GenerateGraph.java.
  */
-public class Tile extends Button {
+public class Tile {
 
     private float costSoFar;
     private float estimatedTotalCost;
     private String node = "";
     private List<Integer> list;
-    private enum Category{
+    public enum Category{
         CLOSED, OPEN, UNVISITED
     }
     private Category currentState;
@@ -27,6 +21,7 @@ public class Tile extends Button {
     private Tile nextTile;
     private String img;
     private int tileID;
+    private Tile connection;
 
     public Tile(int tileID, String img, List<Integer> list, float costSoFar, float estimatedTotalCost){
         this.tileID = tileID;
@@ -34,7 +29,7 @@ public class Tile extends Button {
         this.list = list;
         this.costSoFar = costSoFar;
         this.estimatedTotalCost = estimatedTotalCost;
-        currentState = Category.OPEN;
+        currentState = Category.UNVISITED;
 
     }
 
@@ -75,8 +70,33 @@ public class Tile extends Button {
         return estimatedTotalCost;
     }
 
+    public float getCostSoFar(){
+        return costSoFar;
+
+    }
+
     public float getID(){
         return tileID;
     }
 
+    public String getNode(){
+        return node;
+    }
+
+    public List<Integer> getConnections(){
+        return list;
+    }
+
+    public Category getState(){
+        return currentState;
+
+    }
+
+    public void setConnection(Tile connectionTile) {
+        connection = connectionTile;
+    }
+
+    public Tile getConnection(){
+        return connection;
+    }
 }
