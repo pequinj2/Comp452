@@ -1,5 +1,8 @@
 package com.bugwars.Assignment2.Game1;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -7,10 +10,11 @@ import java.util.PriorityQueue;
 public class PathFindingAStar {
 
     private HashMap<Integer, Tile> graph;
-    private Tile start, end, current;
+    private Tile start, end, current, visited;
     private Heuristic hue;
 
     private PriorityQueue<Tile> open;
+    private RunMap simulation;
 
     public PathFindingAStar(HashMap<Integer, Tile> graph, Tile start, Tile end, Heuristic hue){
         this.graph = graph;
@@ -23,32 +27,32 @@ public class PathFindingAStar {
         start.setConnection(null);
         open.add(start);
 
-        findPath();
+        //findPath();
 
     }
 
-    private void findPath(){
+    public Tile findPath(){
 
 
-        while(!open.isEmpty()){
-            System.out.println("Start while, size of open: " + open.size());
+        //while(!open.isEmpty()){
+            //System.out.println("Start while, size of open: " + open.size());
             current = open.poll();
-            System.out.println("Current node: " + current.getID());
+            //System.out.println("Current node: " + current.getID());
 
             // Get the connections attached to the current Tile
             List<Integer> connections = current.getConnections();
-            System.out.println("Current node connections: " + connections);
+            //System.out.println("Current node connections: " + connections);
 
             Tile connectionTile = current;
             for(Integer conn:connections){
                 connectionTile= graph.get(conn);
-                System.out.println("This is the connection: " + conn);
+                //System.out.println("This is the connection: " + conn);
                 // Get the 'F' cost
                 float endCost = connectionTile.getEstimatedTotalCost();
                 // Get previous from Tiles cost and cost to the connection tile
                 // This is the new 'G' cost
                 float currentCost = current.getCostSoFar() + connectionTile.getCostSoFar();
-                System.out.println("This is the new 'G' cost: " + currentCost);
+                //System.out.println("This is the new 'G' cost: " + currentCost);
 
                 if(connectionTile.getState() == Tile.Category.CLOSED){
                     // If a shorter route wasn't found then skip
@@ -67,8 +71,8 @@ public class PathFindingAStar {
                     // calculate estimated cost to end node and cost so far - update Tile
                     // Update 'F' cost
                     connectionTile.setEstimatedTotalCost(hue.estimatedCost(connectionTile) + currentCost);
-                    System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
-                    System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile));
+                    //System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
+                    //System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile));
                     connectionTile.setCostSoFar(currentCost);
                     open.add(connectionTile);
 
@@ -80,27 +84,36 @@ public class PathFindingAStar {
                     // Calculate new heuristic and set it
                     float newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
                     connectionTile.setEstimatedTotalCost(newEndCost);
-                    System.out.println("Calculate new heuristic and set it: " + newEndCost);
+                    //System.out.println("Calculate new heuristic and set it: " + newEndCost);
 
                 }
 
                 connectionTile.setConnection(current);
 
             }
-            if(current.getNode().equals("End")){
-                break;
-            }
+            return current;
+
+           // if(current.getNode().equals("End")){
+            //    break;
+           // }
 
 
-        }
-        if(!(current.getNode().equals("End"))){
+        //}
+        /*if(!(current.getNode().equals("End"))){
             System.out.println("End node could not be reached :(");
         }
         else{
             printOut();
-        }
+        }*/
 
     }
+
+     /*public void render(){
+        Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        simulation.render(Gdx.graphics.getDeltaTime());
+    }*/
 
 
     private void printOut(){
@@ -111,6 +124,15 @@ public class PathFindingAStar {
             System.out.println(getConnectingNode.getID());
             current = getConnectingNode;
         }
+    }
+
+    public Tile getVisitedPath(){
+        return visited;
+    }
+
+    public void setSimulation(RunMap simu){
+        simulation = simu;
+        //simulation.setCurrentTile(start);
     }
 
 }

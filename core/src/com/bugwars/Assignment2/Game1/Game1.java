@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.bugwars.Assignment1.SpiderIntro;
 import com.bugwars.Assignment2.ToolTip;
+import com.bugwars.Helper.FadeScreen;
 import com.bugwars.PauseMenu;
 import com.bugwars.BugWars;
 
@@ -40,6 +42,7 @@ public class Game1 implements Screen {
     private Boolean mapCreated = false;
     private Boolean runAStar = false;
     private Boolean aStarSimulation = false;
+    private Boolean stopSimulation = false;
 
     private RunMap simulation;
     private PathFindingAStar path;
@@ -54,11 +57,6 @@ public class Game1 implements Screen {
         tileSelector = new TileSelector(camera, stg);
         batch = new SpriteBatch();
         tooltip = new ToolTip(camera);
-
-
-
-
-
     }
 
 
@@ -102,11 +100,10 @@ public class Game1 implements Screen {
             hue = new Heuristic(end); // Ready heuristic with desired end node
             path = new PathFindingAStar(graph, srt, end, hue);
             runAStar = false; // Set true to run simulation in next world step
-            simulation = new RunMap(tileSelector.getBtnList(), camera);
+            //simulation = new RunMap(tileSelector.getBtnList(), camera);
+            //path.setSimulation(simulation);
             aStarSimulation = true;
-        }
-        else if(aStarSimulation){
-            simulation.render(batch);
+            game.setScreen(new FadeScreen(game, this, new RunMap(tileSelector.getBtnList(), camera, path)));
         }
         else {
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything

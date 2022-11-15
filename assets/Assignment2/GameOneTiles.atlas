@@ -6,91 +6,91 @@ filter: Nearest, Nearest
 repeat: none
 Berry
   rotate: false
-  xy: 272, 2
+  xy: 509, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Berry_Highlight
   rotate: false
-  xy: 442, 2
+  xy: 679, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile
   rotate: false
-  xy: 544, 2
+  xy: 781, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile_Highlight
   rotate: false
-  xy: 374, 2
+  xy: 611, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Grass
   rotate: false
-  xy: 510, 2
+  xy: 747, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Grass_Highlight
   rotate: false
-  xy: 306, 2
+  xy: 543, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Poison_Ground
   rotate: false
-  xy: 238, 2
+  xy: 475, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rock_Tile
   rotate: false
-  xy: 476, 2
+  xy: 713, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rock_Tile_Highlight
   rotate: false
-  xy: 578, 2
+  xy: 815, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Start
   rotate: false
-  xy: 340, 2
+  xy: 577, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Start_Highlight
   rotate: false
-  xy: 408, 2
+  xy: 645, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Swamp_Tile
   rotate: false
-  xy: 612, 2
+  xy: 849, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Swamp_Tile_Highlight
   rotate: false
-  xy: 204, 2
+  xy: 441, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -100,5 +100,19 @@ TextBoarderSmall
   xy: 2, 2
   size: 200, 32
   orig: 200, 32
+  offset: 0, 0
+  index: -1
+ToolTip
+  rotate: false
+  xy: 204, 2
+  size: 200, 32
+  orig: 200, 32
+  offset: 0, 0
+  index: -1
+Visited
+  rotate: false
+  xy: 406, 2
+  size: 33, 32
+  orig: 33, 32
   offset: 0, 0
   index: -1
