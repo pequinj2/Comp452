@@ -21,21 +21,23 @@ public class Heuristic {
     public Heuristic(Tile end){
         float id = end.getID();
         int x = (int)id/16;
-        int y = (int)id - (x * 16);
-        // Add 32 because each square is 32x32 pixels so this accounts for the distance travelling
-        endX = (x) * 32;
-        endY = (y) * 32;
+        int y = ((int)id - (x * 16));
+
+        // Translate the extracted x and y coordinates
+        // Multiply by 32 as this is the pixel size and add 16 as to signify the center of the tile
+        endX = x*32+16;
+        endY = y*32+16;
 
     }
 
     /**
      * This function will calculate the Euclidean distance from the current node to the target
      * node and return the calculated value.
-     * Euclidean distance reference:
-     * https://stackoverflow.com/questions/16869920/a-heuristic-calculation-with-euclidean-distance
+     * Chebyshev distance reference:
+     * https://www.reddit.com/r/roguelikedev/comments/59u44j/warning_a_and_manhattan_distance/
      * @return the distance between the current node and the target node
      */
-    public float estimatedCost(Tile currentTile){
+    public float estimatedCost(Tile currentTile, float cost){
         // Use the current node's ID to calculate the x and y coordinates
         float id = currentTile.getID();
         int currX = (int)id/16;
@@ -43,10 +45,14 @@ public class Heuristic {
 
         // x distance from current node to target node on the x-axis
         // y distance from current node to target node on the y-axis
-        float x = abs(endX - currX);
-        float y = abs(endY - currY);
+        // Translate the extracted x and y coordinates
+        // Multiply by 32 as this is the pixel size and add 16 as to signify the center of the tile
+        float x = abs(endX - (currX*32 +16));
+        float y = abs(endY - (currY*32+16));
 
-        float distance = (float) Math.sqrt((Math.pow(x,2) + Math.pow(y,2)));
+        float distance = cost * Math.max(x,y);
+        //float distance = (float) Math.sqrt((Math.pow(x,2) + Math.pow(y,2)));
+        //float distance = 10 * (x + y) - 6 * Math.min(x, y);
 
         return distance;
     }

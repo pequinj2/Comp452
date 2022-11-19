@@ -15,6 +15,7 @@ public class PathFindingAStar {
 
     private PriorityQueue<Tile> open;
     private RunMap simulation;
+    private float newEndCost;
 
     public PathFindingAStar(HashMap<Integer, Tile> graph, Tile start, Tile end, Heuristic hue){
         this.graph = graph;
@@ -23,7 +24,7 @@ public class PathFindingAStar {
         this.hue = hue;
 
         open = new PriorityQueue<>(256, new TileCompare());
-        start.setEstimatedTotalCost(hue.estimatedCost(start));
+        start.setEstimatedTotalCost(hue.estimatedCost(start, 1));
         start.setConnection(null);
         open.add(start);
 
@@ -34,27 +35,42 @@ public class PathFindingAStar {
     public Tile findPath(){
 
 
-        //while(!open.isEmpty()){
-            //System.out.println("Start while, size of open: " + open.size());
+
             current = open.poll();
-            //System.out.println("Current node: " + current.getID());
+            System.out.println("Current node: " + current.getID());
 
             // Get the connections attached to the current Tile
             List<Integer> connections = current.getConnections();
-            //System.out.println("Current node connections: " + connections);
+            System.out.println("Current node connections: " + connections);
+            float endCost = current.getEstimatedTotalCost();
+            System.out.println("Current node F cost: " + endCost);
 
             Tile connectionTile = current;
             for(Integer conn:connections){
                 connectionTile= graph.get(conn);
-                //System.out.println("This is the connection: " + conn);
+                System.out.println("This is the connection: " + conn);
                 // Get the 'F' cost
-                float endCost = connectionTile.getEstimatedTotalCost();
+                endCost = connectionTile.getEstimatedTotalCost();
                 // Get previous from Tiles cost and cost to the connection tile
                 // This is the new 'G' cost
                 float currentCost = current.getCostSoFar() + connectionTile.getCostSoFar();
-                //System.out.println("This is the new 'G' cost: " + currentCost);
+                System.out.println("This is the new 'G' cost: " + currentCost);
+
+                if(connectionTile.getNode().equals("End")){
+                    System.out.println("at end return");
+                    connectionTile.setCostSoFar(currentCost);
+                    connectionTile.setEstimatedTotalCost(currentCost);
+                    connectionTile.setConnection(current);
+                    if(!open.contains(connectionTile)){
+                        //System.out.println("*** ADD TO QUEUE ***");
+                        open.add(connectionTile);
+                    }
+                    current.setState(0);
+                    return current;
+                }
 
                 if(connectionTile.getState() == Tile.Category.CLOSED){
+                    System.out.println("*** In CLOSED ***");
                     // If a shorter route wasn't found then skip
                     if(connectionTile.getCostSoFar() <= currentCost){
                         continue;
@@ -62,49 +78,56 @@ public class PathFindingAStar {
                     // Else put it back on the open list
                     connectionTile.setState(1);
                     // Calculate new heuristic and set it
-                    float newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
-                    connectionTile.setEstimatedTotalCost(newEndCost);
+                    newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
+                    //connectionTile.setEstimatedTotalCost(newEndCost);
                 }
                 else if(connectionTile.getState() == Tile.Category.UNVISITED){
+                    System.out.println("*** In UNVISITED ***");
                     // Set Tile to 'OPEN'
                     connectionTile.setState(1);
                     // calculate estimated cost to end node and cost so far - update Tile
                     // Update 'F' cost
-                    connectionTile.setEstimatedTotalCost(hue.estimatedCost(connectionTile) + currentCost);
+                    //connectionTile.setEstimatedTotalCost(hue.estimatedCost(connectionTile) + currentCost);
+                    newEndCost =hue.estimatedCost(connectionTile, connectionTile.getCostSoFar());
                     //System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
-                    //System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile));
-                    connectionTile.setCostSoFar(currentCost);
-                    open.add(connectionTile);
+                    //System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile, connectionTile.getCostSoFar()));
+                    //connectionTile.setCostSoFar(currentCost);
+
 
                 }else{ // Else tile is 'OPEN'
+                    System.out.println("*** In OPEN ***");
                     // Compare the 'G' cost, if the route isn't better than skip
-                    if(connectionTile.getCostSoFar() <= currentCost){
+                    //.out.println("Old G cost in OPEN : " + connectionTile.getCostSoFar() );
+                    if(connectionTile.getCostSoFar() >= currentCost){
                         continue;
                     }
+                    newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
                     // Calculate new heuristic and set it
-                    float newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
-                    connectionTile.setEstimatedTotalCost(newEndCost);
+                    //float newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
+                    //connectionTile.setEstimatedTotalCost(newEndCost);
                     //System.out.println("Calculate new heuristic and set it: " + newEndCost);
 
                 }
 
+                System.out.println("*** UPDATE ALL ***");
+                //Update 'G' value
+                connectionTile.setCostSoFar(currentCost);
+                // Update 'F' cost with 'H' (pass to heuristic function) and 'G'
+                connectionTile.setEstimatedTotalCost(newEndCost + currentCost);
+                // Set the Tile connected to the tile we're currently at
                 connectionTile.setConnection(current);
+                System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
+                System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile, connectionTile.getCostSoFar()));
+
+                if(!open.contains(connectionTile)){
+                    System.out.println("*** ADD TO QUEUE ***");
+                    open.add(connectionTile);
+                }
 
             }
+            current.setState(0);
             return current;
 
-           // if(current.getNode().equals("End")){
-            //    break;
-           // }
-
-
-        //}
-        /*if(!(current.getNode().equals("End"))){
-            System.out.println("End node could not be reached :(");
-        }
-        else{
-            printOut();
-        }*/
 
     }
 

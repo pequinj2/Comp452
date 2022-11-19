@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.bugwars.Assignment1.SpiderIntro;
 import com.bugwars.Assignment2.ToolTip;
 import com.bugwars.Helper.FadeScreen;
 import com.bugwars.PauseMenu;
@@ -34,8 +33,8 @@ public class Game1 implements Screen {
 
     private TileSelector tileSelector;
     private ToolTip tooltip;
-    private GenerateGraph map;
-    private HashMap<Integer, Tile> graph;
+    private GenerateGraph graph;
+    private HashMap<Integer, Tile> map;
     private Heuristic hue;
 
     private Boolean run = false;
@@ -85,7 +84,7 @@ public class Game1 implements Screen {
             }
             else{ // No problem with map found, create the priority queue and generate map with algorithm
                 if(!mapCreated) {
-                    map = tileSelector.getMap();
+                    graph = tileSelector.getMap();
                     runAStar = true; // Set true to run simulation in next world step
                     run = false;
                     tileSelector.setRun(); // To false because map is ready for simulation
@@ -94,11 +93,12 @@ public class Game1 implements Screen {
 
         } else if(runAStar){
             // Get the graph and tile connections from the user generated map
-            graph = map.getQueue();
-            Tile srt = map.getStartTile();
-            Tile end = map.getEndTile();
+            map = graph.getQueue();
+            Tile srt = graph.getStartTile();
+            Tile end = graph.getEndTile();
             hue = new Heuristic(end); // Ready heuristic with desired end node
-            path = new PathFindingAStar(graph, srt, end, hue);
+            //graph.setHeuristics(hue);
+            path = new PathFindingAStar(map, srt, end, hue);
             runAStar = false; // Set true to run simulation in next world step
             //simulation = new RunMap(tileSelector.getBtnList(), camera);
             //path.setSimulation(simulation);

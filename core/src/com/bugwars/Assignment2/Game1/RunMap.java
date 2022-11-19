@@ -67,6 +67,7 @@ public class RunMap implements Screen {
                 cell.setTile(tile);
                 mapLayer.setCell(i,j, cell.setFlipVertically(true));
                 layers.add(mapLayer);
+
             }
         }
 
@@ -96,7 +97,6 @@ public class RunMap implements Screen {
         camera.update();
         renderer.setView(camera);
 
-
         if(current == null) {
             currentTime = millis();
             if(currentTime >= startTime){
@@ -106,7 +106,7 @@ public class RunMap implements Screen {
             }
         }
         else if(!(current.getNode().equals("End"))){
-            System.out.println("In else if");
+            //System.out.println("In else if");
             currentTime = millis();
             if(currentTime >= startTime){
                 setVisitedTile(current);
@@ -114,8 +114,13 @@ public class RunMap implements Screen {
                 startTime = millis() + 1000;
             }
         }
-        else if(visited.getNode().equals("End")){
-            System.out.println("In else");
+        else if(current.getNode().equals("End")){
+            System.out.println("In end");
+            while(!(current.getNode().equals("Start"))){
+                Tile getConnectingNode = current.getConnection();
+                System.out.println(getConnectingNode.getID());
+                current = getConnectingNode;
+            }
 
         }
 

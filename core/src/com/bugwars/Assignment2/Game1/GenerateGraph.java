@@ -77,12 +77,6 @@ public class GenerateGraph {
 
             }
         }
-
-        /*while(!queue.isEmpty()){
-            System.out.println(queue.remove().getID());
-        }*/
-
-
     }
 
     /**
@@ -314,5 +308,13 @@ public class GenerateGraph {
 
     public Tile getEndTile(){
         return endTile;
+    }
+
+    public void setHeuristics(Heuristic hue) {
+        for(Tile tile : graph.values()){
+            tile.setEstimatedTotalCost(hue.estimatedCost(tile, tile.getCostSoFar()));
+
+        }
+
     }
 }
