@@ -88,7 +88,7 @@ public class MainMenuScreen implements Screen {
         tbl2.row();
         tbl2.add(back).width(320).padTop(20);
 
-        Gdx.input.setInputProcessor(stg);
+
 
         assignment1.addListener(new ChangeListener() {
             @Override
@@ -132,7 +132,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0,0,0.2f,1);
-
+        Gdx.input.setInputProcessor(stg);
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 

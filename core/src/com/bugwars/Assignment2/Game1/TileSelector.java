@@ -96,7 +96,7 @@ public class TileSelector {
             }
         });
 
-        Gdx.input.setInputProcessor(stg);
+
 
         /**
          * Attach listeners to all of the Left Side Bar Buttons using method 'addClickListeners'
@@ -177,6 +177,7 @@ public class TileSelector {
     }
 
     public void render(SpriteBatch batch){
+        Gdx.input.setInputProcessor(stg);
         Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stg.act(Gdx.graphics.getDeltaTime());
@@ -301,7 +302,6 @@ public class TileSelector {
         }
 
         stg.addActor(tbl);
-
 
     }
 
@@ -429,6 +429,9 @@ public class TileSelector {
 
     public Button[] getBtnList(){
         return btnTiles;
+    }
+
+    public void setBtnList(Button[] btnTiles) {
     }
 }
 

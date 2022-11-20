@@ -92,6 +92,7 @@ public class Assignment1 implements Screen {
         this.world = new World(new Vector2(0,0), false); //Gravity is the Vector2
         this.box2DBug = new Box2DDebugRenderer();
         this.pauseMenu = new PauseMenu(this, game, camera);
+        pauseMenu.assignment1Listeners();
         this.tileMapHelper = new TileMapHelper(this);
         /**
          * Getting the map we've loaded from TileMapHelper, may need to pass in String name to

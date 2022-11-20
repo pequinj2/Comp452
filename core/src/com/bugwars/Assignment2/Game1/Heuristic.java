@@ -50,9 +50,8 @@ public class Heuristic {
         float x = abs(endX - (currX*32 +16));
         float y = abs(endY - (currY*32+16));
 
+        // Multiply by the cost of the tile because we're using a weighted graph
         float distance = cost * Math.max(x,y);
-        //float distance = (float) Math.sqrt((Math.pow(x,2) + Math.pow(y,2)));
-        //float distance = 10 * (x + y) - 6 * Math.min(x, y);
 
         return distance;
     }

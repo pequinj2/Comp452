@@ -66,6 +66,7 @@ public class FadeScreen implements Screen {
 
         if (change > 1){
             fade = false;
+
             current.dispose(); // Dispose of previous screen asset
         }
         else if (change <= 0 && fade == false) {

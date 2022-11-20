@@ -1,5 +1,6 @@
 package com.bugwars.Assignment2.Game1;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,12 +8,18 @@ import java.util.List;
  * on the map to customize the route the "Ant" will take. This class extends the Actor class so
  * it can be used with the Table variable in GenerateGraph.java.
  */
-public class Tile {
+public class Tile implements Serializable {
 
     private float costSoFar;
     private float estimatedTotalCost;
     private String node = "";
     private List<Integer> list;
+
+    public Tile(int tileID) {
+        this.tileID = tileID;
+    }
+
+
     public enum Category{
         CLOSED, OPEN, UNVISITED
     }
@@ -31,6 +38,16 @@ public class Tile {
         this.estimatedTotalCost = estimatedTotalCost;
         currentState = Category.UNVISITED;
 
+    }
+
+    public Tile(Tile tile) {
+        this.tileID = tile.tileID;
+        this.img = tile.img;
+        this.list = tile.list;
+        this.costSoFar = tile.costSoFar;
+        this.estimatedTotalCost = tile.estimatedTotalCost;
+        this.currentState = tile.currentState;
+        this.node = tile.node;
     }
 
     public void setStart(){
@@ -99,4 +116,5 @@ public class Tile {
     public Tile getConnection(){
         return connection;
     }
+
 }

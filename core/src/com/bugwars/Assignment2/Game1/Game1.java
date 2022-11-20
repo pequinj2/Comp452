@@ -1,6 +1,7 @@
 package com.bugwars.Assignment2.Game1;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,8 +19,6 @@ import java.util.HashMap;
 public class Game1 implements Screen {
 
     private SpriteBatch batch, hudBatch; //To render our sprites
-    private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
-    private Box2DDebugRenderer box2DBug;
     private OrthographicCamera camera;
     private BugWars game;
     private Stage stg;
@@ -27,9 +26,6 @@ public class Game1 implements Screen {
     // Pause Menu
     private boolean isPaused = false;
     private PauseMenu pauseMenu;
-
-    private int viewPortWidth = 300;
-    private int viewPortHeight = 350;
 
     private TileSelector tileSelector;
     private ToolTip tooltip;
@@ -43,13 +39,14 @@ public class Game1 implements Screen {
     private Boolean aStarSimulation = false;
     private Boolean stopSimulation = false;
 
-    private RunMap simulation;
     private PathFindingAStar path;
+
 
     public Game1(OrthographicCamera camera, BugWars game){
         this.game = game;
         this.camera = camera;
         this.pauseMenu = new PauseMenu(this, game, camera);
+        pauseMenu.assignment2Game1Listeners();
         stg = new Stage();
         //set Cameras
         //camera.setToOrtho(false, viewPortWidth, viewPortHeight); // Camera is effecting the size of the tile map shown
@@ -57,6 +54,7 @@ public class Game1 implements Screen {
         batch = new SpriteBatch();
         tooltip = new ToolTip(camera);
     }
+
 
 
     @Override
@@ -67,6 +65,9 @@ public class Game1 implements Screen {
     private void update(){
         // Get status of Run button
         run = tileSelector.getRun();
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            isPaused = !isPaused;
+        }
     }
 
     @Override
@@ -75,7 +76,7 @@ public class Game1 implements Screen {
 
         if(isPaused){ // check if game is paused
             pause();
-        }if(run) { // If true, user is done making the tile map
+        }else if(run) { // If true, user is done making the tile map
             // There is a problem with the map, issue warning
             if(tileSelector.getWarningText() != "") {
                 tileSelector.render(batch); // Show warning
@@ -103,7 +104,7 @@ public class Game1 implements Screen {
             //simulation = new RunMap(tileSelector.getBtnList(), camera);
             //path.setSimulation(simulation);
             aStarSimulation = true;
-            game.setScreen(new FadeScreen(game, this, new RunMap(tileSelector.getBtnList(), camera, path)));
+            game.setScreen(new FadeScreen(game, this, new RunMap(tileSelector.getBtnList(), camera, path, game)));
         }
         else {
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
@@ -157,5 +158,9 @@ public class Game1 implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public Game1 getNewGame(){
+        return new Game1(camera, game);
     }
 }
