@@ -27,8 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
 import com.bugwars.PauseMenu;
@@ -50,7 +48,7 @@ public class RunMap implements Screen {
     private MapLayers layers;
     private TiledMapTileLayer mapLayer;
     private PathFindingAStar path;
-    private Tile visited, current, start;
+    private Tile current;
     private long currentTime, startTime;
     private TextButton endBtn, redoBtn, mapBtn;
     private BitmapFont font, warningFont;
@@ -165,6 +163,9 @@ public class RunMap implements Screen {
             public void clicked (InputEvent event, float x, float y) {
                 startTime = millis() + 2000;
                 resetMap(); // reset map
+                // Create the TiledMap of the map the user created
+                startingMap();
+                current = path.getStart();
                 path.resetStart();
             }
         });
@@ -217,6 +218,7 @@ public class RunMap implements Screen {
             else if (current.getNode().equals("End")) {
                 Tile check = current;
                 totalCost = (int)current.getCostSoFar();
+                totalConnections = 0;
                 while (!(check.getNode().equals("Start"))) {
                     totalConnections++;
                     Tile getConnectingNode = check.getConnection();
@@ -318,7 +320,7 @@ public class RunMap implements Screen {
      * @param visitedPath
      */
     public void setVisitedTile(Tile visitedPath){
-        visited = visitedPath;
+
         if(visitedPath != null) {
             float id = visitedPath.getID();
             int x = (int) id / 16;
@@ -354,7 +356,7 @@ public class RunMap implements Screen {
      * @param endPath
      */
     public void setEndingTile(Tile endPath){
-        visited = endPath;
+
         float id = endPath.getID();
         int x = (int)id/16;
         int y = (int)id - (x * 16);
@@ -405,7 +407,7 @@ public class RunMap implements Screen {
     }
 
     private void reachedGoalMessage(){
-        String warningText = "Berry has been found!\nIt took " + totalConnections + "moves and had a path cost of " + totalCost;
+        String warningText = "Berry has been found!\nIt took " + totalConnections + " moves and had a path cost of " + totalCost;
         batch.begin();
         warningFont.draw(batch, warningText, 200, 800);
         batch.end();

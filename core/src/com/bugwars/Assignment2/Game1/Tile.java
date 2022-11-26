@@ -14,22 +14,22 @@ public class Tile implements Serializable {
     private float estimatedTotalCost;
     private String node = "";
     private List<Integer> list;
-
-    public Tile(int tileID) {
-        this.tileID = tileID;
-    }
-
-
     public enum Category{
         CLOSED, OPEN, UNVISITED
     }
     private Category currentState;
-    // Intertwine PriorityQueue and node array pg 229
-    private Tile nextTile;
     private String img;
     private int tileID;
     private Tile connection;
 
+    /**
+     * Main Tile constructor used to create new Tile Objects
+     * @param tileID
+     * @param img
+     * @param list - list of the Tile's neighbours and their IDs
+     * @param costSoFar - G cost
+     * @param estimatedTotalCost - F cost
+     */
     public Tile(int tileID, String img, List<Integer> list, float costSoFar, float estimatedTotalCost){
         this.tileID = tileID;
         this.img = img;
@@ -40,6 +40,10 @@ public class Tile implements Serializable {
 
     }
 
+    /**
+     * Constructor used to create a copy of a Tile
+     * @param tile
+     */
     public Tile(Tile tile) {
         this.tileID = tile.tileID;
         this.img = tile.img;
@@ -49,6 +53,18 @@ public class Tile implements Serializable {
         this.currentState = tile.currentState;
         this.node = tile.node;
     }
+
+    /**
+     * Constructor used to create a Tile with no other value besides it's ID - 'noGaol' Tile in PathFindingAStar.java
+     * @param tileID
+     */
+    public Tile(int tileID) {
+        this.tileID = tileID;
+    }
+
+    /**
+     * Below are all the getters and setters needed for the Tile objects
+     */
 
     public void setStart(){
         node = "Start";
@@ -96,6 +112,10 @@ public class Tile implements Serializable {
         return tileID;
     }
 
+    /**
+     * Check if node has a label
+     * @return the label of the tile - whether its labeled "Start" or "End"
+     */
     public String getNode(){
         return node;
     }

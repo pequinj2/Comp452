@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+/**
+ * This class is the main A* algorithm, that will initialize the priority queue (a min-heap), set
+ * the starting tile and the 'noGaol' tile to mark if a goal can not be found.
+ */
 public class PathFindingAStar {
 
     private HashMap<Integer, Tile> graph;
@@ -12,124 +16,124 @@ public class PathFindingAStar {
     private Heuristic hue;
 
     private PriorityQueue<Tile> open;
-    private RunMap simulation;
     private float newEndCost;
     private float initializedStart;
 
     public PathFindingAStar(HashMap<Integer, Tile> graph, Tile start, Tile end, Heuristic hue){
         this.graph = graph;
+        // Set the original state of the graph - this is used later if the user wants to redo the
+        // simulation
         setHashMap(graph);
         this.start = start;
+        // Keep a record of the start node - used if the simulation is set to be redone
         initializedStart = start.getID();
         this.end = end;
         this.hue = hue;
 
+        // Initialize the 'open' list as a min-heap priority queue and use the custom comparator
+        // This comparator will compare the 'estimatedTotalCost' (or F(n)) when sorting
         open = new PriorityQueue<>(256, new TileCompare());
+        // Set heuristic value
         start.setEstimatedTotalCost(hue.estimatedCost(start, 1));
+        // Set connection to Null because we don't know what Tile the Ant will move to yet
         start.setConnection(null);
+        // Add to our queue
         open.add(start);
 
+        // Initialize Tile that will be returned if the no goal can be found
+        // Only the -1 ID is set because it doesn't need any other info
         noGoal = new Tile(-1);
 
     }
 
+    /**
+     * A* Algorithm implementation
+     * Keeping polling the top of the priority queue until either the 'End' Tile is found or there
+     * are no more tiles to get from the queue.
+     * @return Tile that was currently looked at or the 'noGoal' Tile if there are no more tiles to
+     * look at
+     */
     public Tile findPath(){
 
+        // Check if there are any more tiles to be searched - if not, return the 'noGoal' Tile
         if(open.size() == 0){
-            System.out.println("no more nodes :(");
             return noGoal;
         }
         else {
+            // Get the Tile with the lowest F(n) cost
             current = open.poll();
-            System.out.println("Current node: " + current.getID());
-
             // Get the connections attached to the current Tile
             List<Integer> connections = current.getConnections();
-            System.out.println("Current node connections: " + connections);
-            float endCost = current.getEstimatedTotalCost();
-            System.out.println("Current node F cost: " + endCost);
 
-            Tile connectionTile = current;
+            // Parse through the Tiles that are neighbors to the current tile we're at
             for (Integer conn : connections) {
-                connectionTile = graph.get(conn);
-                System.out.println("This is the connection: " + conn);
-                // Get the 'F' cost
-                endCost = connectionTile.getEstimatedTotalCost();
-                // Get previous from Tiles cost and cost to the connection tile
-                // This is the new 'G' cost
-                float currentCost = current.getCostSoFar() + connectionTile.getCostSoFar();
-                System.out.println("This is the new 'G' cost: " + currentCost);
+                // Fetch the Tile thats connected to the current tile
+                Tile connectionTile = graph.get(conn);
 
+                // Get the new 'G' cost by adding the current tile 'costSoFar' to the connecting
+                // tile's cost
+                float currentCost = current.getCostSoFar() + connectionTile.getCostSoFar();
+
+                // If we found the Berry then calculate costs and return
                 if (connectionTile.getNode().equals("End")) {
-                    System.out.println("at end return");
+
                     connectionTile.setCostSoFar(currentCost);
                     connectionTile.setEstimatedTotalCost(currentCost);
+                    // Set the connection from the current tile to the neighbor tile - this is used
+                    // to back track and get the shortest path
                     connectionTile.setConnection(current);
+                    // Add the connecting tile to the open queue if its not there
                     if (!open.contains(connectionTile)) {
-                        //System.out.println("*** ADD TO QUEUE ***");
                         open.add(connectionTile);
                     }
+                    // Set current Tile's state to closed
                     current.setState(0);
                     return current;
                 }
 
+                // If Berry is not found then keep searching
+                // If neighbor tile is 'CLOSED', double check for shorter path else continue
                 if (connectionTile.getState() == Tile.Category.CLOSED) {
-                    System.out.println("*** In CLOSED ***");
                     // If a shorter route wasn't found then skip
                     if (connectionTile.getCostSoFar() <= currentCost) {
                         continue;
                     }
-                    // Else put it back on the open list
+                    // Else set state as open
                     connectionTile.setState(1);
                     // Calculate new heuristic and set it
                     newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
-                    //connectionTile.setEstimatedTotalCost(newEndCost);
+
+                    // If tile is 'UNVISITED' then calculate heuristic and put it in the open list
                 } else if (connectionTile.getState() == Tile.Category.UNVISITED) {
-                    System.out.println("*** In UNVISITED ***");
                     // Set Tile to 'OPEN'
                     connectionTile.setState(1);
-                    // calculate estimated cost to end node and cost so far - update Tile
-                    // Update 'F' cost
-                    //connectionTile.setEstimatedTotalCost(hue.estimatedCost(connectionTile) + currentCost);
+                    // calculate new heuristic
                     newEndCost = hue.estimatedCost(connectionTile, connectionTile.getCostSoFar());
-                    //System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
-                    //System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile, connectionTile.getCostSoFar()));
-                    //connectionTile.setCostSoFar(currentCost);
-
 
                 } else { // Else tile is 'OPEN'
-                    System.out.println("*** In OPEN ***");
                     // Compare the 'G' cost, if the route isn't better than skip
-                    //.out.println("Old G cost in OPEN : " + connectionTile.getCostSoFar() );
-                    if (connectionTile.getCostSoFar() >= currentCost) {
+                    if (connectionTile.getCostSoFar() <= currentCost) {
                         continue;
                     }
+                    // calculate new heuristic
                     newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
-                    // Calculate new heuristic and set it
-                    //float newEndCost = connectionTile.getEstimatedTotalCost() - connectionTile.getCostSoFar();
-                    //connectionTile.setEstimatedTotalCost(newEndCost);
-                    //System.out.println("Calculate new heuristic and set it: " + newEndCost);
 
                 }
 
-                System.out.println("*** UPDATE ALL ***");
                 //Update 'G' value
                 connectionTile.setCostSoFar(currentCost);
                 // Update 'F' cost with 'H' (pass to heuristic function) and 'G'
-                System.out.println("This is the new 'H' cost: " + newEndCost);
                 connectionTile.setEstimatedTotalCost(newEndCost + currentCost);
                 // Set the Tile connected to the tile we're currently at
                 connectionTile.setConnection(current);
-                System.out.println("This is the new 'F' cost: " + connectionTile.getEstimatedTotalCost());
-                //System.out.println("This is the new 'H' cost: " + hue.estimatedCost(connectionTile, connectionTile.getCostSoFar()));
 
+                // If tile is not in Open tile then add it
                 if (!open.contains(connectionTile)) {
-                    System.out.println("*** ADD TO QUEUE ***");
                     open.add(connectionTile);
                 }
 
             }
-
+            // Set current Tile's state to 'CLOSED' then return
             current.setState(0);
             return current;
 
@@ -137,36 +141,39 @@ public class PathFindingAStar {
 
     }
 
-     /*public void render(){
-        Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        simulation.render(Gdx.graphics.getDeltaTime());
-    }*/
-
-
+    /**
+     * Helper function that clear the modified graph and reset the 'open' priority queue along with
+     * the 'Start' tile's initial values.
+     */
     public void resetStart(){
         graph.clear();
+        // Reset the graph to the original state the user had it in
         copyHashMap(startingGraph);
-        System.out.println(graph.size());
         open.clear();
+        //Reset stat tile and add to empty priority queue
         start = graph.get((int)initializedStart);
         start.setEstimatedTotalCost(hue.estimatedCost(start, 1));
         start.setConnection(null);
-        System.out.println(start.getID());
         open.add(start);
     }
 
 
-
+    /**
+     * Helper function that takes in a graph and copies it to the main 'graph' variable used in the
+     * A* algorithm
+     * @param oldGraph
+     */
     private void copyHashMap(HashMap<Integer, Tile> oldGraph){
-        //HashMap<Integer, Tile> newGraph = new HashMap<Integer, Tile>();
         for(Integer tileID : oldGraph.keySet()){
             graph.put(tileID, new Tile(oldGraph.get(tileID)));
         }
 
     }
 
+    /**
+     * Helper function that makes a copy of a graph and stores it for later reference
+     * @param oldGraph
+     */
     private void setHashMap(HashMap<Integer, Tile> oldGraph){
         startingGraph = new HashMap<Integer, Tile>();
         for(Integer tileID : oldGraph.keySet()){
@@ -174,10 +181,11 @@ public class PathFindingAStar {
         }
 
     }
-    private void dispose(){
 
-    }
-
+    /**
+     * Get the Starting Tile
+     * @return
+     */
     public Tile getStart() {
         return start;
     }

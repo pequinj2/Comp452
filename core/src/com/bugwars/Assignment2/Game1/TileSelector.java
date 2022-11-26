@@ -423,7 +423,11 @@ public class TileSelector {
         return warningText;
     }
 
-    public GenerateGraph getMap() {
+    /**
+     * Return the
+     * @return
+     */
+    public GenerateGraph getGraph() {
         return map;
     }
 
