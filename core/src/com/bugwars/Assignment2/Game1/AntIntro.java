@@ -1,10 +1,9 @@
-package com.bugwars.Assignment2;
+package com.bugwars.Assignment2.Game1;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -13,18 +12,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
-import com.bugwars.Assignment1.Assignment1;
-import com.bugwars.Assignment2.Game1.Game1;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
 
 /**
- * This class will give the player the introduction to the Assignment1 and a simple player objective
- * - Destroy the evil centipede!!
+ * This class will give the player the introduction to the Assignment2 Game 1 and a simple player
+ * objective
  */
 public class AntIntro implements Screen {
 
-    private String text1 = "Hello world!!";
     private Texture spiderImg, boarderImg;
     private SpriteBatch batch;
     private int screenWidth = 1216;
@@ -49,18 +45,15 @@ public class AntIntro implements Screen {
     private int numOfChars3 = 0;
     private boolean delayStartingText = true;
     private int textStartX = 40;
-    private int subStrintStart = 0;
+    private int subStringStart = 0;
     private boolean nextFlag = false;
     private boolean nextFlag2 = false;
+    private boolean textFinished = false;
 
     // Audio
-    private Music spiderV;
+    private Music antV;
 
     // Text
-    private FileHandle handle;
-    private String textLines[];
-    private String showTextLines[] = new String[3];
-    private int currentStringLine = 0;
     private int delayTime = 2;
     private int nextPage = 100;
     private int count = 0;
@@ -86,9 +79,9 @@ public class AntIntro implements Screen {
         generator.dispose(); // Once font is generated dispose of the generator
 
         // Get Sound files - https://happycoding.io/tutorials/libgdx/sound
-        spiderV = Gdx.audio.newMusic(Gdx.files.internal("Sound/SpiderIntro/untitled #85 -2.wav"));
-        spiderV.setLooping(false);
-        
+        antV = Gdx.audio.newMusic(Gdx.files.internal("Assignment2/AntInto/AntIntro.wav"));
+        antV.setLooping(true);
+
 
 
 
@@ -126,7 +119,7 @@ public class AntIntro implements Screen {
 
                 if (numOfChars < string1.length()) {
                     currentCharTime += delta;
-                    System.out.println(" Check times " + currentCharTime + " current char time " + charTimer);
+
                     if (currentCharTime >= charTimer) {
                         currentCharTime = 0;
                         numOfChars++;
@@ -136,9 +129,12 @@ public class AntIntro implements Screen {
                     nextFlag = true;
 
                 }
-                System.out.println("This is the substring " + string1.substring(subStrintStart, numOfChars) + "Sub start " +subStrintStart+ " numof char "+numOfChars);
-                spiderV.play(); // Start playing spider voice
-                font.draw(batch, string1.substring(subStrintStart, numOfChars), textStartX, 160);
+
+                if(!textFinished){
+                    antV.play(); // Start playing spider voice
+                }
+
+                font.draw(batch, string1.substring(subStringStart, numOfChars), textStartX, 160);
 
             }
 
@@ -154,14 +150,15 @@ public class AntIntro implements Screen {
                 } else {
                     nextFlag2 = true;
                 }
-                font.draw(batch, string2.substring(subStrintStart, numOfChars2), textStartX, 120);
+                font.draw(batch, string2.substring(subStringStart, numOfChars2), textStartX, 120);
             }
             if (nextFlag2 == true) {
-                System.out.println("Flag2 running");
+
                 if(string3.equals("< Press SPACE to Start >")){
-                    spiderV.stop();
-                    subStrintStart = 0;
+                    antV.stop();
+                    subStringStart = 0;
                     numOfChars3 = string3.length();
+                    textFinished = true;
                 }else {
                     if (numOfChars3 < string3.length()) {
                         currentCharTime3 += delta;
@@ -172,7 +169,7 @@ public class AntIntro implements Screen {
                     }
 
                     if (numOfChars3 == string3.length()) {
-                        spiderV.stop(); // Text is done, stop playing spider voice
+                        antV.stop(); // Text is done, stop playing spider voice
 
                         if(count == nextPage){
 
@@ -198,7 +195,7 @@ public class AntIntro implements Screen {
 
                     }
                 }
-                font.draw(batch, string3.substring(subStrintStart, numOfChars3), textStartX, 80);
+                font.draw(batch, string3.substring(subStringStart, numOfChars3), textStartX, 80);
 
             }
         }
@@ -243,7 +240,7 @@ public class AntIntro implements Screen {
 
     @Override
     public void dispose() {
-        spiderV.dispose();
+        antV.dispose();
         spiderImg.dispose();
         boarderImg.dispose();
         batch.dispose();

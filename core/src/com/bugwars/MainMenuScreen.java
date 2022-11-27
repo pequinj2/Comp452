@@ -3,7 +3,6 @@ package com.bugwars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,10 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.bugwars.Assignment1.Assignment1;
 import com.bugwars.Assignment1.SpiderIntro;
-import com.bugwars.Assignment2.AntIntro;
-import com.bugwars.Assignment2.Game1.Game1;
+import com.bugwars.Assignment2.Game1.AntIntro;
 import com.bugwars.Helper.FadeScreen;
 
 /**

@@ -21,7 +21,7 @@ import java.util.HashMap;
  */
 public class Game1 implements Screen {
 
-    private SpriteBatch batch, hudBatch; //To render our sprites
+    private SpriteBatch batch;
     private OrthographicCamera camera;
     private BugWars game;
     private Stage stg;
@@ -154,8 +154,8 @@ public class Game1 implements Screen {
 
     @Override
     public void dispose() {
-        //batch.dispose();
-        //stg.dispose();
+        batch.dispose();
+        stg.dispose();
         pauseMenu.dispose();
         //tileSelector.dispose();
 
