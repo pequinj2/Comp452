@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.bugwars.Assignment1.Assignment1;
 import com.bugwars.Assignment2.Game1.Game1;
+import com.bugwars.Assignment2.Game2.Game2;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
 import com.bugwars.MainMenuScreen;
@@ -155,4 +156,27 @@ public class PauseMenu {
     }
 
 
+    public void assignment2Game2Listeners() {
+        retry.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new Game2(camera, game) ));
+            }
+        });
+
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                Gdx.app.exit();
+            }
+        });
+
+        mainMenuReturn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new MainMenuScreen(game)));
+            }
+        });
+    }
 }
