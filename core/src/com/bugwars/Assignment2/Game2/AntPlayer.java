@@ -7,8 +7,7 @@ public class AntPlayer {
     private enum GetState{
         SEARCH_FOOD,
         SEARCH_WATER,
-        FIND_HOME,
-        DIE
+        FIND_HOME
     }
 
     private StateManager currentState;
