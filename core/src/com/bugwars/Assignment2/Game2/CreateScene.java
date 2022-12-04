@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.bugwars.Helper.AssetManager;
 
+import java.util.Random;
+
 public class CreateScene {
 
     private TiledMapTileLayer.Cell cell;
@@ -14,10 +16,12 @@ public class CreateScene {
     private MapLayers layers;
     private TiledMapTileLayer mapLayer;
     private TiledMap map;
+    private Random randomNum;
+    private AssetManager assetMgr;
 
 
     public CreateScene(AssetManager assetMgr){
-
+        this.assetMgr = assetMgr;
         map = new TiledMap();
         layers = map.getLayers();
         mapLayer = new TiledMapTileLayer(16, 16, 32, 32);
@@ -33,10 +37,69 @@ public class CreateScene {
 
             }
         }
+
+        randomNum = new Random();
+
     }
 
 
     public TiledMap getMap() {
         return map;
+    }
+
+    public void generateBerry(){
+        int tempI = randomNum.nextInt(16) + 1;
+        int tempJ = randomNum.nextInt(16) + 1;
+
+        cell = mapLayer.getCell(tempI,tempJ);
+
+        while (!(cell.getTile().getTextureRegion().equals(assetMgr.getDirt()))){
+            tempI = randomNum.nextInt(16) + 1;
+            tempJ = randomNum.nextInt(16) + 1;
+
+            cell = mapLayer.getCell(tempI,tempJ);
+        }
+
+        TiledMapTile newTile = new StaticTiledMapTile(assetMgr.getFood());
+        cell = mapLayer.getCell(tempI,tempJ);
+        cell.setTile(newTile);
+    }
+
+    public void generateItems(int itemID){
+        int tempI = randomNum.nextInt(16) + 1;
+        int tempJ = randomNum.nextInt(16) + 1;
+
+        cell = mapLayer.getCell(tempI,tempJ);
+
+        while (!(cell.getTile().getTextureRegion().equals(assetMgr.getDirt()))){
+            tempI = randomNum.nextInt(16) + 1;
+            tempJ = randomNum.nextInt(16) + 1;
+
+            cell = mapLayer.getCell(tempI,tempJ);
+        }
+
+        TiledMapTile newTile;
+        switch(itemID){
+            case 0:
+                newTile = new StaticTiledMapTile(assetMgr.getFood());
+                break;
+            case 1:
+                newTile = new StaticTiledMapTile(assetMgr.getPoison());
+                break;
+            case 2:
+                newTile = new StaticTiledMapTile(assetMgr.getWater());
+                break;
+            default:
+                newTile = new StaticTiledMapTile(assetMgr.getDirt());
+                break;
+        }
+
+        cell = mapLayer.getCell(tempI,tempJ);
+        cell.setTile(newTile);
+
+    }
+
+    public void generateWater(){
+
     }
 }

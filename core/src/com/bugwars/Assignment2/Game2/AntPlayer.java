@@ -1,5 +1,6 @@
 package com.bugwars.Assignment2.Game2;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.bugwars.Assignment2.Game2.States.FindFood;
 
 public class AntPlayer {
@@ -12,7 +13,7 @@ public class AntPlayer {
 
     private StateManager currentState;
 
-    public AntPlayer(){
+    public AntPlayer(TextureRegion antPic){
         currentState = new FindFood();
 
     }

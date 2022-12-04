@@ -11,9 +11,12 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.bugwars.BugWars;
+import com.bugwars.Helper.AntFactory;
 import com.bugwars.Helper.AssetManager;
 import com.bugwars.PauseMenu;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import java.util.ArrayList;
 
 public class Game2 implements Screen {
 
@@ -35,7 +38,13 @@ public class Game2 implements Screen {
     // Player Hud
     private Hud hud;
 
+    // Get how many ants the user wants
     private Boolean getUserInput = true;
+
+    // Ants
+    private AntPlayer currentAnt;
+    private AntFactory antFact;
+    private ArrayList<AntPlayer> ants = new ArrayList<AntPlayer>();
 
     public Game2 (OrthographicCamera camera, BugWars game){
         this.camera = camera;
@@ -45,13 +54,13 @@ public class Game2 implements Screen {
         assetMgr = new AssetManager();
         scene = new CreateScene(assetMgr);
         batch = new SpriteBatch();
+        antFact = new AntFactory(assetMgr);
 
         // Load the TiledMap for rendering and set the viewport
         map = scene.getMap();
-        renderer = new OrthogonalTiledMapRenderer(map);
-        camera.setToOrtho(false, viewPortWidth, viewPortHeight);
-        camera.position.x = 255;
-        //camera.position.y = 255;
+
+
+        // load initial world objects
 
         // Load Hud
         hud = new Hud(assetMgr);
@@ -67,6 +76,8 @@ public class Game2 implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             isPaused = !isPaused;
         }
+
+
     }
 
     @Override
@@ -77,15 +88,32 @@ public class Game2 implements Screen {
         if(isPaused){ // check if game is paused
             pause();
         }
-        else if (getUserInput){
+        else if (getUserInput){ // Game starts - get the number of ants the user wants to start with
+            Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             Stage stg = hud.getStg();
             stg.draw();
             stg.act();
             Gdx.input.setInputProcessor(stg);
             if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+
                 if(hud.getText()){
                     getUserInput = false;
                     stg.dispose();
+                    int numOfAnts = hud.getNumOfAnts();
+                    // For the number of ants the user wants, call the ant factory to make a new one
+                    for(int i=0; i < numOfAnts; i++){
+                        ants.add(antFact.makeAnt());
+                    }
+                    scene.generateItems(0);
+                    scene.generateItems(0);
+                    scene.generateItems(1);
+                    scene.generateItems(1);
+                    renderer = new OrthogonalTiledMapRenderer(map);
+                    camera.setToOrtho(true, viewPortWidth, viewPortHeight);
+                    camera.position.x = 255;
+                    camera.position.y = 210;
+
                 }
             }
         }

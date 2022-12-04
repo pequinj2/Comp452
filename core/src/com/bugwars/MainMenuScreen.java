@@ -3,6 +3,7 @@ package com.bugwars;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -27,10 +28,12 @@ public class MainMenuScreen implements Screen {
 
     final BugWars game;
     private OrthographicCamera camera;
+    private Texture startImg, bugWarsImg;
 
     private SpriteBatch pauseBatch;
 
-    private TextButton assignment1, assignment2, assignment2Game1, assignment2Game2, back;
+    private TextButton assignment1, assignment2, assignment3, assignment2Game1, assignment2Game2,
+            assignment3Game1, assignment3Game2, back;
     private BitmapFont font;
 
     private Stage stg;
@@ -49,7 +52,7 @@ public class MainMenuScreen implements Screen {
         tbl = new Table();
         tbl2 = new Table();
         stg.addActor(tbl);
-        tbl.setDebug(true);
+        //tbl.setDebug(true);
         tbl.setFillParent(true);
         tbl2.setDebug(true);
         tbl2.setFillParent(true);
@@ -58,6 +61,9 @@ public class MainMenuScreen implements Screen {
 
         buttons = new TextureAtlas((Gdx.files.internal("Hud/Buttons.atlas")));
         skin.addRegions(buttons);
+
+        startImg = new Texture(Gdx.files.internal("Assignment2/StartMenu.png"));
+        bugWarsImg = new Texture(Gdx.files.internal("bugwarssplash.png"));
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Retro Gaming.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -72,16 +78,21 @@ public class MainMenuScreen implements Screen {
 
         assignment1 = new TextButton("Assignment 1",style);
         assignment2 = new TextButton("Assignment 2",style);
+        assignment3 = new TextButton("Assignment 3",style);
         assignment2Game1 = new TextButton("Game 1",style);
         assignment2Game2 = new TextButton("Game 2",style);
+        assignment3Game1 = new TextButton("Game 1",style);
+        assignment3Game2 = new TextButton("Game 2",style);
         back = new TextButton("Back",style);
 
         // The main menu buttons
-        tbl.add(assignment1).width(320).padBottom(20);
+        tbl.add(assignment1).width(320).padBottom(20).padTop(200);
         tbl.row();
-        tbl.add(assignment2).width(320).padTop(20);
+        tbl.add(assignment2).width(320).padTop(20).padBottom(20);
+        tbl.row();
+        tbl.add(assignment3).width(320).padTop(20);
 
-        tbl2.add(assignment2Game1).width(320).padBottom(20);
+        tbl2.add(assignment2Game1).width(320).padBottom(20).padTop(200);
         tbl2.row();
         tbl2.add(assignment2Game2).width(320).padTop(20).padBottom(20);
         tbl2.row();
@@ -144,8 +155,8 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.font.draw(game.batch, "Welcome to Bug Wars!!! ", 100, 150);
-        game.font.draw(game.batch, "Tap anywhere to begin!", 100, 100);
+        game.batch.draw(startImg,0,0, 1200, 900);
+        game.batch.draw(bugWarsImg,350,500, 500, 400);
         game.batch.end();
 
         stg.act(Gdx.graphics.getDeltaTime());

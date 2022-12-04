@@ -8,19 +8,24 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 import com.bugwars.Helper.AssetManager;
 
-
+/**
+ * Will display the number of ants alive and dead at a time, as well as, initiate the starting value
+ * ants
+ */
 public class Hud {
 
     private BitmapFont font;
-    private TextureRegion antPic;
     private int numOfAnts, numOfDeadAnts;
     private String aliveAnts, deadAnts;
 
     private Stage stg = new Stage();
     private TextField num;
+    private Label label;
 
     public Hud(AssetManager assetMgr){
 
@@ -30,9 +35,6 @@ public class Hud {
         font = generator.generateFont(parameter);
 
         generator.dispose(); // Once font is generated dispose of the generator
-
-        antPic = assetMgr.getAnt();
-
 
         numOfAnts = 0;
         numOfDeadAnts = 0;
@@ -46,10 +48,19 @@ public class Hud {
         num = new TextField("",sty);
         num.setWidth(300);
         num.setHeight(100);
-        num.setX(300);
-        num.setY(300);
+        num.setX(450);
+        num.setY(400);
+        num.setAlignment(Align.center);
+
+        Label.LabelStyle labelSty = new Label.LabelStyle();
+        labelSty.font = font;
+        labelSty.fontColor = Color.WHITE;
+        label = new Label("Enter number of starting ants then press <Enter>", labelSty);
+        label.setX(150);
+        label.setY(520);
 
         stg.addActor(num);
+        stg.addActor(label);
 
 
     }
@@ -76,21 +87,34 @@ public class Hud {
         return stg;
     }
 
+    /**
+     * Check if text entered by user is numeric or not
+     * @return
+     */
     public Boolean getText(){
         String temp  = num.getText();
 
-
         if(isNumeric(temp)){
             numOfAnts = Integer.valueOf(temp);
-            return true;
+            return true; // Text is numeric
 
         }
         else{
+            label.setText("Only enter numbers - please try again");
             return false;
         }
     }
 
+    /**
+     *
+     * @param str
+     * @return
+     */
     private static boolean isNumeric(String str){
         return str != null && str.matches("[0-9.]+");
+    }
+
+    public int getNumOfAnts() {
+        return numOfAnts;
     }
 }

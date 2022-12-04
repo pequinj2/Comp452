@@ -1,125 +1,146 @@
 
 GameOneTiles.png
-size: 1024, 64
+size: 1024, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+Anthill
+  rotate: false
+  xy: 239, 104
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 Berry
   rotate: false
-  xy: 544, 2
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Berry_Highlight
   rotate: false
-  xy: 714, 2
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile
   rotate: false
-  xy: 816, 2
+  xy: 273, 104
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Dirt_Tile_Highlight
   rotate: false
-  xy: 646, 2
+  xy: 678, 432
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Ended
   rotate: false
-  xy: 406, 2
+  xy: 2, 70
   size: 33, 32
   orig: 33, 32
   offset: 0, 0
   index: -1
 Grass
   rotate: false
-  xy: 782, 2
+  xy: 71, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Grass_Highlight
   rotate: false
-  xy: 578, 2
+  xy: 37, 70
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Poison_Ground
   rotate: false
-  xy: 510, 2
+  xy: 846, 466
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rock_Tile
   rotate: false
-  xy: 748, 2
+  xy: 36, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Rock_Tile_Highlight
   rotate: false
-  xy: 850, 2
+  xy: 644, 364
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Start
   rotate: false
-  xy: 612, 2
+  xy: 644, 398
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+StartMenu
+  rotate: false
+  xy: 2, 138
+  size: 640, 360
+  orig: 640, 360
+  offset: 0, 0
+  index: -1
 Start_Highlight
   rotate: false
-  xy: 680, 2
+  xy: 880, 466
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Swamp_Tile
   rotate: false
-  xy: 884, 2
+  xy: 678, 398
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Swamp_Tile_Highlight
   rotate: false
-  xy: 476, 2
+  xy: 644, 432
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 TextBoarderSmall
   rotate: false
-  xy: 2, 2
+  xy: 2, 104
   size: 200, 32
   orig: 200, 32
   offset: 0, 0
   index: -1
 ToolTip
   rotate: false
-  xy: 204, 2
+  xy: 644, 466
   size: 200, 32
   orig: 200, 32
   offset: 0, 0
   index: -1
 Visited
   rotate: false
-  xy: 441, 2
+  xy: 204, 104
   size: 33, 32
   orig: 33, 32
+  offset: 0, 0
+  index: -1
+Water_Tile
+  rotate: false
+  xy: 712, 432
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
