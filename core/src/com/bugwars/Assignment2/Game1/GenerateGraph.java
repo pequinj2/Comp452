@@ -83,8 +83,8 @@ public class GenerateGraph {
      * The helper function below will create a list of connection nodes from the point that was given
      * to the function. Node = (row, col) which represents the button that was used in the original
      * tile map the user created.
-     * A list of integers is returned that represents tiles connected to the 'From Tile'. This list
-     * is made to exclude tiles that represent rocks since the ant cant go there.
+     * A list of integers is returned that represents nodes connected to the 'From Node'. This list
+     * is made to exclude nodes that represent rocks since the ant cant go there.
      * @param row
      * @param col
      * @return an array of the connecting Tiles (nodes)
@@ -93,7 +93,9 @@ public class GenerateGraph {
 
         List<Integer> connections = new ArrayList<>();
 
-
+        /**
+         * See 'switchCheck' function below for letter representation
+         */
         if(row-1 < 0){ // Can't do A, B, C
             if(col-1 <0){
                 // do D, E, F
@@ -184,6 +186,11 @@ public class GenerateGraph {
 
     }
 
+    /**
+     * Get the Tile's image (dirt, grass, rock, ect.)
+     * @param tile
+     * @return
+     */
     private String getButtonStyle(Button tile){
         String currStyle = "";
 
@@ -199,7 +206,9 @@ public class GenerateGraph {
 
     /**
      * Below is a list of the areas in the map (abstract matrix) that the helper function will look
-     * at, they're lettered as to unclog the amount of comments in the code.
+     * at, they're lettered as to unclog the amount of comments in the code. Each tuple represents
+     * the addition, subtraction or unchanged (~) calculation the we do on the Row and Column number
+     * to get it's neighbor.
      * A) (-1, -1)
      * B) (-1, ~)
      * C) (-1, +1)

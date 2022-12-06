@@ -31,7 +31,7 @@ public class Heuristic {
     }
 
     /**
-     * This function will calculate the Euclidean distance from the current node to the target
+     * This function will calculate the Chebyshev distance from the current node to the target
      * node and return the calculated value.
      * Chebyshev distance reference:
      * https://www.reddit.com/r/roguelikedev/comments/59u44j/warning_a_and_manhattan_distance/
@@ -48,7 +48,7 @@ public class Heuristic {
         // Translate the extracted x and y coordinates
         // Multiply by 32 as this is the pixel size and add 16 as to signify the center of the tile
         float x = abs(endX - (currX*32 +16));
-        float y = abs(endY - (currY*32+16));
+        float y = abs(endY - (currY*32 +16));
 
         // Multiply by the cost of the tile because we're using a weighted graph
         float distance = cost * Math.max(x,y);

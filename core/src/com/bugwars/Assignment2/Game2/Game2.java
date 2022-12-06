@@ -9,15 +9,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.bugwars.Assignment2.Game2.StateMachine.AntPlayer;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.AntFactory;
 import com.bugwars.Helper.AssetManager;
 import com.bugwars.PauseMenu;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.ArrayList;
 
+/**
+ * Main class of Game 2 Assignment 2, this class will control the flow of the game, including
+ * tracking the ants and calling other classes to initiate different events in the ant simulation.
+ */
 public class Game2 implements Screen {
 
     // Create Map
@@ -95,20 +98,38 @@ public class Game2 implements Screen {
             stg.draw();
             stg.act();
             Gdx.input.setInputProcessor(stg);
+            // When the user has inputted a number and clicks enter - check if the number is valid
             if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
-
+                // Returns true if number is valid - start generating simulation
                 if(hud.getText()){
-                    getUserInput = false;
+                    getUserInput = false; // Done with this section so mark as 'false' to skip
                     stg.dispose();
+
+                    /**
+                     * Generate scene items in random locations on the map:
+                     * 0 = Berry
+                     * 1 = Poison
+                     * 2 = Water
+                     * 3 = Ant Hill
+                      */
+                    scene.generateItems(0);
+                    scene.generateItems(0);
+                    scene.generateItems(1);
+                    scene.generateItems(1);
+                    scene.generateItems(2);
+                    scene.generateItems(2);
+                    scene.generateItems(3);
+                    // Set the location of the home ant hill
+                    antFact.setAntHillHome(scene.getAntHillHome());
+
                     int numOfAnts = hud.getNumOfAnts();
                     // For the number of ants the user wants, call the ant factory to make a new one
+                    // and add them to the 'ants' array for tracking
                     for(int i=0; i < numOfAnts; i++){
                         ants.add(antFact.makeAnt());
                     }
-                    scene.generateItems(0);
-                    scene.generateItems(0);
-                    scene.generateItems(1);
-                    scene.generateItems(1);
+
+                    // Render base map and update camera position
                     renderer = new OrthogonalTiledMapRenderer(map);
                     camera.setToOrtho(true, viewPortWidth, viewPortHeight);
                     camera.position.x = 255;

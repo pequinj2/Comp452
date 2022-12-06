@@ -1,6 +1,6 @@
 package com.bugwars.Assignment2.Game2.States;
 
-import com.bugwars.Assignment2.Game2.StateManager;
+import com.bugwars.Assignment2.Game2.StateMachine.StateManager;
 
 public class Death extends StateManager {
 
