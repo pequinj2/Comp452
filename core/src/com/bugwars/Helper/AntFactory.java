@@ -1,9 +1,9 @@
 package com.bugwars.Helper;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.bugwars.Assignment2.Game2.CreateScene;
+import com.bugwars.Assignment2.Game2.Game2;
 import com.bugwars.Assignment2.Game2.StateMachine.AntPlayer;
-
-import java.awt.Point;
 
 /**
  * Factory class that will initiate the ant generation for the simulation
@@ -11,26 +11,43 @@ import java.awt.Point;
 public class AntFactory {
 
     private AssetManager assetMgr;
-    private TextureRegion antPic;
-    private Point antHillHome;
+    private TextureRegion antPic, antPicBerry, antPicWater;
+    private int antHillHome;
+    private CreateScene map;
+    private int count = 0;
 
-    public AntFactory(AssetManager assetMgr){
+    public AntFactory(AssetManager assetMgr, CreateScene map){
         this.assetMgr = assetMgr;
+        this.map = map;
         antPic = assetMgr.getAnt();
+        antPicBerry = assetMgr.getAntBerry();
+        antPicWater = assetMgr.getAntWater();
 
     }
 
-    public AntPlayer makeAnt(){
+    /**
+     * Create a new ant and pass the Ant Hill cell ID to it
+     * @return
+     * @param game2
+     */
+    public AntPlayer makeAnt(Game2 game2){
 
         System.out.println("Made an Ant");
         AntPlayer newAnt = new AntPlayer();
-        newAnt.Awake();
+        count++;
+        newAnt.Awake(antHillHome, antPic, antPicBerry, antPicWater, map, count, game2);
 
         return newAnt;
     }
 
-    public void setAntHillHome(Point hillHome){
+    /**
+     * When created, set the Ant Hill home location
+     * @param hillHome
+     */
+    public void setAntHillHome(int hillHome){
+
         antHillHome = hillHome;
+        System.out.println("Ant Hill current location " + antHillHome);
 
     }
 }

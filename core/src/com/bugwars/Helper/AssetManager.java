@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class AssetManager {
 
     private TextureAtlas atlas, textFieldAtlas;
-    private TextureRegion dirt, ant, food, poison, water, antHill;
+    private TextureRegion dirt, ant, antBerry, antWater, food, poison, water, antHill;
     private Skin skin = new Skin();
     private Skin skin2 = new Skin();
 
@@ -26,6 +26,8 @@ public class AssetManager {
 
         dirt = new TextureRegion(atlas.findRegion("Dirt_Tile"));
         ant= new TextureRegion(atlas.findRegion("Start"));
+        antBerry= new TextureRegion(atlas.findRegion("AntBerry"));
+        antWater= new TextureRegion(atlas.findRegion("AntWater"));
         food = new TextureRegion(atlas.findRegion("Berry"));
         poison = new TextureRegion(atlas.findRegion("Poison_Ground"));
         water = new TextureRegion(atlas.findRegion("Water_Tile"));
@@ -43,6 +45,14 @@ public class AssetManager {
 
     public TextureRegion getAnt() {
         return ant;
+    }
+
+    public TextureRegion getAntBerry() {
+        return antBerry;
+    }
+
+    public TextureRegion getAntWater() {
+        return antWater;
     }
 
     public TextureRegion getFood() {

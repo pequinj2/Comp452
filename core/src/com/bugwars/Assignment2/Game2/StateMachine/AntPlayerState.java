@@ -7,12 +7,10 @@ public class AntPlayerState {
 
     protected AntPlayer player;
     protected StateManager stateMachine;
-    protected AntPlayerData playerData;
 
-    public AntPlayerState(AntPlayer player, StateManager stateMachine, AntPlayerData playerData){
+    public AntPlayerState(AntPlayer player, StateManager stateMachine){
         this.player = player;
         this.stateMachine = stateMachine;
-        this.playerData = playerData;
 
     }
 
@@ -20,8 +18,8 @@ public class AntPlayerState {
      * Enter gets called when we enter a specific state
      */
     public void Enter(){
-        DoCheck();
-        System.out.println("Finding food");
+        //DoCheck();
+        //System.out.println("Finding food");
     }
 
     /**
@@ -35,7 +33,7 @@ public class AntPlayerState {
      * Gets called every frame
      */
     public void Update(){
-
+        DoCheck();
     }
 
     /**

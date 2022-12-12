@@ -1,4 +1,4 @@
-package com.bugwars.Assignment2.Game1;
+package com.bugwars.Assignment2.Game2.AntMovement;
 
 import static java.lang.Math.abs;
 
@@ -16,12 +16,12 @@ import com.bugwars.Assignment2.Game1.Tile;
  *
  * We want to minimize f(n) to find the shortest path
  */
-public class Heuristic {
+public class HeuristicGame2 {
 
     private float endX, endY;
 
-    public Heuristic(Tile end){
-        float id = end.getID();
+    public HeuristicGame2(int home){
+        float id = home;
         int x = (int)id/16;
         int y = ((int)id - (x * 16));
 
@@ -39,9 +39,9 @@ public class Heuristic {
      * https://www.reddit.com/r/roguelikedev/comments/59u44j/warning_a_and_manhattan_distance/
      * @return the distance between the current node and the target node
      */
-    public float estimatedCost(Tile currentTile, float cost){
+    public float estimatedCost(int currentTile, float cost){
         // Use the current node's ID to calculate the x and y coordinates
-        float id = currentTile.getID();
+        float id = currentTile;
         int currX = (int)id/16;
         int currY = ((int)id - (currX * 16));
 

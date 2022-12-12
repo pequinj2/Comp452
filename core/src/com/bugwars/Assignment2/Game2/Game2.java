@@ -1,5 +1,7 @@
 package com.bugwars.Assignment2.Game2;
 
+import static com.badlogic.gdx.utils.TimeUtils.millis;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -48,6 +50,10 @@ public class Game2 implements Screen {
     private AntPlayer currentAnt;
     private AntFactory antFact;
     private ArrayList<AntPlayer> ants = new ArrayList<AntPlayer>();
+    private ArrayList<AntPlayer> deadAnts = new ArrayList<AntPlayer>();
+    private long currentTime, startTime;
+    private int newAntsToMake = 0;
+
 
     public Game2 (OrthographicCamera camera, BugWars game){
         this.camera = camera;
@@ -57,7 +63,7 @@ public class Game2 implements Screen {
         assetMgr = new AssetManager();
         scene = new CreateScene(assetMgr);
         batch = new SpriteBatch();
-        antFact = new AntFactory(assetMgr);
+        antFact = new AntFactory(assetMgr, scene);
 
         // Load the TiledMap for rendering and set the viewport
         map = scene.getMap();
@@ -67,6 +73,8 @@ public class Game2 implements Screen {
 
         // Load Hud
         hud = new Hud(assetMgr);
+
+        startTime = millis() + 2000;
 
     }
 
@@ -79,6 +87,36 @@ public class Game2 implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             isPaused = !isPaused;
         }
+        currentTime = millis();
+        // Render ants, the time intervals are to see the movements at a steady speed
+        if (currentTime >= startTime) {
+            for(AntPlayer ant : ants){
+                //System.out.println("########################## ANT " + ant + "###################");
+                if(ant.getAntAlive()) {
+                    scene.cellUpdateAntPrevPos(ant.antPreviousPos());
+                    scene.cellUpdateAntPos(ant, ant.antCurrentPos());
+                    ant.Update();
+                }
+                else{ // If an ant is dead put it in the remove list to dispose of object in update
+                    deadAnts.add(ant);
+                    scene.removeDeadAnt(ant.antPreviousPos());
+                    hud.setDeadAnts();
+                }
+            }
+            startTime = millis() + 500;
+        }
+        // Dispose of dead ants
+        for(AntPlayer deadAnt : deadAnts){
+            ants.remove(deadAnt);
+        }
+        deadAnts.clear();
+
+        // Make the new Ants
+        for(int i=0; i< newAntsToMake; i++ ){
+            ants.add(antFact.makeAnt(this));
+            hud.setAliveAnts();
+        }
+        newAntsToMake=0;
 
 
     }
@@ -114,8 +152,8 @@ public class Game2 implements Screen {
                       */
                     scene.generateItems(0);
                     scene.generateItems(0);
-                    scene.generateItems(1);
-                    scene.generateItems(1);
+                    scene.generateItems(0);
+                    scene.generateItems(0);
                     scene.generateItems(2);
                     scene.generateItems(2);
                     scene.generateItems(3);
@@ -126,7 +164,7 @@ public class Game2 implements Screen {
                     // For the number of ants the user wants, call the ant factory to make a new one
                     // and add them to the 'ants' array for tracking
                     for(int i=0; i < numOfAnts; i++){
-                        ants.add(antFact.makeAnt());
+                        ants.add(antFact.makeAnt(this));
                     }
 
                     // Render base map and update camera position
@@ -148,6 +186,8 @@ public class Game2 implements Screen {
             renderer.setView(camera);
             batch.begin();
             hud.render(batch);
+
+
             batch.end();
 
 
@@ -178,5 +218,10 @@ public class Game2 implements Screen {
     @Override
     public void dispose() {
         assetMgr.dispose();
+    }
+
+    public void makeNewAnt(){
+
+        newAntsToMake++;
     }
 }

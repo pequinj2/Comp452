@@ -78,6 +78,7 @@ public class Hud {
         numOfAnts++;
     }
     public void setDeadAnts(){
+        numOfAnts--;
         numOfDeadAnts++;
     }
 
@@ -104,9 +105,9 @@ public class Hud {
     }
 
     /**
-     *
+     * Check if the user has only put in numeric numbers
      * @param str
-     * @return
+     * @return true if only numeric, else, false
      */
     private static boolean isNumeric(String str){
         return str != null && str.matches("[0-9.]+");

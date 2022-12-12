@@ -1,5 +1,9 @@
 package com.bugwars.Assignment2.Game1;
 
+import com.bugwars.Assignment2.Game1.Heuristic;
+import com.bugwars.Assignment2.Game1.Tile;
+import com.bugwars.Assignment2.Game1.TileCompare;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
