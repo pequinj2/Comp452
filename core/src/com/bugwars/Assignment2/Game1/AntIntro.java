@@ -21,7 +21,7 @@ import com.bugwars.Helper.FadeScreen;
  */
 public class AntIntro implements Screen {
 
-    private Texture spiderImg, boarderImg;
+    private Texture antImg, boarderImg;
     private SpriteBatch batch;
     private int screenWidth = 1216;
     private int screenHeight = 896;
@@ -66,8 +66,8 @@ public class AntIntro implements Screen {
      */
     public AntIntro(OrthographicCamera camera, BugWars game){
         this.game = game;
-        spiderImg = new Texture(Gdx.files.internal("SpiderMainPageCrop.png"));
-        spid = new TextureRegion(spiderImg, 100, 100, 1216, 800);
+        antImg = new Texture(Gdx.files.internal("Assignment2/AntInto/AntPic.png"));
+        spid = new TextureRegion(antImg, 0, 100, 1200, 800);
         boarderImg = new Texture(Gdx.files.internal("TextBoarder.png"));
         batch = new SpriteBatch();
         this.camera = camera;
@@ -241,7 +241,7 @@ public class AntIntro implements Screen {
     @Override
     public void dispose() {
         antV.dispose();
-        spiderImg.dispose();
+        antImg.dispose();
         boarderImg.dispose();
         batch.dispose();
 

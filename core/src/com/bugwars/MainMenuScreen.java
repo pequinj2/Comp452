@@ -54,7 +54,7 @@ public class MainMenuScreen implements Screen {
         stg.addActor(tbl);
         //tbl.setDebug(true);
         tbl.setFillParent(true);
-        tbl2.setDebug(true);
+        //tbl2.setDebug(true);
         tbl2.setFillParent(true);
         skin = new Skin();
         pauseBatch = new SpriteBatch();

@@ -4,6 +4,10 @@ import com.bugwars.Assignment2.Game2.StateMachine.AntPlayer;
 import com.bugwars.Assignment2.Game2.StateMachine.AntPlayerState;
 import com.bugwars.Assignment2.Game2.StateMachine.StateManager;
 
+/**
+ * This class inherits from 'AntPlayerState' so it has access to everything from this class.
+ * Part of the Ant FSM, this will use the 'wander' algorithm and look for 'water' and 'poison' tiles
+ */
 public class FindWater extends AntPlayerState {
 
 
@@ -31,12 +35,10 @@ public class FindWater extends AntPlayerState {
     public void DoCheck() {
         super.DoCheck();
         if(player.checkWater()){
-            System.out.println("found Water");
             stateMachine.ChangeState(player.findFoodState);
             return;
         }
         if(player.checkPoison()){
-            System.out.println("found death");
             stateMachine.ChangeState(player.foundDeath);
             return;
         }

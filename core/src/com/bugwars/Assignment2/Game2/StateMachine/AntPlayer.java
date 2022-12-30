@@ -37,9 +37,9 @@ public class AntPlayer {
      */
     public void Awake(int antHome, TextureRegion antPic, TextureRegion antPicBerry, TextureRegion antPicWater,CreateScene map, int antID, Game2 game){
     System.out.println("Awake");
-        this.stateManager = new StateManager();
+        stateManager = new StateManager();
         currentState = new AntPlayerState(this, stateManager);
-        this.movement = new AntPlayerMovement(antHome);
+        movement = new AntPlayerMovement(antHome, map);
         this.map = map;
         this.antID = antID;
         this.game = game;
@@ -95,7 +95,6 @@ public class AntPlayer {
     public boolean checkBerry(){
         String currentCell = map.checkCell(antCurrentPos());
         if(currentCell.equals("Berry")){
-            System.out.println("Berry found");
             // Set the ant picture to the 'pink' ant to indicate it has a berry and looking for home
             antCurrentPic = antPicBerry;
             return true;
@@ -114,8 +113,6 @@ public class AntPlayer {
     public boolean checkPoison(){
         String currentCell = map.checkCell(antCurrentPos());
         if(currentCell.equals("Poison")){
-            //TODO double check what is setting the ant alive or dead - add sound bite
-            System.out.println("Death found");
             return true;
 
         }
@@ -130,10 +127,8 @@ public class AntPlayer {
     public boolean checkHome(){
 
         String currentCell = map.checkCell(antCurrentPos());
-        System.out.println("Anthill check "+currentCell+ " at pos " + antCurrentPos());
         if(currentCell.equals("Home")){
             game.makeNewAnt();
-            System.out.println("Anthill found");
             // Set the ant picture to the 'blue' ant to indicate its thirsty and looking for water
             antCurrentPic = antPicWater;
             return true;
@@ -150,19 +145,21 @@ public class AntPlayer {
     public boolean checkWater(){
 
         String currentCell = map.checkCell(antCurrentPos());
-        System.out.println("Water check "+currentCell+ " at pos " + antCurrentPos());
         if(currentCell.equals("Water")){
-            System.out.println("Water found");
             // Set the ant picture back to normal
             antCurrentPic = antPic;
             return true;
-
         }
 
         return false;
     }
 
+    /**
+     * Get the current ant picture - normal, has berry, or looking for water
+     * @return
+     */
     public TextureRegion getAntPic(){
         return antCurrentPic;
     }
+
 }

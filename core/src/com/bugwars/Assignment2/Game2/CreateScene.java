@@ -69,7 +69,6 @@ public class CreateScene {
 
 
     /**
-     *
      * @return current status of map
      */
     public TiledMap getMap() {
@@ -199,7 +198,6 @@ public class CreateScene {
      * @param antPos
      */
     public void removeDeadAnt(int antPos){
-        System.out.println("Dead ant at pos " + antPos);
         int antX = antPos/16;
         int antY = antPos - (antX*16);
         cell = antLayer.getCell(antX,antY );
@@ -207,7 +205,27 @@ public class CreateScene {
 
     }
 
-    public void setAntPic(AntPlayer ant){
+    /**
+     * See if an ant is already in a cell
+     * @param antPosition
+     * @return
+     */
+    public boolean checkForAnt(int antPosition){
+        int antX = antPosition/16;
+        int antY = antPosition - (antX*16);
+        TiledMapTile temp = antLayer.getCell(antX,antY ).getTile();
+
+        if(temp == null){
+            return false;
+        }
+        TextureRegion currentAntTexture = antLayer.getCell(antX,antY ).getTile().getTextureRegion();
+
+        // Check if there is an Ant already at this cell
+        if(currentAntTexture.equals(assetMgr.getAnt()) || currentAntTexture.equals(assetMgr.getAntBerry()) || currentAntTexture.equals(assetMgr.getAntWater())){
+            return true;
+        }else{
+            return false;
+        }
 
     }
 

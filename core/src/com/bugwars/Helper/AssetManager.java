@@ -71,8 +71,11 @@ public class AssetManager {
         return antHill;
     }
 
-    public Drawable getSkin() {
+    public Drawable getBtnUp() {
         return skin.getDrawable("Button_Up");
+    }
+    public Drawable getBtnDown() {
+        return skin.getDrawable("Button_Down");
     }
 
     public void dispose(){

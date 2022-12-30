@@ -7,10 +7,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.bugwars.Assignment2.Game2.StateMachine.AntPlayer;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.AntFactory;
@@ -54,6 +61,14 @@ public class Game2 implements Screen {
     private long currentTime, startTime;
     private int newAntsToMake = 0;
 
+    // Final results
+    private boolean showFinal = false;
+    private Table tbl;
+    private Skin skin;
+    private TextButton finalBtn, goBackBtn;
+    private Stage btnStg = new Stage();
+    private BitmapFont font;
+
 
     public Game2 (OrthographicCamera camera, BugWars game){
         this.camera = camera;
@@ -68,13 +83,12 @@ public class Game2 implements Screen {
         // Load the TiledMap for rendering and set the viewport
         map = scene.getMap();
 
-
-        // load initial world objects
-
         // Load Hud
         hud = new Hud(assetMgr);
 
         startTime = millis() + 2000;
+
+        finalBtn(ants);
 
     }
 
@@ -87,36 +101,40 @@ public class Game2 implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
             isPaused = !isPaused;
         }
-        currentTime = millis();
-        // Render ants, the time intervals are to see the movements at a steady speed
-        if (currentTime >= startTime) {
-            for(AntPlayer ant : ants){
-                //System.out.println("########################## ANT " + ant + "###################");
-                if(ant.getAntAlive()) {
-                    scene.cellUpdateAntPrevPos(ant.antPreviousPos());
-                    scene.cellUpdateAntPos(ant, ant.antCurrentPos());
-                    ant.Update();
+        if(showFinal){
+            // Stop doing updates
+        }
+        else {
+            currentTime = millis();
+            // Render ants, the time intervals are to see the movements at a steady speed
+            if (currentTime >= startTime) {
+                for (AntPlayer ant : ants) {
+                    //System.out.println("########################## ANT " + ant + "###################");
+                    if (ant.getAntAlive()) {
+                        scene.cellUpdateAntPrevPos(ant.antPreviousPos());
+                        scene.cellUpdateAntPos(ant, ant.antCurrentPos());
+                        ant.Update();
+                    } else { // If an ant is dead put it in the remove list to dispose of object in update
+                        deadAnts.add(ant);
+                        scene.removeDeadAnt(ant.antPreviousPos());
+                        hud.setDeadAnts();
+                    }
                 }
-                else{ // If an ant is dead put it in the remove list to dispose of object in update
-                    deadAnts.add(ant);
-                    scene.removeDeadAnt(ant.antPreviousPos());
-                    hud.setDeadAnts();
-                }
+                startTime = millis() + 500;
             }
-            startTime = millis() + 500;
-        }
-        // Dispose of dead ants
-        for(AntPlayer deadAnt : deadAnts){
-            ants.remove(deadAnt);
-        }
-        deadAnts.clear();
+            // Dispose of dead ants
+            for (AntPlayer deadAnt : deadAnts) {
+                ants.remove(deadAnt);
+            }
+            deadAnts.clear();
 
-        // Make the new Ants
-        for(int i=0; i< newAntsToMake; i++ ){
-            ants.add(antFact.makeAnt(this));
-            hud.setAliveAnts();
+            // Make the new Ants
+            for (int i = 0; i < newAntsToMake; i++) {
+                ants.add(antFact.makeAnt(this));
+                hud.setAliveAnts();
+            }
+            newAntsToMake = 0;
         }
-        newAntsToMake=0;
 
 
     }
@@ -152,8 +170,8 @@ public class Game2 implements Screen {
                       */
                     scene.generateItems(0);
                     scene.generateItems(0);
-                    scene.generateItems(0);
-                    scene.generateItems(0);
+                    scene.generateItems(1);
+                    scene.generateItems(1);
                     scene.generateItems(2);
                     scene.generateItems(2);
                     scene.generateItems(3);
@@ -176,6 +194,13 @@ public class Game2 implements Screen {
                 }
             }
         }
+        else if(showFinal){
+            batch.begin();
+            hud.renderFinal(batch);
+            batch.end();
+            btnStg.draw();
+
+        }
         else {
 
             Gdx.gl.glClearColor(0, 0, 0, 1); // Clear the previous screen of anything
@@ -186,9 +211,9 @@ public class Game2 implements Screen {
             renderer.setView(camera);
             batch.begin();
             hud.render(batch);
-
-
             batch.end();
+            Gdx.input.setInputProcessor(btnStg);
+            btnStg.draw();
 
 
         }
@@ -223,5 +248,61 @@ public class Game2 implements Screen {
     public void makeNewAnt(){
 
         newAntsToMake++;
+    }
+
+
+    public void finalBtn(ArrayList<AntPlayer> ants){
+        btnStg = new Stage();
+        tbl = new Table();
+        btnStg.addActor(tbl);
+        tbl.setFillParent(true);
+        //tbl.setDebug(true);
+        skin = new Skin();
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Retro Gaming.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 35; // font size
+        font = generator.generateFont(parameter);
+        generator.dispose(); // Once font is generated dispose of the generator
+
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.font = font;
+        style.up = assetMgr.getBtnUp();
+        style.down = assetMgr.getBtnDown();
+
+        finalBtn = new TextButton("Show Results",style);
+        tbl.add(finalBtn).width(320).padLeft(700).padTop(40);
+        tbl.top().left();
+        tbl.row();
+
+        goBackBtn = new TextButton("Continue",style);
+        tbl.add(goBackBtn).width(320).padLeft(700).padTop(700);
+        //tbl.bottom().left();
+        goBackBtn.setVisible(false);
+
+        goBackBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                //System.out.println("Final btn pressed");
+                //hud.setFinalResults(ants);
+                showFinal = false;
+                goBackBtn.setVisible(false);
+                finalBtn.setVisible(true);
+            }
+        });
+
+        finalBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                System.out.println("Final btn pressed");
+                hud.setFinalResults(ants);
+                showFinal = true;
+                goBackBtn.setVisible(true);
+                finalBtn.setVisible(false);
+            }
+        });
+
+
+
     }
 }

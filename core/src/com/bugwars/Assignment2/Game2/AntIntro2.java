@@ -22,7 +22,7 @@ import com.bugwars.Helper.FadeScreen;
  */
 public class AntIntro2 implements Screen {
 
-    private Texture spiderImg, boarderImg;
+    private Texture antImg, boarderImg;
     private SpriteBatch batch;
     private int screenWidth = 1216;
     private int screenHeight = 896;
@@ -34,8 +34,8 @@ public class AntIntro2 implements Screen {
     // Gaming text downloaded from https://www.dafont.com/retro-gaming.font
     private BitmapFont font;
     private String string1 = "";
-    private String string2 = "Create different mazes the recruits will have to ";
-    private String string3 = "explore through for food.";
+    private String string2 = "its time to test them in the field. ";
+    private String string3 = "There are berries near the colony.";
 
     private float charTimer = 0.1f; // Time between text character appearance
     private float currentCharTime = 0;
@@ -67,8 +67,8 @@ public class AntIntro2 implements Screen {
      */
     public AntIntro2(OrthographicCamera camera, BugWars game){
         this.game = game;
-        spiderImg = new Texture(Gdx.files.internal("SpiderMainPageCrop.png"));
-        spid = new TextureRegion(spiderImg, 100, 100, 1216, 800);
+        antImg = new Texture(Gdx.files.internal("Assignment2/AntInto/AntPic.png"));
+        spid = new TextureRegion(antImg, 0, 100, 1216, 800);
         boarderImg = new Texture(Gdx.files.internal("TextBoarder.png"));
         batch = new SpriteBatch();
         this.camera = camera;
@@ -109,7 +109,7 @@ public class AntIntro2 implements Screen {
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    string1 = "We have new recruits that need to be trained.";
+                    string1 = "Now that the recruits are trained,";
                     delayStartingText = false;
                 }
             }, delayTime);
@@ -177,8 +177,8 @@ public class AntIntro2 implements Screen {
                             numOfChars = 0;
                             numOfChars2 = 0;
                             numOfChars3 = 0;
-                            string1 = "Their success in foraging will bring glory to ";
-                            string2 = "the Queen and Colony!";
+                            string1 = "They must bring berries to the colony for the ";
+                            string2 = "Queen! But not all will survive...";
                             string3 = "< Press SPACE to Start >";
                             nextFlag = false;
                             nextFlag2 = false;
@@ -242,7 +242,7 @@ public class AntIntro2 implements Screen {
     @Override
     public void dispose() {
         antV.dispose();
-        spiderImg.dispose();
+        antImg.dispose();
         boarderImg.dispose();
         batch.dispose();
 

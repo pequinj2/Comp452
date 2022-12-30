@@ -4,6 +4,10 @@ import com.bugwars.Assignment2.Game2.StateMachine.AntPlayer;
 import com.bugwars.Assignment2.Game2.StateMachine.AntPlayerState;
 import com.bugwars.Assignment2.Game2.StateMachine.StateManager;
 
+/**
+ * This class inherits from 'AntPlayerState' so it has access to everything from this class.
+ * Part of the Ant FSM, this kill the ant :(
+ */
 public class Death extends AntPlayerState {
 
 
@@ -14,7 +18,6 @@ public class Death extends AntPlayerState {
     @Override
     public void Enter() {
         super.Enter();
-        System.out.println("In death for ant " + player.antID);
         player.dispose();
         Exit();
     }
@@ -22,6 +25,6 @@ public class Death extends AntPlayerState {
     @Override
     public void Exit() {
         super.Exit();
-        System.out.println("In Death Exit");
+
     }
 }

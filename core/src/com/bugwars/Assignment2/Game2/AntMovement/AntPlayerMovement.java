@@ -1,5 +1,7 @@
 package com.bugwars.Assignment2.Game2.AntMovement;
 
+import com.bugwars.Assignment2.Game2.CreateScene;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -15,7 +17,21 @@ public class AntPlayerMovement {
     private Random randomNum;
     private int maxSize = 15;
     private HeuristicGame2 hue;
+    private CreateScene map;
 
+    /**
+     * The following lists are used to determine which cells should be looked at, cells are numbered
+     * as follows:
+     * ++++++++++++++++++++++++++
+     * +   6    +   5   +   4   +
+     * ++++++++++++++++++++++++++
+     * +   7    +  Ant  +   3   +
+     * ++++++++++++++++++++++++++
+     * +   0    +   1   +   2   +
+     * ++++++++++++++++++++++++++
+     * The function 'switchCheck' will run a calculation to determine cell ID based on the number
+     * 0-7 that it is passed
+     */
     private List<Integer> numListA = Arrays.asList(3,4,5);
     private List<Integer> numListB = Arrays.asList(5,6,7);
     private List<Integer> numListC = Arrays.asList(3,4,5,6,7);
@@ -27,7 +43,8 @@ public class AntPlayerMovement {
     private List<Integer> numListI = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
 
 
-    public AntPlayerMovement(int currentCellID){
+    public AntPlayerMovement(int currentCellID, CreateScene map){
+        this.map = map;
         this.currentCellID = currentCellID;
         this.previousCellID = currentCellID;
         randomNum = new Random();
@@ -41,7 +58,6 @@ public class AntPlayerMovement {
      * the previous cell
      */
     public void wander(){
-        //currentCellID = currentID;
         int currX = (int)currentCellID/16;
         int currY = ((int)currentCellID - (currX * 16));
         int newPosition = previousCellID;
@@ -56,70 +72,54 @@ public class AntPlayerMovement {
         while(newPosition == previousCellID) {
             int temp = 0;
 
-            if (currX - 1 < 0) { // Can't do A, B, C
+            if (currX - 1 < 0) {
                 if (currY - 1 < 0) {
-                    // do D, E, F
                     // Generate num between 3 & 5 - includes 3 and 5
-                    //numList = Arrays.asList(3,4,5);
                     int position = randomNum.nextInt(numListA.size());
                     temp = numListA.get(position);
 
 
                 } else if (currY + 1 > maxSize) {
-                    // do F, G, H
                     // Generate num between 5 & 7 - includes 5 and 7
-                    //numList = Arrays.asList(5,6,7);
                     int position = randomNum.nextInt(numListB.size());
                     temp = numListB.get(position);
 
 
                 } else {
-                    // do D, E, F, G, H
                     // Generate num between 3 & 7 - includes 3 and 7
-                    //numList = Arrays.asList(3,4,5,6,7);
                     int position = randomNum.nextInt(numListC.size());
                     temp = numListC.get(position);
 
 
                 }
-            } else if (currX + 1 > maxSize) { // Can't do E, F, G
+            } else if (currX + 1 > maxSize) {
                 if (currY - 1 < 0) {
-                    // do B, C, D
                     // Generate num between 1 & 3 - includes 1 and 3
-                    //numList = Arrays.asList(1,2,3);
                     int position = randomNum.nextInt(numListD.size());
                     temp = numListD.get(position);
 
 
                 } else if (currY + 1 > maxSize) {
-                    // do A, B, H
                     // Generate num between 0 & 1 or 7 - includes 0 and 1
-                    //numList = Arrays.asList(0, 1, 7);
                     int position = randomNum.nextInt(numListE.size());
                     temp = numListE.get(position);
 
 
                 } else {
-                    // do A, B, C, D, H
                     // Generate num between 0 & 3 or 7 - includes 0 and 3
-                    //numList = Arrays.asList(0, 1, 2, 3, 7);
                     int position = randomNum.nextInt(numListF.size());
                     temp = numListF.get(position);
 
                 }
 
             } else if (currY - 1 < 0) {
-                // do B, C, D, E, F
                 // Generate num between 1 & 5 - includes 1 and 5
-                //numList = Arrays.asList(1,2,3,4,5);
                 int position = randomNum.nextInt(numListG.size());
                 temp = numListG.get(position);
 
 
             } else if (currY + 1 > maxSize) {
-                // do A, B, F, G, H
                 // Generate num between 0 & 1 or 5 & 7 - includes 0, 1, 5, 7
-                //numList = Arrays.asList(0, 1, 5, 6, 7);
                 int position = randomNum.nextInt(numListH.size());
                 temp = numListH.get(position);
 
@@ -127,14 +127,16 @@ public class AntPlayerMovement {
             } else {
                 // do All
                 // Generate num between 0 & 7 - includes 0 and 7
-                //numList = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
                 int position = randomNum.nextInt(numListI.size());
                 temp = numListI.get(position);
 
             }
 
-            //TODO get cell ID and compare to prev in 'while'
             newPosition = switchCheck(temp, currX, currY);
+            // Already an ant here so keep looking
+            if(map.checkForAnt(newPosition)){
+                newPosition = previousCellID;
+            }
         }
 
 
@@ -144,7 +146,7 @@ public class AntPlayerMovement {
     }
 
     /**
-     * Get the cell ID of a spot around the ant
+     * Get the cell ID of a spot around the ant's current position
      * @param caseToCheck value generated in 'wander'
      * @param row
      * @param col
@@ -186,12 +188,14 @@ public class AntPlayerMovement {
     }
 
     /**
-     * Once the ant has found food, find the way home using the visited cell list 'wayHome'
-     *
+     * Once the ant has found food, find the way home. The function will look at the ant's current
+     * cell neighbours and calculate the heuristic and go to the cell that has the lowest value.
+     * The 'IF' statements determine if the ant is on the edge of the map or not. Depending on the
+     * edge the ant is located, it will determine which cells are looked at or not by calling the
+     * appropriate 'numList(#)' that is used (see private variables at top).
      */
     public void returnHome(){
-        // TODO
-        //wayHome currentCellID
+
         int currX = (int)currentCellID/16;
         int currY = ((int)currentCellID - (currX * 16));
         int newPosition = previousCellID;
@@ -201,115 +205,13 @@ public class AntPlayerMovement {
 
         int temp = 0;
 
-            if (currX - 1 < 0) { // Can't do A, B, C
-                if (currY - 1 < 0) {
-                    // do D, E, F
-                    // Generate num between 3 & 5 - includes 3 and 5
-                    //numList = Arrays.asList(3,4,5);
-                    for(int i=0; i< numListA.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListA.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-
-                } else if (currY + 1 > maxSize) {
-                    // do F, G, H
-                    // Generate num between 5 & 7 - includes 5 and 7
-                    //numList = Arrays.asList(5,6,7);
-                    for(int i=0; i< numListB.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListB.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-
-                } else {
-                    // do D, E, F, G, H
-                    // Generate num between 3 & 7 - includes 3 and 7
-                    //numList = Arrays.asList(3,4,5,6,7);
-                    for(int i=0; i< numListC.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListC.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-
-                }
-            } else if (currX + 1 > maxSize) { // Can't do E, F, G
-                if (currY - 1 < 0) {
-                    // do B, C, D
-                    // Generate num between 1 & 3 - includes 1 and 3
-                    //numList = Arrays.asList(1,2,3);
-                    for(int i=0; i< numListD.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListD.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-
-                } else if (currY + 1 > maxSize) {
-                    // do A, B, H
-                    // Generate num between 0 & 1 or 7 - includes 0 and 1
-                    //numList = Arrays.asList(0, 1, 7);
-                    for(int i=0; i< numListE.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListE.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-
-                } else {
-                    // do A, B, C, D, H
-                    // Generate num between 0 & 3 or 7 - includes 0 and 3
-                    //numList = Arrays.asList(0, 1, 2, 3, 7);
-                    for(int i=0; i< numListF.size(); i++){
-                        //temp = numList.get(i);
-                        temp = switchCheck(numListF.get(i), currX, currY);
-                        compareHue = hue.estimatedCost(temp,1);
-                        if(compareHue < compareCell){
-                            newPosition = temp;
-                            compareCell = compareHue;
-                        }
-
-                    }
-
-                }
-
-            } else if (currY - 1 < 0) {
-                // do B, C, D, E, F
-                // Generate num between 1 & 5 - includes 1 and 5
-                //numList = Arrays.asList(1,2,3,4,5);
-                for(int i=0; i< numListG.size(); i++){
-                    //temp = numList.get(i);
-                    temp = switchCheck(numListG.get(i), currX, currY);
+        if (currX - 1 < 0) { // Can't do A, B, C
+            if (currY - 1 < 0) {
+                // Generate num between 3 & 5 - includes 3 and 5
+                for(int i=0; i< numListA.size(); i++){
+                    temp = switchCheck(numListA.get(i), currX, currY);
                     compareHue = hue.estimatedCost(temp,1);
-                    if(compareHue < compareCell){
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
                         newPosition = temp;
                         compareCell = compareHue;
                     }
@@ -318,14 +220,11 @@ public class AntPlayerMovement {
 
 
             } else if (currY + 1 > maxSize) {
-                // do A, B, F, G, H
-                // Generate num between 0 & 1 or 5 & 7 - includes 0, 1, 5, 7
-                //numList = Arrays.asList(0, 1, 5, 6, 7);
-                for(int i=0; i< numListH.size(); i++){
-                    //temp = numList.get(i);
-                    temp = switchCheck(numListH.get(i), currX, currY);
+                // Generate num between 5 & 7 - includes 5 and 7
+                for(int i=0; i< numListB.size(); i++){
+                    temp = switchCheck(numListB.get(i), currX, currY);
                     compareHue = hue.estimatedCost(temp,1);
-                    if(compareHue < compareCell){
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
                         newPosition = temp;
                         compareCell = compareHue;
                     }
@@ -334,24 +233,101 @@ public class AntPlayerMovement {
 
 
             } else {
-                // do All
-                // Generate num between 0 & 7 - includes 0 and 7
-                //numList = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7);
-                System.out.println("Look for home?");
-                for(int i=0; i< numListI.size(); i++){
-
-                    temp = switchCheck(numListI.get(i), currX, currY);
+                // Generate num between 3 & 7 - includes 3 and 7
+                for(int i=0; i< numListC.size(); i++){
+                    temp = switchCheck(numListC.get(i), currX, currY);
                     compareHue = hue.estimatedCost(temp,1);
-                    if(compareHue < compareCell){
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
                         newPosition = temp;
                         compareCell = compareHue;
                     }
 
                 }
-                System.out.println("Go Home: " + newPosition);
+
+
+            }
+        } else if (currX + 1 > maxSize) { // Can't do E, F, G
+            if (currY - 1 < 0) {
+                // Generate num between 1 & 3 - includes 1 and 3
+                for(int i=0; i< numListD.size(); i++){
+                    temp = switchCheck(numListD.get(i), currX, currY);
+                    compareHue = hue.estimatedCost(temp,1);
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                        newPosition = temp;
+                        compareCell = compareHue;
+                    }
+
+                }
+
+
+            } else if (currY + 1 > maxSize) {
+                // Generate num between 0 & 1 or 7 - includes 0 and 1
+                for(int i=0; i< numListE.size(); i++){
+                    temp = switchCheck(numListE.get(i), currX, currY);
+                    compareHue = hue.estimatedCost(temp,1);
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                        newPosition = temp;
+                        compareCell = compareHue;
+                    }
+
+                }
+
+
+            } else {
+                // Generate num between 0 & 3 or 7 - includes 0 and 3
+                for(int i=0; i< numListF.size(); i++){
+                    temp = switchCheck(numListF.get(i), currX, currY);
+                    compareHue = hue.estimatedCost(temp,1);
+                    if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                        newPosition = temp;
+                        compareCell = compareHue;
+                    }
+
+                }
 
             }
 
+        } else if (currY - 1 < 0) {
+            // Generate num between 1 & 5 - includes 1 and 5
+            for(int i=0; i< numListG.size(); i++){
+                //temp = numList.get(i);
+                temp = switchCheck(numListG.get(i), currX, currY);
+                compareHue = hue.estimatedCost(temp,1);
+                if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                    newPosition = temp;
+                    compareCell = compareHue;
+                }
+
+            }
+
+
+        } else if (currY + 1 > maxSize) {
+            // Generate num between 0 & 1 or 5 & 7 - includes 0, 1, 5, 7
+            for(int i=0; i< numListH.size(); i++){
+                temp = switchCheck(numListH.get(i), currX, currY);
+                compareHue = hue.estimatedCost(temp,1);
+                if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                    newPosition = temp;
+                    compareCell = compareHue;
+                }
+
+            }
+
+
+        } else {
+            // do All
+            // Generate num between 0 & 7 - includes 0 and 7
+            for(int i=0; i< numListI.size(); i++){
+                temp = switchCheck(numListI.get(i), currX, currY);
+                compareHue = hue.estimatedCost(temp,1);
+                if((compareHue < compareCell) && !map.checkForAnt(temp)){
+                    newPosition = temp;
+                    compareCell = compareHue;
+                }
+
+            }
+
+        }
 
         previousCellID = currentCellID;
         currentCellID = newPosition;
