@@ -179,4 +179,53 @@ public class PauseMenu {
             }
         });
     }
+
+    public void assignment3Game1Listeners(){
+        retry.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new Game1(camera, game) ));
+            }
+        });
+
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                Gdx.app.exit();
+            }
+        });
+
+        mainMenuReturn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new MainMenuScreen(game)));
+            }
+        });
+    }
+
+
+    public void assignment3Game2Listeners() {
+        retry.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new Game2(camera, game) ));
+            }
+        });
+
+        quit.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+                Gdx.app.exit();
+            }
+        });
+
+        mainMenuReturn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(new FadeScreen(game, assign , new MainMenuScreen(game)));
+            }
+        });
+    }
 }

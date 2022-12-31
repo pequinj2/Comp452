@@ -75,7 +75,6 @@ public class Game2 implements Screen {
         assetMgr = new AssetManager();
         pauseMenu = new PauseMenu(this, game, camera);
         pauseMenu.assignment2Game2Listeners();
-        assetMgr = new AssetManager();
         scene = new CreateScene(assetMgr);
         batch = new SpriteBatch();
         antFact = new AntFactory(assetMgr, scene);
