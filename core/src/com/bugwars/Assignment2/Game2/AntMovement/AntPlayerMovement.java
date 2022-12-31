@@ -246,7 +246,7 @@ public class AntPlayerMovement {
 
 
             }
-        } else if (currX + 1 > maxSize) { // Can't do E, F, G
+        } else if (currX + 1 > maxSize) {
             if (currY - 1 < 0) {
                 // Generate num between 1 & 3 - includes 1 and 3
                 for(int i=0; i< numListD.size(); i++){

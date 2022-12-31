@@ -9,6 +9,10 @@ import com.bugwars.Assignment2.Game2.States.FindFood;
 import com.bugwars.Assignment2.Game2.States.FindHome;
 import com.bugwars.Assignment2.Game2.States.FindWater;
 
+/**
+ * This is the main class for the ants, the "AntFactory" class will call this class
+ * to initialize the ants as they're created
+ */
 public class AntPlayer {
 
     // https://www.youtube.com/watch?v=OjreMoAG9Ec
@@ -19,7 +23,6 @@ public class AntPlayer {
     public FindHome findHome;
     public FindWater findWater;
 
-    private AntPlayerData playerData;
     public AntPlayerMovement movement;
     private TextureRegion antPic;
     private TextureRegion antPicBerry;
@@ -36,7 +39,7 @@ public class AntPlayer {
      * When the ant is created, initialize the state machine
      */
     public void Awake(int antHome, TextureRegion antPic, TextureRegion antPicBerry, TextureRegion antPicWater,CreateScene map, int antID, Game2 game){
-    System.out.println("Awake");
+
         stateManager = new StateManager();
         currentState = new AntPlayerState(this, stateManager);
         movement = new AntPlayerMovement(antHome, map);

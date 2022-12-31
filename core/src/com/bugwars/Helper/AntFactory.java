@@ -32,7 +32,6 @@ public class AntFactory {
      */
     public AntPlayer makeAnt(Game2 game2){
 
-        System.out.println("Made an Ant");
         AntPlayer newAnt = new AntPlayer();
         count++;
         newAnt.Awake(antHillHome, antPic, antPicBerry, antPicWater, map, count, game2);
@@ -45,9 +44,7 @@ public class AntFactory {
      * @param hillHome
      */
     public void setAntHillHome(int hillHome){
-
         antHillHome = hillHome;
-        System.out.println("Ant Hill current location " + antHillHome);
 
     }
 }

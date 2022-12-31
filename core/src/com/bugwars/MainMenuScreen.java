@@ -187,7 +187,12 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+
         buttons.dispose();
+        startImg.dispose();
+        bugWarsImg.dispose();
+        tbl.remove();
+        tbl2.remove();
     }
 
     /**

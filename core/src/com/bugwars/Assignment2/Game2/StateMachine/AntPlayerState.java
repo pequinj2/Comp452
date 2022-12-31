@@ -1,7 +1,7 @@
 package com.bugwars.Assignment2.Game2.StateMachine;
 
 /**
- * Parent class of the ant's different states (FindFood, FindHome and FindWater).
+ * Parent class of the ant's different states (FindFood, FindHome,FindWater and Death).
  */
 public class AntPlayerState {
 
@@ -19,7 +19,7 @@ public class AntPlayerState {
      */
     public void Enter(){
         //DoCheck();
-        //System.out.println("Finding food");
+
     }
 
     /**

@@ -108,7 +108,6 @@ public class CreateScene {
             case 1:
                 newTile = new StaticTiledMapTile(assetMgr.getPoison());
                 temp = cell.getTile().getId();
-                System.out.println("Posion at positions " + temp);
                 poisonLocations.add(temp);
                 break;
             case 2:
@@ -119,7 +118,6 @@ public class CreateScene {
             case 3:
                 newTile = new StaticTiledMapTile(assetMgr.getAntHill());
                 antHillHome = cell.getTile().getId();
-                System.out.println("Cell ID of Hill Home " + antHillHome);
                 break;
             default:
                 newTile = new StaticTiledMapTile(assetMgr.getDirt());

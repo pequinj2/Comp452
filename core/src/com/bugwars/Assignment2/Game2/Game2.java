@@ -109,7 +109,6 @@ public class Game2 implements Screen {
             // Render ants, the time intervals are to see the movements at a steady speed
             if (currentTime >= startTime) {
                 for (AntPlayer ant : ants) {
-                    //System.out.println("########################## ANT " + ant + "###################");
                     if (ant.getAntAlive()) {
                         scene.cellUpdateAntPrevPos(ant.antPreviousPos());
                         scene.cellUpdateAntPos(ant, ant.antCurrentPos());
@@ -283,8 +282,6 @@ public class Game2 implements Screen {
         goBackBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //System.out.println("Final btn pressed");
-                //hud.setFinalResults(ants);
                 showFinal = false;
                 goBackBtn.setVisible(false);
                 finalBtn.setVisible(true);
@@ -294,7 +291,6 @@ public class Game2 implements Screen {
         finalBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                System.out.println("Final btn pressed");
                 hud.setFinalResults(ants);
                 showFinal = true;
                 goBackBtn.setVisible(true);
