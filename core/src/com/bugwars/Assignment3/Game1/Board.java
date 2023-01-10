@@ -1,11 +1,17 @@
 package com.bugwars.Assignment3.Game1;
 
+import com.badlogic.gdx.utils.Array;
+
 public class Board {
 
     private Move[][] board = new Move[6][7]; // r, c
-    private Move[] moves;
+    private Array<Move> moves = new Array<>();
 
     public Board (){
+
+        for(int i = 0; i<7; i++){
+            moves.add(new Move(0,i));
+        }
 
     }
 
@@ -13,16 +19,18 @@ public class Board {
      * Moves that can be made from the board position
      * @return list of move objects
      */
-    private Move[] getMoves(){
-
-        return new Move[4];
+    public Array<Move> getMoves(){
+        return moves;
     }
 
     /**
      * Update the board with the position the player wants to make
      */
-    private void makeMove(){
-
+    public Board makeMove(Move move, int currentPlayer){
+        move.updateMove(currentPlayer);
+        // Copy move to the playing board
+        board[move.getX()][move.getY()] = new Move(move);
+        return this;
     }
 
     /**
@@ -44,7 +52,15 @@ public class Board {
 
     }
 
-    private boolean isGameOver(){
+    public boolean isGameOver(){
         return false;
+    }
+
+    public Move getMove(int i) {
+
+        for(Move m: moves){
+            System.out.print(" , " + m.getX() + " ID: " + m.getPlayerID() + " , ");
+        }
+        return moves.get(i);
     }
 }

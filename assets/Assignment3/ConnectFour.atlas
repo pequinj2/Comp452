@@ -1,0 +1,68 @@
+
+ConnectFour.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ConnectCell
+  rotate: false
+  xy: 620, 604
+  size: 88, 100
+  orig: 88, 100
+  offset: 0, 0
+  index: -1
+DiskGreen
+  rotate: false
+  xy: 92, 2
+  size: 88, 100
+  orig: 88, 100
+  offset: 0, 0
+  index: -1
+DiskPink
+  rotate: false
+  xy: 2, 2
+  size: 88, 100
+  orig: 88, 100
+  offset: 0, 0
+  index: -1
+ProfilesGlowG
+  rotate: false
+  xy: 994, 737
+  size: 968, 1258
+  orig: 968, 1258
+  offset: 0, 0
+  index: -1
+ProfilesGlowP
+  rotate: false
+  xy: 2, 706
+  size: 990, 1289
+  orig: 990, 1289
+  offset: 0, 0
+  index: -1
+connect4
+  rotate: false
+  xy: 2, 104
+  size: 616, 600
+  orig: 616, 600
+  offset: 0, 0
+  index: -1
+
+ConnectFour2.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+AntProfile
+  rotate: false
+  xy: 2, 2
+  size: 655, 975
+  orig: 655, 975
+  offset: 0, 0
+  index: -1
+SpiderProfile
+  rotate: false
+  xy: 659, 43
+  size: 646, 934
+  orig: 646, 934
+  offset: 0, 0
+  index: -1

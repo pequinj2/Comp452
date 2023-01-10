@@ -164,7 +164,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //this.hide();
-                game.setScreen(new FadeScreen(game, mainMenu, new Game1(camera, game) ));
+                game.setScreen(new FadeScreen(game, mainMenu, new Game1(camera, game, 0) ));
             }
         });
 
