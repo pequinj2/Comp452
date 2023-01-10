@@ -58,16 +58,14 @@ public class CreateScene {
      * @param position
      */
     public void dropPiece(int position){
-        //currentPieceX = position * 88 + 292;
-        //currentPieceY = 670;
+
         int depth = (rowDepth*100) + 50;
-        System.out.println(depth+ "     "+ rowDepth);
         if(currentPieceY > depth){
             currentPieceY-=5;
         }
         else{
             disks.add(new Disk(currentPiece,currentPieceX, currentPieceY));
-            game.setCurrentAction(0);
+            game.setCurrentAction(1);
         }
 
 

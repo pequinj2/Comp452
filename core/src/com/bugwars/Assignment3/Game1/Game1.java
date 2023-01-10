@@ -25,6 +25,7 @@ public class Game1 implements Screen {
     private Player player;
 
     // AI
+    private AIPlayer ai;
 
     // Overall game
     private int user, aiPlayer, currentAction;
@@ -43,6 +44,7 @@ public class Game1 implements Screen {
         user = i;
         aiPlayer ^= i;
         player = new Player(scene, board, user, this);
+        ai = new AIPlayer(board, aiPlayer);
         // Maybe need to change these locations later
         scene.currentPiece(user);
         currentAction = 0;
@@ -63,8 +65,18 @@ public class Game1 implements Screen {
                 scene.movePiece(player.getPiecePosition());
                 break;
             case 1: // AI's turn
+                System.out.println("IN THE AI TURN");
+                scene.currentPiece(aiPlayer);
+                float idk = ai.miniMax(board, 4, true, 1000, -1000);
+
                 break;
-            case 2: // Dropping game piece
+            case 2:
+                System.out.println("IN THE AI TURN 2 animation " + ai.getBestMove().getX());
+                scene.movePiece(ai.getBestMove().getX());
+                scene.dropPiece(ai.getBestMove().getX());
+                scene.addDisk();
+                break;
+            case 3: // Dropping game piece
                 //System.out.println(currentAction);
                 scene.dropPiece(player.getPiecePosition());
                 break;
@@ -127,6 +139,18 @@ public class Game1 implements Screen {
     }
 
     public void setCurrentAction(int i){
-        currentAction = i;
+        if(currentAction == 3) {
+            if (isPlayersTurn) {
+                currentAction = 1;
+                isPlayersTurn = false;
+            } else {
+                currentAction = 0;
+                isPlayersTurn = true;
+            }
+        }
+        else{
+            currentAction = 3;
+        }
+
     }
 }

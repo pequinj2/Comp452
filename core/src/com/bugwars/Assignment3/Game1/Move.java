@@ -33,7 +33,10 @@ public class Move {
      */
     public void updateMove(int playerID){
         this.playerID = playerID;
-        x++;
+        if(x != 5){
+            x++;
+        }
+
     }
 
     /**
