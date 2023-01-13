@@ -331,6 +331,16 @@ public class Board {
         }
     }
 
+    public void checkWinner(){
+
+    }
+
+    /**
+     * https://www.youtube.com/watch?v=MMLtza3CZFM&t=4738s
+     * Tutorial on building a heuristic for connect 4
+     * @param player
+     * @return
+     */
     public int evalualteBoard(int player){
 
         int windowLength = 4;
