@@ -17,6 +17,8 @@ public class AIPlayer {
     private Array<Move> movesToMake;
     private Array<Move> allowedMoves;
 
+    private int DEPTH = 4;
+
     public AIPlayer(Board board, int playerID, Game1 game, CreateScene scene){
         this.board = board;
         this.playerID = playerID;
@@ -25,85 +27,41 @@ public class AIPlayer {
         this.scene = scene;
 
     }
-    // Return score and have a pointer to best move because Java cannot return multiple values
+
+    /**
+     * Works but not as good as NegaMax
+     * @param board
+     * @param currentDepth
+     * @param isMaxPlayer
+     * @param alpha
+     * @param beta
+     * @return
+     */
     public float miniMax(Board board, int currentDepth, Boolean isMaxPlayer, float alpha, float beta){
         //System.out.println("\nCurrent depth is: " + currentDepth);
         Array<Move> availableMoves = board.getMoves();
+        int enemyID = playerID ^ 1;
         // Check if max depth has been reached or the game is over
         if(currentDepth == 0 || board.isGameOver()){
-            return board.evalualteBoard(playerID);
+            return board.evaluateBoard(playerID);
         }
-        bestMove = null;
-
-        // Maximizing player
-       /* if(isMaxPlayer){
-
-            for(int i = 0; i<availableMoves.size; i++){
-                Move move = new Move(availableMoves.get(i));
-                Move prevMove = availableMoves.get(i);
-                System.out.println("Checking move MAX: " + move.getX() + " , " + move.getY());
-                Board newBoard = board.makeMove(move,playerID);
-               //board.printBoard();
-                float score = miniMax(newBoard, currentDepth-1, false, alpha, beta);
-                newBoard.deleteMove(prevMove);
-                //System.out.println("Checking Alpha: " + alpha + " , " + score);
-                //availableMoves.set(i, prevMove);
-                System.out.println("SCORE and ALPHA: " + move.getX() + " ," + move.getY() +" - "+score+" , "+alpha);
-                if(score > alpha){
-                    alpha = score;
-
-                    bestMove = new Move(prevMove);
-                    System.out.println("Returning alpha move?: " + bestMove.getX() + " ,"+ bestMove.getY());
-                    arrayPosition = i;
-                }
-                if(beta <= alpha){
-                    break;
-                }
-            }
-
-            return alpha;
-        }
-        else{
-
-
-            for(int i = 0; i<availableMoves.size; i++){
-                Move move = new Move(availableMoves.get(i));
-                //System.out.println("ON THIS Move?: " + move.getX() + " ,"+ move.getY());
-                Move prevMove = availableMoves.get(i);
-                System.out.println("Checking move MIN: " + move.getX() + " , " + move.getY());
-                Board newBoard = board.makeMove(move,playerID);
-                float score = miniMax(newBoard, currentDepth-1, true, alpha, beta);
-                newBoard.deleteMove(prevMove);
-                //availableMoves.set(i, prevMove);
-                //System.out.println("Returning: " + move.getX());
-                if(score < beta){
-                    beta = score;
-                    //bestMove = new Move(prevMove);
-                    //System.out.println("Returning Move?: " + bestMove.getX() + " ,"+ bestMove.getY());
-                    arrayPosition = i;
-                }
-
-                if(beta <= alpha){
-                    break;
-                }
-            }
-            return beta;
-        }*/
+        int randIndex = (int)Math.random() * availableMoves.size;
+        bestMove = availableMoves.get(randIndex);
 
         if(isMaxPlayer) {
             int bestScore = -1000;
             for (int i = 0; i < availableMoves.size; i++) {
                 Move move = new Move(availableMoves.get(i));
                 Board newBoard = board.makeMove(move, playerID);
-                System.out.println("Checking move MAX: " + move.getX() + " , " + move.getY());
                 int score = (int) miniMax(newBoard, currentDepth - 1, false, alpha, beta);
                 newBoard.deleteMove(move);
                 if(score > bestScore){
                     bestScore = score;
-                    bestMove = move;
                     move.updateScore(bestScore);
+                    if(currentDepth == DEPTH){
+                        bestMove = move;
+                    }
                     System.out.println("\nMove max"+move.getX()+move.getY()+" gets a score of: "+ bestScore);
-                    updateMovesMade(move, bestScore);
 
                 }
                 alpha = max(alpha, bestScore);
@@ -116,16 +74,17 @@ public class AIPlayer {
             int bestScore = 1000;
             for (int i = 0; i < availableMoves.size; i++) {
                 Move move = new Move(availableMoves.get(i));
-                Board newBoard = board.makeMove(move, playerID);
-                System.out.println("Checking move MIN: " + move.getX() + " , " + move.getY());
+                Board newBoard = board.makeMove(move, enemyID);
                 int score = (int) miniMax(newBoard, currentDepth - 1, true, alpha, beta);
                 newBoard.deleteMove(move);
                 if(score < bestScore){
                     bestScore = score;
-                    bestMove = move;
                     move.updateScore(bestScore);
+                    if(currentDepth == DEPTH){
+                        bestMove = move;
+                    }
                     System.out.println("\nMove min"+move.getX()+move.getY()+" gets a score of: "+ bestScore);
-                    updateMovesMade(move, bestScore);
+
                 }
                 beta = min(beta, bestScore);
                 if (beta <= alpha) {
@@ -137,31 +96,57 @@ public class AIPlayer {
 
     }
 
-    public void playTurn(){
-        allowedMoves = board.getMoves();
-        movesToMake = new Array<Move>();
-        float temp = miniMax(board, 4, true, -1000, 1000);
-        Array<Move> finalMoves = new Array<Move>();
-        for (Move m: movesToMake){
-            for(Move checkMove: allowedMoves){
-                if(m.getX() == checkMove.getX() && m.getY()==checkMove.getY()){
-                    finalMoves.add(m);
+    /**
+     * https://www.youtube.com/watch?v=5UVwksLYAKI&t=892s
+     * Chess Engine in Python - Part 14 - Nega Max and Alpha Beta Pruning - Eddie Sharick
+     * @param board
+     * @param depth
+     * @param playerID
+     * @param alpha
+     * @param beta
+     * @return
+     */
+    public int negamax(Board board, int depth, int playerID, int alpha, int beta){
+        if(depth == 0){
+            int multiplier = 1;
+            if(playerID==0){
+                multiplier=-1;
+            }
+            return multiplier * board.evaluateBoard(playerID);
+        }
+
+        Array<Move> availableMoves = board.getMoves();
+        int bestScore = -10000;
+        for (int i = 0; i < availableMoves.size; i++) {
+            Move move = new Move(availableMoves.get(i));
+            Board newBoard = board.makeMove(move, playerID);
+            int score = -negamax(newBoard, depth - 1, playerID ^1, -max(alpha, bestScore), -beta);
+            newBoard.deleteMove(move);
+
+            if(score>bestScore){
+                bestScore = score;
+                if(depth == DEPTH){
+                    bestMove = move;
                 }
             }
-        }
-        for(Move getFinal: finalMoves){
-            System.out.println("Move ID: " + getFinal.getX()+","+getFinal.getY()+"   Score: "+ getFinal.getScore());
-            if(bestMove.getScore() < getFinal.getScore()){
-                bestMove = getFinal;
+
+            if(bestScore>= beta){
+                break;
             }
         }
+
+        return bestScore;
+    }
+
+
+    public void playTurn(){
+        //float temp = miniMax(board, DEPTH, true, -1000, 1000);
+        int temp = negamax(board, DEPTH, playerID, -1000, 1000);
         System.out.println("This is the minimax score: " + temp + "\nThis is the best move: " + bestMove.getX() +" " + bestMove.getY());
         piecePosition = bestMove.getX();
-        //System.out.println("The piece position: " + piecePosition);
         scene.movePiece(bestMove.getY());
         scene.setRowDepth(piecePosition);
         setBestMove();
-        //game.setCurrentAction(1);
     }
 
 
@@ -180,25 +165,4 @@ public class AIPlayer {
         return piecePosition;
     }
 
-    public void updateMovesMade(Move move, int bestScore){
-        if(movesToMake.size != 0){
-            boolean moveFound = false;
-            for(Move m: movesToMake){
-                if(m.getX()==move.getX() && m.getY()==move.getY() ){
-                    if(m.getScore()<move.getScore()) {
-                        m.updateScore(bestScore);
-                    }
-                    moveFound = true;
-                    break;
-                }
-            }
-            if(moveFound != true){
-                movesToMake.add(move);
-            }
-        }
-        else{
-            movesToMake.add(move);
-        }
-
-    }
 }

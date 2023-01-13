@@ -103,30 +103,6 @@ public class Game1 implements Screen {
 
         }
 
-       /* switch(currentAction){
-            case 0: // User's turn
-                player.movePlayerPiece();
-                scene.movePiece(player.getPiecePosition());
-                break;
-            case 1: // AI's turn
-                System.out.println("IN THE AI TURN");
-                scene.currentPiece(aiPlayer);
-                float idk = ai.miniMax(board, 4, true, 1000, -1000);
-
-                break;
-            case 2:
-                System.out.println("IN THE AI TURN 2 animation " + ai.getBestMove().getX());
-                scene.movePiece(ai.getBestMove().getX());
-                scene.dropPiece(ai.getBestMove().getX());
-                scene.addDisk();
-                break;
-            case 3: // Dropping game piece
-                //System.out.println(currentAction);
-                scene.dropPiece(player.getPiecePosition());
-                break;
-        }*/
-
-
     }
 
     @Override

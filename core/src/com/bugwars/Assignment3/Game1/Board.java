@@ -322,7 +322,13 @@ public class Board {
         for(Move[] row: board){
             System.out.println();
             for(Move m: row){
-                System.out.print(" , " +m);
+                if(m != null){
+                    System.out.print("  ,  " +m.getPlayerID());
+                }
+                else{
+                    System.out.print("," +m);
+                }
+
             }
         }
         System.out.println("\nAvailable moves ");
@@ -341,7 +347,7 @@ public class Board {
      * @param player
      * @return
      */
-    public int evalualteBoard(int player){
+    public int evaluateBoard(int player){
 
         int windowLength = 4;
         int score = 0;
@@ -367,7 +373,8 @@ public class Board {
                 }
             }
         }
-        score += (countCenter * 6);
+
+        score += (countCenter * 3);
 
         // Horizontal
         for(Move[] row: board){
@@ -399,8 +406,8 @@ public class Board {
 
 
         // Diagonal Positive
-        for(int i=0; i<6-3; i++){
-            for(int j=0; j<7-3; j++){
+        for(int i=0; i<3; i++){
+            for(int j=0; j<4; j++){
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i + index][j + index];
@@ -413,8 +420,8 @@ public class Board {
 
         //Diagonal negative
         // Diagonal Positive
-        for(int i=0; i<6-3; i++){
-            for(int j=0; j<7-3; j++){
+        for(int i=0; i<3; i++){
+            for(int j=0; j<4; j++){
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i+3 - index][j + index];
@@ -436,8 +443,6 @@ public class Board {
         int enemyScore = 0;
         int enemyID = playerID ^ 1;
 
-
-
         for(Move move: window){
 
             if(move != null){
@@ -453,6 +458,7 @@ public class Board {
                 nulls++;
             }
         }
+
         if(count==4){
             System.out.println("\n4 squares found!");
             score += 100;
@@ -466,9 +472,12 @@ public class Board {
             score += 2;
         }
 
+
         if(enemyScore == 3 && nulls==1){
-            score -= 80;
+            System.out.println("\nEnemy could win! squares found!");
+            score -= 4;
         }
+
 
         return score;
     }
