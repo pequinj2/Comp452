@@ -2,6 +2,7 @@ package com.bugwars.Assignment3.Game1;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.utils.Array;
 
 public class Player {
 
@@ -38,9 +39,11 @@ public class Player {
 
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){ // Drop piece
+            Array<Move> availableMoves = board.getMoves();
             Move getPosition = board.getMove(piecePosition);
             int rowDepth = getPosition.getX();
-            if(rowDepth != 6){ // Make sure that the piece fits on the board
+            System.out.println("\n"+piecePosition+ " Returning this rowdepth: " + rowDepth);
+            if(rowDepth != 10){ // Make sure that the piece fits on the board
                 Board newBoard = board.makeMove(getPosition, playerID);
                 scene.setRowDepth(rowDepth);
                 // Play drop piece animation

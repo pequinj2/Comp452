@@ -7,6 +7,7 @@ public class Move {
 
     private int x, y;
     private int playerID;
+    private int score;
 
     public Move(int playerID, int x, int y){
         this.playerID = playerID;
@@ -32,12 +33,16 @@ public class Move {
      * @param playerID
      */
     public void updateMove(int playerID){
-        this.playerID = playerID;
-        if(x != 5){
-            x++;
-        }
+        this.playerID =playerID;
 
     }
+
+    public void reverseMove(){
+        this.playerID = 2;
+        x--;
+    }
+
+
 
     /**
      * Return the row number (starts at 0)
@@ -61,5 +66,13 @@ public class Move {
      */
     public int getPlayerID() {
         return playerID;
+    }
+
+    public void updateScore(int score){
+        this.score = score;
+    }
+
+    public int getScore(){
+        return score;
     }
 }

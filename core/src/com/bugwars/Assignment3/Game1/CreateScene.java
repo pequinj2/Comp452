@@ -66,6 +66,7 @@ public class CreateScene {
         else{
             disks.add(new Disk(currentPiece,currentPieceX, currentPieceY));
             game.setCurrentAction(1);
+            game.changeCurrentPlayer();
         }
 
 
