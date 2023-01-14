@@ -25,6 +25,13 @@ DiskPink
   orig: 88, 100
   offset: 0, 0
   index: -1
+DiskYellow
+  rotate: false
+  xy: 620, 502
+  size: 88, 100
+  orig: 88, 100
+  offset: 0, 0
+  index: -1
 ProfilesGlowG
   rotate: false
   xy: 994, 737

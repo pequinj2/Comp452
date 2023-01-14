@@ -47,7 +47,7 @@ public class Player {
                 Board newBoard = board.makeMove(getPosition, playerID);
                 scene.setRowDepth(rowDepth);
                 // Play drop piece animation
-                game.setCurrentAction(3);
+                game.setCurrentAction();
             }
 
 

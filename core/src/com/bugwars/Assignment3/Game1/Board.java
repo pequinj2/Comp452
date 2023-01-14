@@ -1,20 +1,20 @@
 package com.bugwars.Assignment3.Game1;
 
-import static java.lang.Math.abs;
-
 import com.badlogic.gdx.utils.Array;
-
 import java.util.Arrays;
 
+/**
+ * This class is the game board that will determine available moves, piece scores and if a there
+ * is a winning combination.
+ */
 public class Board {
 
     private Move[][] board = new Move[6][7]; // r, c
     private Array<Move> moves = new Array<>();
     private boolean gameOver = false;
+    private Move[] winningWindow;
 
     public Board (){
-
-
 
     }
 
@@ -75,214 +75,7 @@ public class Board {
         //return this;
     }
 
-    /**
-     * Is the Static Evaluation Function
-     * @return The score for the current position for the current player
-     */
-    public int evaluate(int currentPlayer){
-        int score = 0;
-        int enemyScore = 0;
-        int scoreCurrent = 0;
-        int enemyScoreCurrent = 0;
-        int playerID = currentPlayer;
-        int enemyID = currentPlayer ^ 1;
-        int windowCount = 0;
-        int windowCountStart = 0;
 
-
-        // Horizontal
-        for(Move[] moveRow: board){
-            windowCount =0;
-            windowCountStart =0;
-            for(int i=0; i<7; i++){
-                Move move = moveRow[i];
-                windowCount++;
-                //System.out.println("i = : " + windowCount);
-                if(windowCount == (windowCountStart+5)){
-                    windowCountStart++;
-                    scoreCurrent += score;
-                    enemyScoreCurrent += enemyScore;
-                    score=0;
-                    enemyScore=0;
-                    if(windowCountStart == 4){
-                        scoreCurrent += score;
-                        enemyScoreCurrent += enemyScore;
-                        break;
-                    }
-                    i=windowCountStart;
-                    windowCount = windowCountStart;
-                    //System.out.println("This is i and window start " + i + " " + windowCountStart);
-                    continue;
-                }else {
-                    if (move != null) {
-                        System.out.println("\nMove gets a SCORE: "+ move.getX() + " " + move.getY());
-                        int currentID = move.getPlayerID();
-                        if (playerID == currentID) {
-                            score++;
-                            enemyScore = 0;
-                            if(score == 4){
-                                System.out.println("AI will win HORIZONTAL!!!");
-                                score = 200;
-                            }
-
-                        } else {
-                            enemyScore++;
-                            score = 0;
-                            if(enemyScore == 3){
-                                System.out.println("Player will win HORIZONTAL!!!");
-                                enemyScore = 100;
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        }
-        System.out.println("AI score vs Player score HORIZONTAL: "+ scoreCurrent + " " + enemyScoreCurrent);
-        // Vertical
-
-
-        // Get column
-       /* for(int g=0; g<7; g++){ // 7 columns we need to go through
-            int[] column = new int[6]; // column will have 6 row values
-            // Reset window values
-            windowCount =0;
-            windowCountStart =0;
-            score=0;
-            enemyScore=0;
-            // Build the first column to scan
-            for(int j=0; j<6; j++) { // starting row
-                Move move = board[j][g];
-                if (move != null) {
-                    column[j] = move.getPlayerID();
-                }else{
-                    column[j] = 10; // arbitrary number
-                }
-            }
-            // Scan first column
-            for(int i=0; i<6; i++){ // column
-                windowCount++;
-                if(windowCount == (windowCountStart+5)){
-                    windowCountStart++;
-                    scoreCurrent += score;
-                    enemyScoreCurrent += enemyScore;
-                    score=0;
-                    enemyScore=0;
-                    if(windowCountStart == 3){
-                        scoreCurrent += score;
-                        enemyScoreCurrent += enemyScore;
-                        break;
-                    }
-                    i=windowCountStart;
-                    windowCount = windowCountStart;
-                    continue;
-                }else {
-                    if (playerID == column[i]) {
-                        score++;
-                        enemyScore =0;
-                        if(score == 4){
-                            System.out.println("AI will win VERTICAL!!!" + score);
-                            score = 200;
-                        }
-                    }
-                    if (enemyID == column[i]) {
-                        enemyScore++;
-                        score = 0;
-                        if(enemyScore == 3){
-                            System.out.println("Player will win VERTICAL!!!" + enemyScore);
-                            if(column[i+1] == playerID){
-                                enemyScore = -100;
-                            }
-                            else{
-
-                            }
-
-                        }
-                    }
-                }
-            }
-        }
-
-        // Positive Diagonal
-        int[][][] positiveDiag = new int[][][] {
-                {{2,0}, {3,1}, {4,2}, {5,3} },
-                {{1,0}, {2,1}, {3,2}, {4,3}, {5,4} },
-                {{0,0}, {1,1}, {2,2}, {3,3}, {4,4}, {5,5} },
-                {{0,1}, {1,2}, {2,3}, {3,4}, {4,5}, {5,6} },
-                {{0,2}, {1,3}, {2,4}, {3,5}, {4,6} },
-                {{0,3}, {1,4}, {2,5}, {3,6} };*/
-        //};
-        /*int[][] positiveDiag1 = new int[][] {{2,0}, {3,1}, {4,2}, {5,3} };
-        int[][] positiveDiag2 = new int[][] {{1,0}, {2,1}, {3,2}, {4,3}, {5,4} };
-        int[][] positiveDiag3 = new int[][] {{0,0}, {1,1}, {2,2}, {3,3}, {4,4}, {5,5} };
-        int[][] positiveDiag4 = new int[][] {{0,1}, {1,2}, {2,3}, {3,4}, {4,5}, {5,6} };
-        int[][] positiveDiag5 = new int[][] {{0,2}, {1,3}, {2,4}, {3,5}, {4,6} };
-        int[][] positiveDiag6 = new int[][] {{0,3}, {1,4}, {2,5}, {3,6} };*/
-
-       /* for(int i=0; i<positiveDiag.length; i++){
-
-            for(int j=0; j< positiveDiag[i].length; j++){
-                windowCount =0;
-                windowCountStart =0;
-                score=0;
-                enemyScore=0;
-                for(int g=0; g<positiveDiag[i][j].length; g++){
-                    int x = positiveDiag[i][j][g];
-                    int y = positiveDiag[i][j][g+1];
-                    //System.out.println("This is the 3rd for loop G: "+ x + " " + y);
-                    windowCount++;
-                    if(windowCount == (windowCountStart+5)) {
-                        windowCountStart++;
-                        scoreCurrent += score;
-                        enemyScoreCurrent += enemyScore;
-                        score=0;
-                        enemyScore=0;
-                        if (windowCountStart == (positiveDiag[i].length%4)) {
-                            scoreCurrent += score;
-                            enemyScoreCurrent += enemyScore;
-                            break;
-                        }
-                        g = windowCountStart;
-                        windowCount = windowCountStart;
-                        continue;
-                    }
-                    Move move = board[x][y];
-                    if(move != null){
-                        int currentID = move.getPlayerID();
-                        if (playerID == currentID) {
-                            score++;
-                            enemyScore =0;
-                            if(score == 4){
-                                score = 200;
-                            }
-
-                        } else {
-                            enemyScore++;
-                            score=0;
-                            if(enemyScore == 3){
-                                 x= positiveDiag[i][j+1][0];
-                                 y = positiveDiag[i][j+1][1];
-                                 int nextPlayerID = board[x][y].getPlayerID();
-                                if(nextPlayerID == playerID){
-                                    enemyScore = -100;
-                                }
-                            }
-                        }
-                    }
-                    g++;
-                }
-            }
-        }
-
-        //int x, y = positiveDiag[i][j];*/
-
-
-    System.out.println("Returning Scores "+ (scoreCurrent - enemyScoreCurrent));
-
-        return scoreCurrent - enemyScoreCurrent;
-
-    }
 
     /**
      * @return The current player making a move
@@ -337,8 +130,79 @@ public class Board {
         }
     }
 
-    public void checkWinner(){
+    public boolean checkWinner(int playerID){
 
+        int windowLength = 4;
+        boolean winnerFound = false;
+
+        // Check horizontal win
+        for(Move[] row: board){
+            for(int i=0; i< row.length-3; i++){
+                Move[] window = Arrays.copyOfRange(row,i, windowLength+i);
+                winnerFound = windowWinner(window, playerID);
+                if(winnerFound){
+                    return true;
+                }
+            }
+        }
+
+        // Check vertical win
+
+        for(int g=0; g<7; g++) { // 7 columns we need to go through
+            Move[] column = new Move[6]; // column will have 6 row values
+            // Build the first column to scan
+            for (int j = 0; j < 6; j++) { // starting row
+                Move move = board[j][g];
+                if (move != null) {
+                    column[j] = move;
+                } else {
+                    column[j] = null; // arbitrary number
+                }
+            }
+            // Scan first column
+            for (int i = 0; i < 6-3; i++) { // column
+                Move[] window = Arrays.copyOfRange(column, i, windowLength+i);
+                winnerFound = windowWinner(window, playerID);
+                if(winnerFound){
+                    return true;
+                }
+            }
+        }
+        // Check + diagonal win
+
+        for(int i=0; i<3; i++){
+            for(int j=0; j<4; j++){
+                Move[] window = new Move[4];
+                for(int index=0; index<4; index++) {
+                    window[index] = board[i + index][j + index];
+                    //System.out.println("Diagonal positive "+ (i + index)+ " , " +(j + index));
+                }
+                winnerFound = windowWinner(window, playerID);
+                if(winnerFound){
+                    return true;
+                }
+
+            }
+        }
+
+        // Check - diagonal win
+
+        for(int i=0; i<3; i++){
+            for(int j=0; j<4; j++){
+                Move[] window = new Move[4];
+                for(int index=0; index<4; index++) {
+                    window[index] = board[i+3 - index][j + index];
+                    //System.out.println("Diagonal negative "+ (i+3 - index)+ " , " +(j + index));
+                }
+                winnerFound = windowWinner(window, playerID);
+                if(winnerFound){
+                    return true;
+                }
+
+            }
+        }
+
+        return winnerFound;
     }
 
     /**
@@ -419,7 +283,6 @@ public class Board {
         }
 
         //Diagonal negative
-        // Diagonal Positive
         for(int i=0; i<3; i++){
             for(int j=0; j<4; j++){
                 Move[] window = new Move[4];
@@ -480,5 +343,27 @@ public class Board {
 
 
         return score;
+    }
+
+    public boolean windowWinner(Move[] window, int playerID){
+        int count = 0;
+
+        for(Move move: window){
+            if(move !=null){
+                if(move.getPlayerID() != playerID){
+                    return false;
+                }
+            }
+            else{ // Null space found so no winner
+                return false;
+            }
+        }
+        winningWindow = window;
+        gameOver = true;
+        return true;
+    }
+
+    public Move[] getWinningWindow(){
+        return winningWindow;
     }
 }

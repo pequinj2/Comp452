@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.bugwars.Assignment1.SpiderIntro;
 import com.bugwars.Assignment2.Game1.AntIntro;
 import com.bugwars.Assignment2.Game2.AntIntro2;
+import com.bugwars.Assignment3.Game1.ChoseCharacter;
 import com.bugwars.Assignment3.Game1.Game1;
 import com.bugwars.Helper.FadeScreen;
 
@@ -164,7 +165,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //this.hide();
-                game.setScreen(new FadeScreen(game, mainMenu, new Game1(camera, game, 0) ));
+                game.setScreen(new FadeScreen(game, mainMenu, new ChoseCharacter(camera, game) ));
             }
         });
 

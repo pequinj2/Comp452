@@ -23,7 +23,7 @@ public class Game1 implements Screen {
     private PauseMenu pauseMenu;
 
     // Player
-    private Boolean isPlayersTurn = true;
+    private Boolean isPlayersTurn = false;
     private Player player;
 
     // AI
@@ -34,8 +34,7 @@ public class Game1 implements Screen {
     private Boolean pieceDropped = false;
     private Board board;
     private int piecePosition;
-    private BitmapFont font;
-    private String tie = "Game Over - Tie!";
+
 
 
     public Game1(OrthographicCamera camera, BugWars game, int i){
@@ -54,12 +53,12 @@ public class Game1 implements Screen {
         scene.currentPiece(user);
         currentAction = 0;
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Retro Gaming.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 30; // font size
-        font = generator.generateFont(parameter);
+        // If user selected the ant then they go first
+        if(user==0){
+            isPlayersTurn=true;
+        }
 
-        generator.dispose(); // Once font is generated dispose of the generator
+
 
 
     }
@@ -79,11 +78,9 @@ public class Game1 implements Screen {
                     scene.movePiece(piecePosition);
                     break;
                 case 1:
-                    scene.dropPiece(piecePosition);
+                    scene.dropPiece();
                     break;
-
             }
-
         }
         else{
             switch(currentAction){
@@ -91,12 +88,9 @@ public class Game1 implements Screen {
                     scene.currentPiece(aiPlayer);
                     ai.playTurn();
                     piecePosition = ai.getPiecePosition();
-                    System.out.println("IN THE AI TURN 2 animation " + piecePosition );
-
-                    board.printBoard();
                     break;
                 case 1:
-                    scene.dropPiece(piecePosition);
+                    scene.dropPiece();
                     break;
 
             }
@@ -111,9 +105,7 @@ public class Game1 implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.setProjectionMatrix(camera.combined);
             batch.begin();
-            font.draw(batch, tie, 40, 830);
             scene.render(batch);
-
             batch.end();
 
         }else{
@@ -180,8 +172,29 @@ public class Game1 implements Screen {
         }
     }
 
-    public void setCurrentAction(int i){
+    public void setCurrentAction(){
         currentAction = currentAction ^ 1;
 
+    }
+
+    public boolean checkForWinner(){
+        boolean winner = false;
+        if(isPlayersTurn) {
+            winner = board.checkWinner(user);
+            if(winner){
+                scene.finishScreen(user);
+                scene.finishingPieces(board.getWinningWindow());
+
+            }
+        }
+        else{
+            winner = board.checkWinner(aiPlayer);
+            if(winner){
+                scene.finishScreen(aiPlayer);
+                scene.finishingPieces(board.getWinningWindow());
+            }
+
+        }
+        return winner;
     }
 }

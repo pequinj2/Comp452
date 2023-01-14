@@ -3,11 +3,7 @@ package com.bugwars.Helper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.bugwars.Assignment1.Assignment1;
 
 /**
  * Asset manager for Assignment 3 Games
@@ -16,7 +12,7 @@ public class AssetMangerAssignment3 {
 
     private TextureAtlas atlas;
     private TextureRegion antProfile, spiderProfile, antDisk, spiderDisk, profileGlowAnt, profileGlowSpider,
-            gridGlow, gameBoard;
+             gameBoard, yellowDisk;
     private Skin skin = new Skin();
 
 
@@ -31,7 +27,7 @@ public class AssetMangerAssignment3 {
         spiderDisk = new TextureRegion(atlas.findRegion("DiskGreen"));
         profileGlowAnt = new TextureRegion(atlas.findRegion("ProfilesGlowP"));
         profileGlowSpider = new TextureRegion(atlas.findRegion("ProfilesGlowG"));
-        //gridGlow = new TextureRegion(atlas.findRegion("Berry"));
+        yellowDisk = new TextureRegion(atlas.findRegion("DiskYellow"));
 
 
     }
@@ -86,4 +82,13 @@ public class AssetMangerAssignment3 {
     public TextureRegion getAntGlow(){
         return profileGlowAnt;
     }
+
+    /**
+     * @return
+     */
+    public TextureRegion getEndPiece(){
+        return yellowDisk;
+    }
+
+
 }

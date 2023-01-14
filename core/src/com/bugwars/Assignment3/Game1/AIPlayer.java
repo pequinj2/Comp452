@@ -109,7 +109,7 @@ public class AIPlayer {
     public int negamax(Board board, int depth, int playerID, int alpha, int beta){
         if(depth == 0){
             int multiplier = 1;
-            if(playerID==0){
+            if(playerID!=this.playerID){
                 multiplier=-1;
             }
             return multiplier * board.evaluateBoard(playerID);
@@ -158,7 +158,7 @@ public class AIPlayer {
     public void setBestMove(){
         board.makeMove(bestMove,playerID);
         //board.getMoves().set(arrayPosition, bestMove);
-        game.setCurrentAction(1);
+        game.setCurrentAction();
     }
 
     public int getPiecePosition(){

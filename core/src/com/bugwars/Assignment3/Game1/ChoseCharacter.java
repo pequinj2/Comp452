@@ -16,16 +16,18 @@ import com.bugwars.Helper.FadeScreen;
 public class ChoseCharacter implements Screen {
 
     private int chosenCharacter;
-    private Texture antAndSpiderImg, boarderImg, chracterHighlight;
-    private TextureRegion characters, chracterHighlightBoarder;
+    private Texture antAndSpiderImg, boarderImg, antHighlight, spiderHighlight;
+    private TextureRegion characters, antHighlightBoarder, spiderHighlightBoarder;
     private BugWars game;
     private OrthographicCamera camera;
     private SpriteBatch batch = new SpriteBatch();
     private BitmapFont font;
-    private String choseChar = "Press <a> or <d> to select character, when the character you want is highlighted press <SPACE> to begin.";
-    private String choseChar2 = "Note Ant will always go first.";
+    private String choseChar = "Press <a> or <d> to select a character, when the ";
+    private String choseChar1 ="character you want is highlighted press <SPACE> to begin.";
+    private String choseChar2 = "Note, Ant will always go first.";
     private int highlightX = 0;
     private int highlightY = 100;
+    private boolean characterSelect = true;
 
 
     public ChoseCharacter(OrthographicCamera camera, BugWars game){
@@ -41,9 +43,11 @@ public class ChoseCharacter implements Screen {
         generator.dispose(); // Once font is generated dispose of the generator
 
         antAndSpiderImg = new Texture(Gdx.files.internal("Assignment3/AntSpiderPic.png"));
-        chracterHighlight = new Texture(Gdx.files.internal("Assignment3/CharacterHighlight.png"));
-        chracterHighlightBoarder = new TextureRegion(chracterHighlight, 0, 100, 1200, 800);
-        characters = new TextureRegion(antAndSpiderImg, highlightX, highlightY, 1200, 800);
+        antHighlight = new Texture(Gdx.files.internal("Assignment3/AntGlow.png"));
+        spiderHighlight = new Texture(Gdx.files.internal("Assignment3/SpiderGlow.png"));
+        antHighlightBoarder = new TextureRegion(antHighlight, 0, 0, 1200, 800);
+        spiderHighlightBoarder = new TextureRegion(spiderHighlight, 0, 0, 1200, 800);
+        characters = new TextureRegion(antAndSpiderImg, 0, 0, 1200, 800);
         boarderImg = new Texture(Gdx.files.internal("TextBoarder.png"));
 
     }
@@ -57,11 +61,13 @@ public class ChoseCharacter implements Screen {
             // Highlight ant
             chosenCharacter = 0;
             highlightX = 0;
+            characterSelect = true;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.D)){
             // Highlight spider
             chosenCharacter = 1;
-            highlightX = 600;
+            highlightX = 0;
+            characterSelect = false;
 
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
@@ -72,6 +78,7 @@ public class ChoseCharacter implements Screen {
 
     @Override
     public void render(float delta) {
+        update();
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -79,9 +86,15 @@ public class ChoseCharacter implements Screen {
         batch.begin();
         batch.draw(characters, 0, 200);
         batch.draw(boarderImg, 0, 0);
-        batch.draw(chracterHighlightBoarder, highlightX, 200);
+        if(characterSelect){
+            batch.draw(antHighlightBoarder, highlightX, 200);
+        }else{
+            batch.draw(spiderHighlightBoarder, highlightX, 200);
+        }
+
         font.draw(batch,choseChar,40,160);
-        font.draw(batch,choseChar2,40,120);
+        font.draw(batch,choseChar1,40,120);
+        font.draw(batch,choseChar2,40,80);
         batch.end();
     }
 
