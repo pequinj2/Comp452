@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * The user's player class, controls piece movement and placing.
+ */
 public class Player {
 
-    private int character;
     private CreateScene scene;
     private int piecePosition = 6;
     private Board board;
@@ -39,10 +41,9 @@ public class Player {
 
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){ // Drop piece
-            Array<Move> availableMoves = board.getMoves();
+            Array<Move> availableMoves = board.getMoves(); // Generate available moves
             Move getPosition = board.getMove(piecePosition);
             int rowDepth = getPosition.getX();
-            System.out.println("\n"+piecePosition+ " Returning this rowdepth: " + rowDepth);
             if(rowDepth != 10){ // Make sure that the piece fits on the board
                 Board newBoard = board.makeMove(getPosition, playerID);
                 scene.setRowDepth(rowDepth);
@@ -55,6 +56,10 @@ public class Player {
         }
     }
 
+    /**
+     * Return X (row) value to place the game piece in the right place
+     * @return
+     */
     public int getPiecePosition(){
         return piecePosition;
     }

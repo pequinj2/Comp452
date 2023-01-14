@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.bugwars.Helper.AssetMangerAssignment3;
 
 /**
- * This class is responsible for displaying all apporiate textures, game finishing text and
+ * This class is responsible for displaying all appropriate textures, game finishing text and
  * their positions
  */
 public class CreateScene {
@@ -24,7 +24,7 @@ public class CreateScene {
     private int currentPieceX, currentPieceY, currentGlowX, currentGlowY, positionDrop;
     private boolean renderFinish = false;
     private BitmapFont font;
-    private String finishText = "";
+    private String finishText  = "Game Over - Tie!";
 
     public CreateScene(Game1 game){
         this.game = game;
@@ -126,9 +126,6 @@ public class CreateScene {
         }
     }
 
-/*    public void addDisk(){
-        disks.add(new Disk(currentPiece,currentPieceX, currentPieceY));
-    }*/
 
     /**
      * rowDepth is the Row value that the disk will fall to
@@ -151,9 +148,7 @@ public class CreateScene {
             case 1:
                 finishText = "Spider wins!!";
                 break;
-            case 2:
-                finishText = "Game Over - Tie!";
-                break;
+            // Tie is defaulted to display
         }
 
     }
@@ -167,12 +162,19 @@ public class CreateScene {
         for(Move move: moves){
             int x = move.getX();
             int y = move.getY();
-            System.out.println("Finishing Moves: "+ x +", "+y);
+
             currentPiece = endPiece;
             currentPieceX = y * 88 + 292;
             currentPieceY = (x*100) + 50;
-            System.out.println("Finishing coordinates: "+ currentPieceX +", "+currentPieceY);
+
             finishDisks.add(new Disk(currentPiece,currentPieceX, currentPieceY));
         }
+    }
+
+    /**
+     * In the case of a tie just render the final game text
+     */
+    public void setRenderFinish(){
+        renderFinish = true;
     }
 }

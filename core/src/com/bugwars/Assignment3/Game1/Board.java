@@ -44,10 +44,7 @@ public class Board {
                 }
             }
         }
-        if(moves.size == 0){
-            gameOver ^= gameOver;
-            System.out.println("Game is over its a tie!");
-        }
+
         return moves;
     }
 
@@ -94,7 +91,6 @@ public class Board {
         for(Move m: moves){
 
             if(m.getY() == i){
-                //System.out.println("returning this move: "+ m.getX() + ", "+ m.getY());
                 return m;
             }
         }
@@ -113,7 +109,6 @@ public class Board {
 
     public void printBoard(){
         for(Move[] row: board){
-            System.out.println();
             for(Move m: row){
                 if(m != null){
                     System.out.print("  ,  " +m.getPlayerID());
@@ -175,7 +170,6 @@ public class Board {
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i + index][j + index];
-                    //System.out.println("Diagonal positive "+ (i + index)+ " , " +(j + index));
                 }
                 winnerFound = windowWinner(window, playerID);
                 if(winnerFound){
@@ -192,7 +186,6 @@ public class Board {
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i+3 - index][j + index];
-                    //System.out.println("Diagonal negative "+ (i+3 - index)+ " , " +(j + index));
                 }
                 winnerFound = windowWinner(window, playerID);
                 if(winnerFound){
@@ -262,7 +255,7 @@ public class Board {
                 }
             }
             // Scan first column
-            for (int i = 0; i < 6-3; i++) { // column
+            for (int i = 0; i < 3; i++) { // column
                 Move[] window = Arrays.copyOfRange(column, i, windowLength+i);
                 score += windowCount(window, playerID);
             }
@@ -275,7 +268,6 @@ public class Board {
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i + index][j + index];
-                    //System.out.println("Diagonal positive "+ (i + index)+ " , " +(j + index));
                 }
                 score += windowCount(window, playerID);
 
@@ -288,7 +280,6 @@ public class Board {
                 Move[] window = new Move[4];
                 for(int index=0; index<4; index++) {
                     window[index] = board[i+3 - index][j + index];
-                    //System.out.println("Diagonal negative "+ (i+3 - index)+ " , " +(j + index));
                 }
                 score += windowCount(window, playerID);
 
@@ -322,32 +313,35 @@ public class Board {
             }
         }
 
-        if(count==4){
-            System.out.println("\n4 squares found!");
+        if(count==4){ // Winning move found
             score += 100;
         }
-        else if(count==3 && nulls==1){
-            System.out.println("\n3 squares found!");
+        else if(count==3 && nulls==1){ // 3 player spaces found and 1 empty found
             score += 5;
         }
-        else if(count==2 && nulls==2){
-            System.out.println("\n2 squares found!");
-            score += 2;
+        else if(count==2 && nulls==2){ // 2 player spaces found and 2 empty found
+            score += 1;
         }
 
 
-        if(enemyScore == 3 && nulls==1){
-            System.out.println("\nEnemy could win! squares found!");
+        if(enemyScore==3 && nulls==1){ // 3 player spaces found and 1 empty found
             score -= 4;
+        }
+        else if(enemyScore==2 && nulls==2){ // 2 player spaces found and 2 empty found
+            score -= 1;
         }
 
 
         return score;
     }
 
+    /**
+     * Scan the 'window' array if a winner has been found
+     * @param window
+     * @param playerID
+     * @return True or false if a winner was found
+     */
     public boolean windowWinner(Move[] window, int playerID){
-        int count = 0;
-
         for(Move move: window){
             if(move !=null){
                 if(move.getPlayerID() != playerID){
@@ -365,5 +359,9 @@ public class Board {
 
     public Move[] getWinningWindow(){
         return winningWindow;
+    }
+
+    public void setGameOver(){
+        gameOver = true;
     }
 }

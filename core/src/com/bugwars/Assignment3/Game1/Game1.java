@@ -1,13 +1,12 @@
 package com.bugwars.Assignment3.Game1;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.bugwars.Assignment3.Game1.CreateScene;
+import com.badlogic.gdx.utils.Array;
 import com.bugwars.BugWars;
 import com.bugwars.PauseMenu;
 
@@ -57,10 +56,6 @@ public class Game1 implements Screen {
         if(user==0){
             isPlayersTurn=true;
         }
-
-
-
-
     }
 
     @Override
@@ -69,27 +64,30 @@ public class Game1 implements Screen {
     }
 
     public void update(){
-
-        if(isPlayersTurn){
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            isPaused = !isPaused;
+        }
+        // Run current player's turn
+        if(isPlayersTurn){ // User
             switch(currentAction){
                 case 0:
                     player.movePlayerPiece();
                     piecePosition = player.getPiecePosition();
                     scene.movePiece(piecePosition);
                     break;
-                case 1:
+                case 1: // Move found, play dropping piece animation
                     scene.dropPiece();
                     break;
             }
         }
-        else{
+        else{ // AI
             switch(currentAction){
-                case 0:
+                case 0: // Find move to make
                     scene.currentPiece(aiPlayer);
                     ai.playTurn();
                     piecePosition = ai.getPiecePosition();
                     break;
-                case 1:
+                case 1: // Move found, play dropping piece animation
                     scene.dropPiece();
                     break;
 
@@ -101,7 +99,10 @@ public class Game1 implements Screen {
 
     @Override
     public void render(float v) {
-        if(board.isGameOver()){
+        if(isPaused){ // check if game is paused
+            pause();
+        }
+        else if(board.isGameOver()){
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.setProjectionMatrix(camera.combined);
             batch.begin();
@@ -113,21 +114,9 @@ public class Game1 implements Screen {
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.setProjectionMatrix(camera.combined);
             batch.begin();
-            // render in CreateScene
             scene.render(batch);
-
             batch.end();
-
         }
-
-
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        // render in CreateScene
-        scene.render(batch);
-
-        batch.end();
 
 
     }
@@ -139,6 +128,7 @@ public class Game1 implements Screen {
 
     @Override
     public void pause() {
+        pauseMenu.render();
 
     }
 
@@ -162,36 +152,56 @@ public class Game1 implements Screen {
         isPlayersTurn = !isPlayersTurn;
 
         if(isPlayersTurn) {
-            System.out.println("USer Player");
             scene.currentPiece(user);
         }
         else{
-            System.out.println("AI Player");
             scene.currentPiece(aiPlayer);
 
         }
     }
 
+    /**
+     * Used to toggle between character actions -- see switch case in update()
+     */
     public void setCurrentAction(){
         currentAction = currentAction ^ 1;
 
     }
 
+    /**
+     * Check the board if the player that just placed a move is a winner or not
+     * @return true if winner was found - else false
+     */
     public boolean checkForWinner(){
         boolean winner = false;
         if(isPlayersTurn) {
             winner = board.checkWinner(user);
-            if(winner){
+            if(winner && board.isGameOver()){
                 scene.finishScreen(user);
                 scene.finishingPieces(board.getWinningWindow());
+            }
+            else if(!winner){ // Tie
+                Array<Move> moves = board.getMoves();
+                if(moves.size==0){
+                    scene.setRenderFinish();
+                    board.setGameOver();
+                }
 
             }
         }
         else{
             winner = board.checkWinner(aiPlayer);
-            if(winner){
+            if(winner && board.isGameOver()){
                 scene.finishScreen(aiPlayer);
                 scene.finishingPieces(board.getWinningWindow());
+            }
+            else if(!winner){ // Tie
+                Array<Move> moves = board.getMoves();
+                if(moves.size==0){
+                    scene.setRenderFinish();
+                    board.setGameOver();
+                }
+
             }
 
         }

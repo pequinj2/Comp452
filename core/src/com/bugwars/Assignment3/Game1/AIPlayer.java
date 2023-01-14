@@ -2,27 +2,25 @@ package com.bugwars.Assignment3.Game1;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
-
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * AI class that will face off against the user. It will use NegaMax with ab pruning to try and beat
+ * it's opponent. Main calls will be to the 'Board' class to run evaluations on moves it wants to
+ * make, then call the 'Game1' and 'CreateScene' classes to render move and switch turns.
+ */
 public class AIPlayer {
 
     private Board board;
-    private float currentScore,recursedScore;
     private Move bestMove;
-    private int playerID, piecePosition, arrayPosition;
+    private int playerID, piecePosition;
     private Game1 game;
     private CreateScene scene;
-
-    private Array<Move> movesToMake;
-    private Array<Move> allowedMoves;
-
     private int DEPTH = 4;
 
     public AIPlayer(Board board, int playerID, Game1 game, CreateScene scene){
         this.board = board;
         this.playerID = playerID;
-        System.out.println("This is the AI Id: " + playerID);
         this.game = game;
         this.scene = scene;
 
@@ -99,9 +97,11 @@ public class AIPlayer {
     /**
      * https://www.youtube.com/watch?v=5UVwksLYAKI&t=892s
      * Chess Engine in Python - Part 14 - Nega Max and Alpha Beta Pruning - Eddie Sharick
-     * @param board
-     * @param depth
-     * @param playerID
+     * The above youtube tutorial was used to help debug negamax function.
+     * NegaMax
+     * @param board Current instance of the game board
+     * @param depth Depth of how far the AI wants to look
+     * @param playerID PlayerID of what score is currently being evaluated (switches between 0 & 1)
      * @param alpha
      * @param beta
      * @return
@@ -116,11 +116,11 @@ public class AIPlayer {
         }
 
         Array<Move> availableMoves = board.getMoves();
-        int bestScore = -10000;
+        int bestScore = -Integer.MAX_VALUE;
         for (int i = 0; i < availableMoves.size; i++) {
             Move move = new Move(availableMoves.get(i));
             Board newBoard = board.makeMove(move, playerID);
-            int score = -negamax(newBoard, depth - 1, playerID ^1, -max(alpha, bestScore), -beta);
+            int score = -negamax(newBoard, depth - 1, playerID ^1, -beta,-alpha);
             newBoard.deleteMove(move);
 
             if(score>bestScore){
@@ -129,8 +129,8 @@ public class AIPlayer {
                     bestMove = move;
                 }
             }
-
-            if(bestScore>= beta){
+            alpha = max(alpha, bestScore);
+            if(alpha >= beta){
                 break;
             }
         }
@@ -139,28 +139,30 @@ public class AIPlayer {
     }
 
 
+    /**
+     * Call negamax function to find the best move to play on the current game board. When 'bestMove'
+     * is found by NegaMax, call the 'CreateScene' class to render move.
+     */
     public void playTurn(){
-        //float temp = miniMax(board, DEPTH, true, -1000, 1000);
         int temp = negamax(board, DEPTH, playerID, -1000, 1000);
-        System.out.println("This is the minimax score: " + temp + "\nThis is the best move: " + bestMove.getX() +" " + bestMove.getY());
-        piecePosition = bestMove.getX();
         scene.movePiece(bestMove.getY());
-        scene.setRowDepth(piecePosition);
+        scene.setRowDepth(bestMove.getX());
         setBestMove();
     }
 
-
-    public Move getBestMove(){
-        System.out.println("This is the best move: "+ bestMove.getX() +","+ bestMove.getY());
-        return bestMove;
-    }
-
+    /**
+     * Make the move on the actual game board then switch to next player.
+     * Note: game.setCurrentAction() will see if a winning move is made
+     */
     public void setBestMove(){
         board.makeMove(bestMove,playerID);
-        //board.getMoves().set(arrayPosition, bestMove);
         game.setCurrentAction();
     }
 
+    /**
+     * Get the X (Row) value that the piece was dropped at
+     * @return
+     */
     public int getPiecePosition(){
         return piecePosition;
     }
