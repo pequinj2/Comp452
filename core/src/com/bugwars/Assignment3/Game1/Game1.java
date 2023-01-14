@@ -30,7 +30,6 @@ public class Game1 implements Screen {
 
     // Overall game
     private int user, aiPlayer, currentAction;
-    private Boolean pieceDropped = false;
     private Board board;
     private int piecePosition;
 
