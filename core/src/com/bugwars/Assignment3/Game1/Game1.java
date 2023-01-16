@@ -63,9 +63,7 @@ public class Game1 implements Screen {
     }
 
     public void update(){
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            isPaused = !isPaused;
-        }
+
         // Run current player's turn
         if(isPlayersTurn){ // User
             switch(currentAction){
@@ -84,7 +82,7 @@ public class Game1 implements Screen {
                 case 0: // Find move to make
                     scene.currentPiece(aiPlayer);
                     ai.playTurn();
-                    piecePosition = ai.getPiecePosition();
+                    //piecePosition = ai.getPiecePosition();
                     break;
                 case 1: // Move found, play dropping piece animation
                     scene.dropPiece();
@@ -98,10 +96,14 @@ public class Game1 implements Screen {
 
     @Override
     public void render(float v) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
+            isPaused = !isPaused;
+        }
         if(isPaused){ // check if game is paused
             pause();
         }
         else if(board.isGameOver()){
+
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             batch.setProjectionMatrix(camera.combined);
             batch.begin();

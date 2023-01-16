@@ -18,7 +18,6 @@ public class CreateScene {
     private TextureRegion board, spiderProf, antProf, currentPiece, antPiece, spiderPiece,currentGlow, endPiece;
     private Array<Disk> disks = new Array<>();
     private Array<Disk> finishDisks = new Array<>();
-    private Move move;
     private int rowDepth;
     private Game1 game;
     private int currentPieceX, currentPieceY, currentGlowX, currentGlowY, positionDrop;

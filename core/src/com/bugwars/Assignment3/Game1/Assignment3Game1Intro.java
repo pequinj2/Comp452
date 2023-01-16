@@ -159,7 +159,8 @@ public class Assignment3Game1Intro implements Screen {
 
         // When user hits SPACE, start the Assignment1!
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            //spiderV.stop();
+            spiderV.stop();
+            antV.stop();
             this.hide();
             game.setScreen(new FadeScreen(game, this,new ChoseCharacter(camera, game) ));
             //dispose();
@@ -189,6 +190,11 @@ public class Assignment3Game1Intro implements Screen {
 
     @Override
     public void dispose() {
+        antV.dispose();
+        spiderV.dispose();
+        antAndSpiderImg.dispose();
+        boarderImg.dispose();
+        batch.dispose();
 
     }
 

@@ -13,7 +13,7 @@ public class AIPlayer {
 
     private Board board;
     private Move bestMove;
-    private int playerID, piecePosition;
+    private int playerID;
     private Game1 game;
     private CreateScene scene;
     private int DEPTH = 4;
@@ -98,43 +98,72 @@ public class AIPlayer {
      * https://www.youtube.com/watch?v=5UVwksLYAKI&t=892s
      * Chess Engine in Python - Part 14 - Nega Max and Alpha Beta Pruning - Eddie Sharick
      * The above youtube tutorial was used to help debug negamax function.
-     * NegaMax
+     * NegaMax /w will try to find the maximum possible score for each player. It will evaluate each
+     * terminal node, then negate the scores found and pick the maximum value from the nodes of that
+     * branch.
      * @param board Current instance of the game board
      * @param depth Depth of how far the AI wants to look
      * @param playerID PlayerID of what score is currently being evaluated (switches between 0 & 1)
-     * @param alpha
-     * @param beta
-     * @return
+     * @param alpha lower/upper bound
+     * @param beta upper/lower bound
+     * @return best score
      */
     public int negamax(Board board, int depth, int playerID, int alpha, int beta){
+        // Check if we've reached the terminal node
         if(depth == 0){
             int multiplier = 1;
+            // If this is the opponent's score of the node, make it negative because they're trying
+            // to make us get the least score
+            // (Current Player) != AI's player ID
             if(playerID!=this.playerID){
                 multiplier=-1;
             }
             return multiplier * board.evaluateBoard(playerID);
         }
-
+        // Get all VALID available moves - this will change as depth is decreased
         Array<Move> availableMoves = board.getMoves();
+        // Set the negative infinity value - NegaMax looks for the highest value hence the negative infinity
         int bestScore = -Integer.MAX_VALUE;
+        // Go through all current available moves for the current board instance
         for (int i = 0; i < availableMoves.size; i++) {
+            // Make a new 'Move' as to not permanently modify it until we know the best move
             Move move = new Move(availableMoves.get(i));
+            // Make 'fake' move on the board to see future results
             Board newBoard = board.makeMove(move, playerID);
+            /** Invert the score bubbled up from child node below
+             * If AI turn, find it's highest score
+             * If its the opponents turn, whatever their best score is - is the worst score for the AI
+             * so negate score to find it's highest value
+             * Pass in:
+             * - Board instance
+             * - Next depth to search
+             * - Player ID of opponents turn (goes back and forth from 0 or 1)
+             * - Set the negation of alpha and beta for the next player's lower and upper bounds of
+             * possible values that represent a window a node must score in based on it's parent node
+              */
             int score = -negamax(newBoard, depth - 1, playerID ^1, -beta,-alpha);
+            // Delete 'fake' move that was placed on the board - do this to keep board at original
+            // when NegaMax is finished or onto the next instance
+            // state, depending on the current instance of the board
             newBoard.deleteMove(move);
-
+            // If highest score found
             if(score>bestScore){
+                // Set new highest score
                 bestScore = score;
+                // ## Tutorial ##
+                // Check if we're back at the root node - if so assign best move, if not keep digging
                 if(depth == DEPTH){
                     bestMove = move;
                 }
             }
+            // Get new best score to check if next score is less than or equal to it - if so cut off
             alpha = max(alpha, bestScore);
+            // Terminal node is outside of lower/upper bound so cut off that branch - no point to look at it
             if(alpha >= beta){
                 break;
             }
         }
-
+        // Return highest score found
         return bestScore;
     }
 
@@ -159,12 +188,5 @@ public class AIPlayer {
         game.setCurrentAction();
     }
 
-    /**
-     * Get the X (Row) value that the piece was dropped at
-     * @return
-     */
-    public int getPiecePosition(){
-        return piecePosition;
-    }
 
 }

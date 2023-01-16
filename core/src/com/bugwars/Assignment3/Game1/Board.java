@@ -19,7 +19,7 @@ public class Board {
     }
 
     /**
-     * Moves that can be made from the board position
+     * Valid moves that can be made from the game board's current instance
      * @return list of move objects
      */
     public Array<Move> getMoves(){
@@ -60,36 +60,28 @@ public class Board {
     }
 
     /**
-     * Update the board with the position the player wants to make
+     * Delete move from the game board
      */
     public void deleteMove(Move move){
-        // Copy move to the playing board
-        //move.reverseMove();
         board[move.getX()][move.getY()] = null;
-        //move.updateMove(currentPlayer);
-
-
-        //return this;
     }
-
-
 
     /**
-     * @return The current player making a move
+     * Return true or false if the game is over - whether a winner is found or game board is full
+     * @return
      */
-    private int currentPlayer(){
-
-        return 12;
-
-    }
-
     public boolean isGameOver(){
         return gameOver;
     }
 
+    /**
+     * Return a Move object at the desired column position - there is only 1 valid move in each
+     * column which is why we're just looking for that
+     * @param i column value we're looking for
+     * @return Move at the column position or invalid move
+     */
     public Move getMove(int i) {
         for(Move m: moves){
-
             if(m.getY() == i){
                 return m;
             }
@@ -97,16 +89,18 @@ public class Board {
         return new Move(10,10);
     }
 
+    /**
+     * Get the current instance of the game board
+     * @return
+     */
     public Move[][] getBoard(){
         return board;
     }
 
-    public Move checkBoard(int x, int y){
-        Move getMove = board[x][y];
-        return getMove;
-
-    }
-
+    /**
+     * Helper function used for debugging to get the output of current board instance and current
+     * available moves
+     */
     public void printBoard(){
         for(Move[] row: board){
             for(Move m: row){
@@ -125,6 +119,13 @@ public class Board {
         }
     }
 
+    /**
+     * Similar to 'evaluateBoard', this function will go through the board and see if there is a
+     * 'window' of 4 similar pieces together and return true if found. Calls 'windowWinner' function
+     * to evaluate if there are 4 similar pieces together.
+     * @param playerID ID of winner we're looking for
+     * @return True if winner is found - false otherwise
+     */
     public boolean checkWinner(int playerID){
 
         int windowLength = 4;
@@ -200,87 +201,109 @@ public class Board {
 
     /**
      * https://www.youtube.com/watch?v=MMLtza3CZFM&t=4738s
-     * Tutorial on building a heuristic for connect 4
-     * @param player
-     * @return
+     * How to Program a Connect 4 AI (implementing the minimax algorithm) - Keith Galli
+     * The above tutorial was used to build the heuristic for the game.
+     * This function will take in player id it's evaluating and then go through the entire game board
+     * and tally up the points for the pieces it finds in that board instance. 'windowCount' function
+     * is used to help tally up these scores
+     * @param player Player ID function is evaluating
+     * @return Return board score
      */
     public int evaluateBoard(int player){
-
+        // Length of the array 'window' being used to find sections of the game board
         int windowLength = 4;
+        // Initial score of the board
         int score = 0;
+        // ID of the player the function is evaluating
         int playerID = player;
 
         // Center preference
-        Move[] centerColumn = new Move[6]; // column will have 6 row values
-        // Build the first column to scan
-        for (int j = 0; j < 6; j++) { // starting row
+        // Because the center column of the board is shown to yield a greater chance of
+        // winning the game, any pieces found here are given a point boost.
+        // Initialize array to store center column - column will have 6 row values
+        Move[] centerColumn = new Move[6];
+        // Build column to scan
+        for (int j = 0; j < 6; j++) {
+            // j = row , 3 = center column
             Move move = board[j][3];
-            if (move != null) {
-                centerColumn[j] = move;
-            } else {
-                centerColumn[j] = null; // arbitrary number
-            }
+            centerColumn[j] = move;
         }
+        // Counter for the evaluating player's game pieces
         int countCenter = 0;
+        // Go through column
         for(Move move: centerColumn) {
+            // Make sure there is a move there
             if (move != null) {
                 int currentID = move.getPlayerID();
+                // Make sure the player ID is the evaluating player's then increment counter
                 if (playerID == currentID) {
                     countCenter++;
                 }
             }
         }
-
+        // Add counter booster the the score
         score += (countCenter * 3);
 
         // Horizontal
+        // Get a board row
         for(Move[] row: board){
+            // Increment the window array starting from 0 to column 3
             for(int i=0; i< row.length-3; i++){
+                // Slice the row for the window
                 Move[] window = Arrays.copyOfRange(row,i, windowLength+i);
+                // Evaluate window and get score
                 score += windowCount(window, playerID);
 
             }
         }
 
         // Vertical
+        // Generate the boards columns
         for(int g=0; g<7; g++) { // 7 columns we need to go through
             Move[] column = new Move[6]; // column will have 6 row values
             // Build the first column to scan
             for (int j = 0; j < 6; j++) { // starting row
                 Move move = board[j][g];
-                if (move != null) {
-                    column[j] = move;
-                } else {
-                    column[j] = null; // arbitrary number
-                }
+                column[j] = move;
             }
-            // Scan first column
+            // Scan first column with window array
             for (int i = 0; i < 3; i++) { // column
                 Move[] window = Arrays.copyOfRange(column, i, windowLength+i);
+                // Evaluate window and get score
                 score += windowCount(window, playerID);
             }
         }
 
 
-        // Diagonal Positive
+        // Diagonal Positive - bottom left to top right
+        // Row position - 0 to 2
         for(int i=0; i<3; i++){
+            // Column position = 0 to 3
             for(int j=0; j<4; j++){
+                // Reset window array
                 Move[] window = new Move[4];
+                // Build the window
                 for(int index=0; index<4; index++) {
                     window[index] = board[i + index][j + index];
                 }
+                // Evaluate window and get score
                 score += windowCount(window, playerID);
 
             }
         }
 
-        //Diagonal negative
+        //Diagonal negative - top left to bottom right
+        // Row position - 0 to 2
         for(int i=0; i<3; i++){
+            // Column position = 0 to 3
             for(int j=0; j<4; j++){
+                // Reset window array
                 Move[] window = new Move[4];
+                // Build the window
                 for(int index=0; index<4; index++) {
                     window[index] = board[i+3 - index][j + index];
                 }
+                // Evaluate window and get score
                 score += windowCount(window, playerID);
 
             }
@@ -290,17 +313,24 @@ public class Board {
 
     }
 
+    /**
+     * Takes in a 'window' array and the player ID to be evaluated and returns a score based on
+     * what criteria was found in the window
+     * @param window Move array
+     * @param playerID ID to be evaluated
+     * @return score
+     */
     public int windowCount(Move[] window, int playerID){
-        int count =0;
-        int nulls =0;
-        int score = 0;
-        int enemyScore = 0;
-        int enemyID = playerID ^ 1;
+        int count =0; // Evaluating player counter
+        int nulls =0; // Empty square counter
+        int score = 0; // Evaluating player's score
+        int enemyScore = 0; // Opponent counter
 
         for(Move move: window){
-
             if(move != null){
                 int currentID = move.getPlayerID();
+                // If move in window is not null then get the Player ID and see if it matches the
+                // current evaluating player, if so, increment 'count' else increment enemy's score count
                 if (playerID == currentID) {
                     count++;
                 }
@@ -308,11 +338,12 @@ public class Board {
                     enemyScore++;
                 }
             }
+            // No Move object, therefore, empty square - increment empty square counter
             else{
                 nulls++;
             }
         }
-
+        // Tally up the score depending on the state of the window array found above
         if(count==4){ // Winning move found
             score += 100;
         }
@@ -324,14 +355,14 @@ public class Board {
         }
 
 
-        if(enemyScore==3 && nulls==1){ // 3 player spaces found and 1 empty found
+        if(enemyScore==3 && nulls==1){ // 3 enemy spaces found and 1 empty found
             score -= 4;
         }
-        else if(enemyScore==2 && nulls==2){ // 2 player spaces found and 2 empty found
+        else if(enemyScore==2 && nulls==2){ // 2 enemy spaces found and 2 empty found
             score -= 1;
         }
 
-
+        // Return overall score found of window
         return score;
     }
 

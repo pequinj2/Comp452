@@ -22,8 +22,6 @@ public class Player {
         this.game = game;
     }
 
-
-
     /**
      * While its the user's turn, enable game piece movement via keys
      */

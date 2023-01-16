@@ -1,7 +1,9 @@
 package com.bugwars.Assignment3.Game1;
 
 /**
- * May not need player ID
+ * Move class is used for storing information on the current move made on the game board or
+ * future moves the AI wishes to make. Keeps track of Row, Column, move Score and the Player ID
+ * that made the move.
  */
 public class Move {
 
@@ -9,12 +11,6 @@ public class Move {
     private int playerID;
     private int score;
 
-    public Move(int playerID, int x, int y){
-        this.playerID = playerID;
-        this.x = x;
-        this.y = y;
-
-    }
 
     public Move(int x, int y){
         this.x = x;
@@ -37,13 +33,6 @@ public class Move {
 
     }
 
-    public void reverseMove(){
-        this.playerID = 2;
-        x--;
-    }
-
-
-
     /**
      * Return the row number (starts at 0)
      * @return
@@ -53,17 +42,13 @@ public class Move {
     }
 
     /**
-     * Return the column number (starts at 0)
+     * Return the col number (starts at 0)
      * @return
      */
     public int getY() {
         return y;
     }
 
-    /**
-     * Return the column number (starts at 0)
-     * @return
-     */
     public int getPlayerID() {
         return playerID;
     }

@@ -24,7 +24,7 @@ public class ChoseCharacter implements Screen {
     private BitmapFont font;
     private String choseChar = "Press <a> or <d> to select a character, when the ";
     private String choseChar1 ="character you want is highlighted press <SPACE> to begin.";
-    private String choseChar2 = "Note, Ant will always go first.";
+    private String choseChar2 = "Note: Ant will always go first.";
     private int highlightX = 0;
     private int highlightY = 100;
     private boolean characterSelect = true;
