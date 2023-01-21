@@ -16,7 +16,7 @@ import com.bugwars.Objects.Player.Health;
 import com.bugwars.Objects.Projectiles.SwarmShot;
 
 
-public class Centipede extends Entity implements Health, Damage {
+public class Centipede2 extends Entity implements Health, Damage {
 
     private float x, y, width, height;
     private int position = 0;
@@ -38,9 +38,9 @@ public class Centipede extends Entity implements Health, Damage {
 
 
     // Implement constructor
-    public Centipede(World world,float width, float height, Body body, float health) {
+    public Centipede2(World world, float width, float height, Body body, float health) {
         super(width, height, body);
-        this.speed = 40f;
+        this.speed = 2;
         this.width = width;
         this.height = height;
         this.body = body;
@@ -224,8 +224,8 @@ public class Centipede extends Entity implements Health, Damage {
      */
     public void initBody(World world){
         body1 = BodyHelperService.createBody(
-                610 + 16, // Position
-                610 + 16, // Position
+                110 + 16, // Position
+                110 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -233,8 +233,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body1.setUserData(this);
         body2 = BodyHelperService.createBody(
-                620 + 16, // Position
-                620 + 16, // Position
+                120 + 16, // Position
+                120 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -242,8 +242,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body2.setUserData(this);
         body3 = BodyHelperService.createBody(
-                630 + 16, // Position
-                630 + 16, // Position
+                130 + 16, // Position
+                130 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -251,8 +251,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body3.setUserData(this);
         body4 = BodyHelperService.createBody(
-                640 + 16, // Position
-                640 + 16, // Position
+                140 + 16, // Position
+                140 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -260,8 +260,8 @@ public class Centipede extends Entity implements Health, Damage {
                 world);
         body4.setUserData(this);
         butt = BodyHelperService.createBody(
-                650 + 16, // Position
-                650 + 16, // Position
+                150 + 16, // Position
+                150 + 16, // Position
                 32, // Box size
                 32, // Box size
                 1,
@@ -287,7 +287,7 @@ public class Centipede extends Entity implements Health, Damage {
     }
 
     public int getRotation(){
-        return 0;
+        return rotation;
     };
 
     /**
@@ -297,25 +297,25 @@ public class Centipede extends Entity implements Health, Damage {
 
         velX = 0;
         velY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(608-width)){
-            velX = 100;
+        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(1216-width)){
+            velX = maxSpeed;
             direcLR = false;
             rotation = -90;
 
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x>width){
-            velX = -100;
+            velX = -maxSpeed;
             direcLR = true;
             direcUD = false;
             rotation = 90;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(448-height)){
-            velY = 100;
+        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(896-height)){
+            velY = maxSpeed;
             direcUD = false;
             rotation = 0;
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)&&body.getPosition().y>height){
-            velY = -100;
+            velY = -maxSpeed;
             direcUD = true;
             rotation = -180;
         }
@@ -327,6 +327,7 @@ public class Centipede extends Entity implements Health, Damage {
 
         }
         body.setLinearVelocity(velX * speed, velY * speed);
+
 
     }
 

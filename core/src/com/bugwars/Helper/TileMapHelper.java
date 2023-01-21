@@ -9,6 +9,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.bugwars.Assignment1.Assignment1;
+import com.bugwars.Assignment3.Game2.Game2;
 
 /**
  * This helper class will load the maps created in Tiled to build our levels.
@@ -20,9 +21,13 @@ public class TileMapHelper {
 
     private TiledMap tiledMap;
     private Assignment1 gameWorld;
+    private Game2 gameWorld2;
 
     public TileMapHelper(Assignment1 gameWorld){
         this.gameWorld = gameWorld;
+    }
+    public TileMapHelper(Game2 gameWorld){
+        this.gameWorld2 = gameWorld;
     }
 
     // Load our level 1 map
@@ -30,6 +35,12 @@ public class TileMapHelper {
         tiledMap = new TmxMapLoader().load("maps/level1.tmx");
         //parseMapObjects(tiledMap.getLayers().get("Sprites").getObjects());
         return new OrthogonalTiledMapRenderer(tiledMap);
+    }
+
+    // Load our level 1 map
+    public OrthogonalTiledMapRenderer setupMap2(){
+        tiledMap = new TmxMapLoader().load("maps/Assignment3/Game2Floor.tmx");
+        return new OrthogonalTiledMapRenderer(tiledMap, 0.7f);
     }
 
     // Not used but kept for future reference

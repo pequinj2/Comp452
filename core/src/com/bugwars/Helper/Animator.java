@@ -74,6 +74,29 @@ public class Animator {
         return endGameTextures;
     }
 
+    //*****************************************************************************************
+    // ASSIGNMENT 3 GAME 2 UPDATE
+
+    /**
+     * Construct the animation for the ant moving
+     * @return
+     */
+    public Animation<TextureRegion> antAnimator() {
+        setCentipedeMouthAtlas();
+
+        centipedeMouthAnimation = new Animation<TextureRegion>(0.33f, atlas.findRegions("Ant"), Animation.PlayMode.LOOP);
+
+        return centipedeMouthAnimation;
+    }
+
+    /**
+     * Create the animation atlas for ant moving
+     */
+    public void setAntAtlas(){
+        this.atlas = new TextureAtlas(Gdx.files.internal("maps/Ant.atlas"));
+
+    }
+
 
     public void dispose(){
         atlas.dispose();

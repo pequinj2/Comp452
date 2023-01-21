@@ -29,4 +29,6 @@ public abstract class Entity {
     public void setHealth(float health){
         this.health = health;
     }
+
+
 }

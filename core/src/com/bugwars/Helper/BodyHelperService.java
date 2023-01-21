@@ -253,5 +253,143 @@ public class BodyHelperService {
         return body;
     }
 
+    /**
+     * Create the Assignment1 boarder boundaries
+     * @param world
+     */
+    public static void createGameBorder2(World world){
 
+        // ***** Left border
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(0, 0);
+
+        bodyDef.fixedRotation = false;
+        Body body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(0, 627);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+        // ***** Top border
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(0, 627);
+
+        bodyDef.fixedRotation = false;
+        body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
+
+        shape = new PolygonShape();
+        shape.setAsBox(851, 0);
+        // Create a fixture definition to apply our shape to
+        fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+
+        // Create our fixture and attach it to the body
+        fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+        // ***** Right border
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(851, 0);
+
+        bodyDef.fixedRotation = false;
+        body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
+
+        shape = new PolygonShape();
+        shape.setAsBox(0, 627);
+        // Create a fixture definition to apply our shape to
+        fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+
+        // Create our fixture and attach it to the body
+        fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+        // ***** Bottom border
+        bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set(0, 0);
+
+        bodyDef.fixedRotation = false;
+        body = world.createBody(bodyDef); // Create the body in our world
+        body.setUserData("Boarder");
+
+        shape = new PolygonShape();
+        shape.setAsBox(851, 0);
+        // Create a fixture definition to apply our shape to
+        fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+
+        // Create our fixture and attach it to the body
+        fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+
+    }
+    /**
+     * Create the web sac pickup bodies
+     * @param world
+     * @return
+     */
+    public static Body createWebSac2(World world){
+        BodyDef bodyDef = new BodyDef();
+        // Create a static body that stays still or dynamic body so it moves around and is affected by forces
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        // Set our body's starting position in the world
+        bodyDef.position.set((int)(Math.random()*851 + 8), (int)(Math.random()*627 + 8));
+
+        // If the Body is NOT dynamic then turn rotation off
+        bodyDef.fixedRotation = true;
+        Body body = world.createBody(bodyDef); // Create the body in our world
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(10, 10);
+        // Create a fixture definition to apply our shape to
+        FixtureDef fixtureDef = new FixtureDef();
+
+        fixtureDef.shape = shape;
+        // By setting the group index to -1 these specific objects won't collide
+        // This works in our scenario because all circles are going to be the centipede body
+        // If we have more circles we'd have to change how this is created
+        // https://www.iforce2d.net/b2dtut/collision-filtering
+        //fixtureDef.filter.groupIndex = -1;
+
+        // Create our fixture and attach it to the body
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Remember to dispose of any shapes after you're done with them!
+        // BodyDef and FixtureDef don't need disposing, but shapes do.
+        shape.dispose();
+
+
+        return body;
+
+    }
 }
