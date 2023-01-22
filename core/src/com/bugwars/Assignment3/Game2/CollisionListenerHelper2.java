@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
+import com.bugwars.Assignment3.Game2.Objects.Ants.Ant;
 import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Enemy.Centipede2;
 import com.bugwars.Objects.Pickups.WebSac;
@@ -20,9 +21,11 @@ import com.bugwars.Objects.Projectiles.Web;
 public class CollisionListenerHelper2 {
 
     private World world;
+    private Game2 game;
 
-    public CollisionListenerHelper2(World world){
+    public CollisionListenerHelper2(World world, Game2 game){
         this.world = world;
+        this.game = game;
 
 
         world.setContactListener(new ContactListener() {
@@ -45,6 +48,7 @@ public class CollisionListenerHelper2 {
 
                 Object o1 = b1.getUserData();
                 Object o2 = b2.getUserData();
+
 
                 if(o2.getClass() == Centipede2.class || o1.getClass() == Centipede2.class){
                     if(o1.getClass() == WebSac.class){  // Centipede takes damage
@@ -71,22 +75,28 @@ public class CollisionListenerHelper2 {
 
                     }
 
+                }
+                if( o1.getClass() == Ant.class || o2.getClass() == Ant.class){
+                    if(o1.getClass() == Centipede2.class){  // Web Shot hits boarder and is destroyed
+                        Centipede2 cent = (Centipede2) o1;
+                        if(cent.checkBody(b1)){
+                            Ant ant = (Ant) o2;
+                            ant.setDead();
+                            game.addScore();
+                        }
 
-                }
-                else if( o1.getClass() == Web.class || o2.getClass() == Web.class){
-                    if(o1.equals("Boarder")){  // Web Shot hits boarder and is destroyed
-                        Web web = (Web) o2;
-                        if(web.current != Web.WebState.FOLLOW){
-                            web.setStateKill();
-                        }
                     }
-                    else if(o2.equals("Boarder")){
-                        Web web = (Web) o1;
-                        if(web.current != Web.WebState.FOLLOW){
-                            web.setStateKill();
+                    else if(o2.getClass() == Centipede2.class) {  // Web Shot hits boarder and is destroyed
+                        Centipede2 cent = (Centipede2) o2;
+                        if (cent.checkBody(b2)) {
+                            Ant ant = (Ant) o1;
+                            ant.setDead();
+                            game.addScore();
                         }
                     }
                 }
+
+
             }
 
             @Override

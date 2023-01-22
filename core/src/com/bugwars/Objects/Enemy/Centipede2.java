@@ -35,12 +35,13 @@ public class Centipede2 extends Entity implements Health, Damage {
     private float velX, velY;
     private boolean direcLR, direcUD;
     private int rotation = 0;
+    private int score = 0;
 
 
     // Implement constructor
     public Centipede2(World world, float width, float height, Body body, float health) {
         super(width, height, body);
-        this.speed = 2;
+        this.speed = 1;
         this.width = width;
         this.height = height;
         this.body = body;
@@ -50,6 +51,7 @@ public class Centipede2 extends Entity implements Health, Damage {
 
 
     }
+
 
     @Override
     public void update() {
@@ -82,7 +84,6 @@ public class Centipede2 extends Entity implements Health, Damage {
     public void removeHealth(float damage) {
         float newHealth = health - damage;
         setHealth(newHealth);
-
     }
 
     /**
@@ -333,5 +334,22 @@ public class Centipede2 extends Entity implements Health, Damage {
 
     public Body getHead(){
         return body;
+    }
+
+    public void addScore(){
+        score++;
+    }
+
+    public int getScore(){
+        return score;
+    }
+
+    public boolean checkBody(Body b2) {
+        if(b2.equals(body)){
+            System.out.println("Returning true");
+            return true;
+        }
+        System.out.println("Returning false");
+        return false;
     }
 }

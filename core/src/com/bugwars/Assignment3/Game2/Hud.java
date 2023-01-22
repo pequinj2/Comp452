@@ -31,8 +31,8 @@ public class Hud {
     }
 
     public void render(SpriteBatch hudBatch) {
-        font.draw(hudBatch, "Score: ", 60, 870);// Display Name
-        font.draw(hudBatch, Integer.toString(count), 210, 870);// Number Representation of Health
+        font.draw(hudBatch, "Score:  ", 60, 870);// Display Name
+        font.draw(hudBatch, Integer.toString(count), 220, 870);// Number Representation of Health
         hudBatch.draw(enemyHealthBar, 900, 800, 300, 50);// Base Health Bar
         hudBatch.draw(enemyHealthBarColor, 900, 800, 300 * (enemyHealth/100), 50);// Color in Health Bar
         font.draw(hudBatch, enemyNumHealth, 950, 780);// Number Representation of Health
@@ -45,7 +45,7 @@ public class Hud {
         }
         String newEnemyHealth = this.enemyHealth + tempHealth;
         enemyNumHealth = newEnemyHealth;
-        System.out.println(enemyHealth/100);
+
     }
 
     public void incrementCount(){

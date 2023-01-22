@@ -15,7 +15,7 @@ public class Animator {
     private TextureAtlas atlas;
 
     public Animation<TextureRegion> walkingAnimation;
-    public Animation<TextureRegion> centipedeMouthAnimation;
+    public Animation<TextureRegion> centipedeMouthAnimation, antAnimation;
     public Animation<TextureRegion> endGameTextures;
 
 
@@ -82,18 +82,17 @@ public class Animator {
      * @return
      */
     public Animation<TextureRegion> antAnimator() {
-        setCentipedeMouthAtlas();
+        setAntAtlas();
+        antAnimation = new Animation<TextureRegion>(0.33f, atlas.findRegions("Ant"), Animation.PlayMode.LOOP);
 
-        centipedeMouthAnimation = new Animation<TextureRegion>(0.33f, atlas.findRegions("Ant"), Animation.PlayMode.LOOP);
-
-        return centipedeMouthAnimation;
+        return antAnimation;
     }
 
     /**
      * Create the animation atlas for ant moving
      */
     public void setAntAtlas(){
-        this.atlas = new TextureAtlas(Gdx.files.internal("maps/Ant.atlas"));
+        this.atlas = new TextureAtlas(Gdx.files.internal("Assignment3/Ant.atlas"));
 
     }
 
