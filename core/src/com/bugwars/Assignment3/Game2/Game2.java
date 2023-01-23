@@ -21,19 +21,17 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.bugwars.Assignment1.EndState;
-import com.bugwars.Assignment1.PlayerHud;
 import com.bugwars.Assignment3.Game2.Objects.Ants.Ant;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Helper.TileMapHelper;
-import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Enemy.Centipede2;
 import com.bugwars.Objects.Pickups.WebSac;
-import com.bugwars.Objects.Player.Spider;
-import com.bugwars.Objects.Projectiles.Web;
 import com.bugwars.PauseMenu;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class Game2 implements Screen {
@@ -84,6 +82,9 @@ public class Game2 implements Screen {
     private Array<Ant> ants = new Array<Ant>();
     private long startTime = TimeUtils.millis();
 
+    private List<Integer> clockWise = Arrays.asList(0,3,1,2);
+    private int currentMove = 0;
+
     public Game2(OrthographicCamera camera, BugWars game){
         this.camera = camera;
         pauseMenu = new PauseMenu(this, game, camera);
@@ -118,7 +119,7 @@ public class Game2 implements Screen {
                 false,
                 world);
 
-        setCentipede(new Centipede2(world,16, 16, bodyEnemyHead, 100));
+        setCentipede(new Centipede2(world,16, 16, bodyEnemyHead, 30));
         centipedeEnemy.initBody(world); // initialize the rest of the centipede body
         centipedeEnemy.initDistanceJoint(world);
         centipedeBodies = centipedeEnemy.getCentipede();
@@ -174,8 +175,15 @@ public class Game2 implements Screen {
     }
 
     public void update(){
-        //createAnt();
-        centipedeEnemy.checkUserInput();
+        
+        centipedeEnemy.checkUserInput(currentMove); // Update with action
+        int index = clockWise.indexOf(currentMove);
+        if(index == 3){
+            index = 0;
+        }else{
+            index++;
+        }
+        currentMove = clockWise.get(index);
         Vector3 position = camera.position;
         position.x = Math.round(centipedeEnemy.getHead().getPosition().x);
         position.y = Math.round(centipedeEnemy.getHead().getPosition().y);
@@ -237,18 +245,10 @@ public class Game2 implements Screen {
             antFrame = antAnimation.getKeyFrame(stateTime, true);
 
             if(centipedeEnemy.getHealth() <= 0.0){ // Player lost, rerun test
-                centipedeEnemy.updateStop();
-                batch.begin();
-                centipedeRender();
-                batch.end();
-                currentState.loseStateRender();
-                handleEndGameInput();
+                resetGame();
 
             }else if(centipedeEnemy.getHealth() <= 0.0){ // Player wins, run end game screen
-                hud.update((int) centipedeEnemy.getHealth());
-                centipedeEnemy.updateStop();
 
-                handleEndGameInput();
 
 
             }else {
@@ -272,7 +272,10 @@ public class Game2 implements Screen {
 
             }
             if((TimeUtils.millis()-startTime) > 10000){
-                createAnt();
+                if(ants.size != 1){
+                    createAnt();
+                }
+
                 startTime=TimeUtils.millis();
                 //startTime=TimeUtils.millis()*10;
             }else{
@@ -430,6 +433,30 @@ public class Game2 implements Screen {
                 ants.removeIndex(i);
             }
         }
+
+    }
+
+    public void resetGame(){
+        // Remove WebSac bombs
+        webPickup1.removeSac();
+        webPickup2.removeSac();
+        webPickup3.removeSac();
+
+        // Generate Web Sac pickups
+        Body bodyWebSac1 = BodyHelperService.createWebSac(world);
+        Body bodyWebSac2 = BodyHelperService.createWebSac(world);
+        Body bodyWebSac3 = BodyHelperService.createWebSac(world);
+
+        webPickup1 = new WebSac(bodyWebSac1, world);
+        webPickup2 = new WebSac(bodyWebSac2, world);
+        webPickup3 = new WebSac(bodyWebSac3, world);
+
+        // Remove ants
+        ants.clear();
+
+        // Reset Centipede Position
+        centipedeEnemy.resetPosition(100);
+
 
     }
 }

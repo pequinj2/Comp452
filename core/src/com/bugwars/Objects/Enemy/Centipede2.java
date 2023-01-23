@@ -15,6 +15,9 @@ import com.bugwars.Objects.Player.Damage;
 import com.bugwars.Objects.Player.Health;
 import com.bugwars.Objects.Projectiles.SwarmShot;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public class Centipede2 extends Entity implements Health, Damage {
 
@@ -36,6 +39,7 @@ public class Centipede2 extends Entity implements Health, Damage {
     private boolean direcLR, direcUD;
     private int rotation = 0;
     private int score = 0;
+
 
 
     // Implement constructor
@@ -294,28 +298,28 @@ public class Centipede2 extends Entity implements Health, Damage {
     /**
      * Get user input and direction for proper character texture animation and rotation
      */
-    public void checkUserInput() {
+    public void checkUserInput(int move) {
 
         velX = 0;
         velY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(1216-width)){
+        if(move==0){ // Go Right
             velX = maxSpeed;
             direcLR = false;
             rotation = -90;
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x>width){
+        if(move==1){ // Go Left
             velX = -maxSpeed;
             direcLR = true;
             direcUD = false;
             rotation = 90;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(896-height)){
+        if(move==2){ // Go Up
             velY = maxSpeed;
             direcUD = false;
             rotation = 0;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)&&body.getPosition().y>height){
+        if(move==3){ // Go Down
             velY = -maxSpeed;
             direcUD = true;
             rotation = -180;
@@ -351,5 +355,16 @@ public class Centipede2 extends Entity implements Health, Damage {
         }
         System.out.println("Returning false");
         return false;
+    }
+
+    public void resetPosition(int initialPosition) {
+        body.getPosition().set(initialPosition+16, initialPosition+16);
+        body1.getPosition().set(initialPosition+10+16,initialPosition+10+16 );
+        body2.getPosition().set(initialPosition+20+16,initialPosition+20+16 );
+        body3.getPosition().set(initialPosition+30+16,initialPosition+30+16 );
+        body4.getPosition().set(initialPosition+40+16,initialPosition+40+16 );
+        butt.getPosition().set(initialPosition+50+16,initialPosition+50+16 );
+        health = 100;
+        System.out.println("Reset competed");
     }
 }
