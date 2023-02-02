@@ -40,7 +40,7 @@ public class TileMapHelper {
     // Load our level 1 map
     public OrthogonalTiledMapRenderer setupMap2(){
         tiledMap = new TmxMapLoader().load("maps/Assignment3/Game2Floor.tmx");
-        return new OrthogonalTiledMapRenderer(tiledMap, 0.7f);
+        return new OrthogonalTiledMapRenderer(tiledMap, 0.3f);
     }
 
     // Not used but kept for future reference

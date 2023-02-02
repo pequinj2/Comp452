@@ -1,7 +1,5 @@
 package com.bugwars.Objects.Enemy;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -9,6 +7,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.bugwars.Assignment3.Game2.AI.States.BossState;
+import com.bugwars.Assignment3.Game2.AI.States.StateManager;
+import com.bugwars.Assignment3.Game2.CentipedeAttacks.Beam;
+import com.bugwars.Assignment3.Game2.CentipedeAttacks.Patrol;
+import com.bugwars.Assignment3.Game2.CentipedeAttacks.TailSwipe;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Player.Damage;
@@ -26,6 +29,7 @@ public class Centipede extends Entity implements Health, Damage {
     private boolean delayStarting = true;
     private float maxSpeed = 100;
     private float linearDamping = 1.5f;
+    private World world;
 
     // Burst Shot
     private SwarmShot aoeAttack;
@@ -35,11 +39,19 @@ public class Centipede extends Entity implements Health, Damage {
     private float velX, velY;
     private boolean direcLR, direcUD;
     private int rotation = 0;
+    private Beam beam;
+    private TailSwipe tail;
+    private int distance;
+    private Vector2 result;
+    private BossState bossState;
+    private StateManager stateMachine;
+    private Patrol patrol;
 
 
     // Implement constructor
     public Centipede(World world,float width, float height, Body body, float health) {
         super(width, height, body);
+        this.world = world;
         this.speed = 40f;
         this.width = width;
         this.height = height;
@@ -47,8 +59,8 @@ public class Centipede extends Entity implements Health, Damage {
         this.setHealth(health);
         body.setUserData(this);
         aoeAttack = new SwarmShot(world,body);
-
-
+        beam = new Beam();
+        distance = 364-(int)width;
     }
 
     @Override
@@ -62,9 +74,18 @@ public class Centipede extends Entity implements Health, Damage {
         y = body.getPosition().y;
     }
 
+    public void updateBehavior(){
+
+    }
+
     @Override
     public void render(SpriteBatch batch) {
         aoeAttack.render(batch);
+
+    }
+
+    public void render2(SpriteBatch batch) {
+        aoeAttack.render2(batch);
 
     }
 
@@ -118,6 +139,12 @@ public class Centipede extends Entity implements Health, Damage {
         aoeAttack.fireSwarm(); // Fire off the AOE attack
 
     }
+
+    public void aoeShot2(){
+        aoeAttack.fireSwarm2(); // Fire off the AOE attack
+
+    }
+
 
     public float getWidth(){
         return width;
@@ -280,57 +307,73 @@ public class Centipede extends Entity implements Health, Damage {
         aoeAttack.dispose();
     }
 
-    //****************************************************************************************
-    // ADDED FOR ASSIGNMENT 3 GAME 2
-    public void setMaxSpeed(int speed){
-        maxSpeed = speed;
+    // ********************************************************
+    // ASSIGNMENT 3 GAME 2
+    public void initTail(){
+        body1 = BodyHelperService.createBody(
+                610 + 16, // Position
+                610 + 16, // Position
+                32, // Box size
+                32, // Box size
+                1,
+                false,
+                world);
+        body1.setUserData(this);
+        body1.setActive(false);
+        tail = new TailSwipe(body1);
     }
 
-    public int getRotation(){
-        return 0;
-    };
+    public void moveBoss(Body spider){
+        float timeToTarget = 0.1f;
+        Vector2 radiiPos = new Vector2(spider.getPosition().x,0); // Make coordinates proper Vector2s
+        Vector2 currentPos = new Vector2(body.getPosition().x,0);
 
-    /**
-     * Get user input and direction for proper character texture animation and rotation
-     */
-    public void checkUserInput() {
+        // Get displacement distance from enemy to target
+        Vector2 newDirection = radiiPos.sub(currentPos);
+        Vector2 temp = newDirection;
+        Vector2 vel;
 
-        velX = 0;
-        velY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(608-width)){
-            velX = 100;
-            direcLR = false;
-            rotation = -90;
+        float distance = newDirection.len();
+        float targetRadii = 16f;
+        float largeRadii = 64f;
+        float targetSpeed;
+
+        System.out.println(distance + " " + targetRadii);
+        if(distance < targetRadii){
+            result = temp.nor().scl(0); // At target, have no velocity
+        }
+        else {
+
+            if (distance > largeRadii) {
+                targetSpeed = 50;
+
+            } else {
+                targetSpeed = 50 * (distance / largeRadii) ;
+            }
+
+            vel = temp.nor().scl(targetSpeed); // Target Velocity
+            Vector2 currentVelocity = body.getLinearVelocity(); // Current object velocity
+
+            result = vel.sub(currentVelocity);
+            result.scl(1 / timeToTarget);
+
+            // Throttle acceleration if too fast
+            if (result.len() > 50) {
+                result.nor();
+                result.scl(50);
+
+            }
+            body.setLinearVelocity(result);
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x>width){
-            velX = -100;
-            direcLR = true;
-            direcUD = false;
-            rotation = 90;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(448-height)){
-            velY = 100;
-            direcUD = false;
-            rotation = 0;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)&&body.getPosition().y>height){
-            velY = -100;
-            direcUD = true;
-            rotation = -180;
-        }
+    }
 
-        // Web shooter
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-            // Fire web shooter in the direction character is facing
+    public void setBehaviors(Body spider){
+        stateMachine = new StateManager();
+        patrol = new Patrol(this, spider, stateMachine);
+        stateMachine.Initialize(patrol);
 
-
-        }
-        body.setLinearVelocity(velX * speed, velY * speed);
 
     }
 
-    public Body getHead(){
-        return body;
-    }
 }

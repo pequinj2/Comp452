@@ -77,4 +77,38 @@ public class SwarmShot {
             p.dispose();
         }
     }
+
+
+    public void render2(SpriteBatch batch) {
+        if(projArray.size() > 0) { // if there are projectiles fired
+
+            for (Projectile p : projArray) {
+                //System.out.println(p.getState());
+                if(p.getState() == Projectile.ProjState.FIRE){
+                    p.flock2(projArray);
+                    p.render(batch);
+
+
+                }
+            }
+        }
+    }
+
+    /**
+     * Create 100 projectiles that will act as a swarm to surround and inflict damage to the Spider.
+     * Projectile.java is called to create the projectiles which are stored in projArray
+     */
+    public void fireSwarm2(){
+        int count = 50;
+
+        if(projArray.size() > 0){
+            clearArray();
+        }
+        for(int i=0; i<count; i++){
+
+            p = new Projectile(world, origin.getPosition().x, origin.getPosition().y, i);
+            projArray.add(p);
+        }
+
+    }
 }

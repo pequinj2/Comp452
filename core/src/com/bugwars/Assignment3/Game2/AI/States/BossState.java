@@ -1,18 +1,21 @@
-package com.bugwars.Assignment3.Game2.StateMachine.States;
+package com.bugwars.Assignment3.Game2.AI.States;
 
-
+import com.badlogic.gdx.physics.box2d.Body;
 import com.bugwars.Objects.Enemy.Centipede;
 
 /**
- * Parent class of the different states the Centipede boss can be in
+ * https://refactoring.guru/design-patterns/state/java/example
  */
-public class CentipedeState {
+public abstract class BossState {
+
     protected Centipede boss;
+    protected Body spider;
     protected StateManager stateMachine;
 
-    public CentipedeState(Centipede boss, StateManager stateMachine){
+    public BossState(Centipede boss, Body spider, StateManager stateMachine){
         this.boss = boss;
         this.stateMachine = stateMachine;
+        this.spider = spider;
 
     }
 

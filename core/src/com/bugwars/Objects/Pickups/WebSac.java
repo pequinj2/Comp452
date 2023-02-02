@@ -31,8 +31,8 @@ public class WebSac {
     private Body sac;
     private World world;
     private int origin = 12;
-    private int height = 12;
-    private int width = 12;
+    private int height = 6;
+    private int width = 6;
 
 
     public WebSac(Body sac, World world){
@@ -127,7 +127,7 @@ public class WebSac {
 
     public void setSac(){
         world.destroyBody(sac);
-        sac = BodyHelperService.createWebSac(world);
+        sac = BodyHelperService.createWebSac2(world, (int)(1216 *0.3), (int)(896 * 0.3) );
         sac.setUserData(this);
     }
 

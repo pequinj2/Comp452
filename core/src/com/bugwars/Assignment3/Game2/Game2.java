@@ -19,119 +19,125 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.TimeUtils;
-import com.bugwars.Assignment1.EndState;
-import com.bugwars.Assignment3.Game2.Objects.Ants.Ant;
+import com.badlogic.gdx.utils.Timer;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.BodyHelperService;
+import com.bugwars.Helper.CollisionListenerHelper;
 import com.bugwars.Helper.TileMapHelper;
-import com.bugwars.Objects.Enemy.Centipede2;
+import com.bugwars.Objects.Enemy.Centipede;
 import com.bugwars.Objects.Pickups.WebSac;
+import com.bugwars.Objects.Player.Spider;
 import com.bugwars.PauseMenu;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
+/**
+ * This is the main hub of the game that controls most of what happens including camera controls,
+ * world and some sprite rendering
+ */
 public class Game2 implements Screen {
 
-    private OrthographicCamera camera, hudCamera;
     private SpriteBatch batch, hudBatch; //To render our sprites
-    private World world;
+    private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
     private Box2DDebugRenderer box2DBug;
-    private int viewPortWidth = 400;
-    private int viewPortHeight = 450;
+    private OrthographicCamera camera, hudCamera;
+    private int viewPortWidth = (int) (700*0.3);
+    private int viewPortHeight = (int) (750*0.3);
+    private int mapWidth = (int)(1216 * 0.3);
+    private int mapHeight = (int)(896 *0.3);
     private float stateTime;
-    private EndState currentState;
-    private boolean isEndGame = false;
-    private Random random;
 
-    // Pause Menu
-    private boolean isPaused = false;
-    private PauseMenu pauseMenu;
+    // Objects for our tile map
+    private OrthogonalTiledMapRenderer orthoTileRender;
+    private TileMapHelper tileMapHelper;
+    private Spider spiderPlayer;
+    private Centipede centipedeEnemy;
+    private Array<Body> centipedeBodies;
 
     //Animations
-    private Animation<TextureRegion> antAnimation, centipedeMouthAnimation; // Must declare frame type (TextureRegion)
-    private TextureRegion centipedeFrame, antFrame;
+    private Animation<TextureRegion> walkAnimation, centipedeMouthAnimation; // Must declare frame type (TextureRegion)
+    private TextureRegion centipedeFrame;
     private Animator ani;
 
     // Textures
     private TextureRegion centipedeBody, centipedeButt;
     private TextureAtlas allTextures;
 
-    // Objects for our tile map
-    private OrthogonalTiledMapRenderer orthoTileRender;
-    private TileMapHelper tileMapHelper;
-    private Centipede2 centipedeEnemy;
-    private Array<Body> centipedeBodies;
-
     // Character AI
-    private long currentTime;
+    private long timerBurstShot, currentTime;
 
     // Player Hud
-    private Hud hud;
+    private PlayerHud hud;
 
     // Web Sac Pickups
     private WebSac webPickup1, webPickup2, webPickup3;
 
+    // Centipede AOE
+    private boolean aoeDelay = false;
+
     // Pause Menu
     private BugWars game;
+    private boolean isPaused = false;
+    private PauseMenu pauseMenu;
 
-    // Keep track of Ants
-    private Array<Ant> ants = new Array<Ant>();
-    private long startTime = TimeUtils.millis();
+    // End Game
+    private EndState currentState;
+    private boolean isEndGame = false;
 
-    private List<Integer> clockWise = Arrays.asList(0,3,1,2);
-    private int currentMove = 0;
+
+
 
     public Game2(OrthographicCamera camera, BugWars game){
-        this.camera = camera;
-        pauseMenu = new PauseMenu(this, game, camera);
-        pauseMenu.assignment3Game2Listeners();
-
         this.game = game;
         this.camera = camera;
         this.batch = new SpriteBatch();
         hudBatch = new SpriteBatch(); // player and enemy health bars
         this.world = new World(new Vector2(0,0), false); //Gravity is the Vector2
         this.box2DBug = new Box2DDebugRenderer();
-
+        this.pauseMenu = new PauseMenu(this, game, camera);
+        pauseMenu.assignment3Game2Listeners();
         this.tileMapHelper = new TileMapHelper(this);
         /**
          * Getting the map we've loaded from TileMapHelper, may need to pass in String name to
          * make it more portable.
          */
-        this.orthoTileRender = tileMapHelper.setupMap1();
-
-
+        this.orthoTileRender = tileMapHelper.setupMap2();
 
         // Instantiate the collision listener
         createCollisionListener();
 
+        // Create Spider character ***************************************************
+        Body body = BodyHelperService.createBody(
+                100 + 16, // Position
+                100 + 16, // Position
+                16, // Box size
+                16, // Box size
+                0,
+                false,
+                world);
+        setSpider(new Spider(16, 16, body, 100, world));
+        spiderPlayer.setSpeed(5);
+        // **************************************************************************
+
         // Create Centipede enemy ***************************************************
         Body bodyEnemyHead = BodyHelperService.createBody(
-                100 + 16, // Position
-                100 + 16, // Position
-                32, // Box size
-                32, // Box size
+                350, // Position
+                550, // Position
+                80, // Box size
+                80, // Box size
                 1,
                 false,
                 world);
 
-        setCentipede(new Centipede2(world,16, 16, bodyEnemyHead, 30));
-        centipedeEnemy.initBody(world); // initialize the rest of the centipede body
-        centipedeEnemy.initDistanceJoint(world);
-        centipedeBodies = centipedeEnemy.getCentipede();
-        centipedeBodies = centipedeEnemy.getCentipede();
-        centipedeEnemy.setMaxSpeed(1200);
+        setCentipede(new Centipede(world,128, 128, bodyEnemyHead, 100));
+        centipedeEnemy.initTail(); // initialize the rest of the centipede body
+        centipedeEnemy.setBehaviors(spiderPlayer.getBody());
 
         // *************************************************************************
 
         // Get Sprite animations
         ani = new Animator();
+        walkAnimation = ani.AnimatorSpider();
         centipedeMouthAnimation = ani.CentipedeMouthAnimator();
-        antAnimation = ani.antAnimator();
 
         allTextures = new TextureAtlas(Gdx.files.internal("maps/Assignment1TexturePack.atlas"));
         centipedeBody = new TextureRegion(allTextures.findRegion("Centipede_Body"));
@@ -139,55 +145,94 @@ public class Game2 implements Screen {
 
 
         // Create world boarders
-        BodyHelperService.createGameBorder(world);
+        BodyHelperService.createGameBorder2(world, mapWidth, mapHeight);
         stateTime = 0f;
 
         //set Cameras
+        camera.rotate(90);
         camera.setToOrtho(false, viewPortWidth, viewPortHeight); // Camera is effecting the size of the tile map shown
         hudCamera = new OrthographicCamera();
         hudCamera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()); // Camera is effecting the size of the tile map shown,
 
         // Initialize player HUD
-        hud = new Hud(100);
+        hud = new PlayerHud(spiderPlayer.getHealth(),centipedeEnemy.getHealth());
 
         // Generate Web Sac pickups
-        Body bodyWebSac1 = BodyHelperService.createWebSac(world);
-        Body bodyWebSac2 = BodyHelperService.createWebSac(world);
-        Body bodyWebSac3 = BodyHelperService.createWebSac(world);
+        Body bodyWebSac1 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
+        Body bodyWebSac2 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
+        Body bodyWebSac3 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
 
         webPickup1 = new WebSac(bodyWebSac1, world);
         webPickup2 = new WebSac(bodyWebSac2, world);
         webPickup3 = new WebSac(bodyWebSac3, world);
 
+        // Centipede burst shot
+        timerBurstShot = millis() + (10*1000);
 
         // Initialize the End Game
         currentState = new EndState();
-        random = new Random();
-        //createAnt();
 
     }
 
+    /**
+     * Update sprites, camera locations and any further character actions - such as the Centipede AOE
+     */
+    private void update(){
+
+        handleInput();
+
+        camera.update();
+        hudCamera.update();
+        /**
+         * https://stackoverflow.com/questions/33703663/understanding-the-libgdx-projection-matrix
+         * Call setProjectionMatrix whenever you have moved the camera or resized the screen.
+         * Camera.combined describes where things in your Assignment1 world should be rendered onto the screen
+         */
+        batch.setProjectionMatrix(camera.combined);
+        hudBatch.setProjectionMatrix(hudCamera.combined);
+
+        orthoTileRender.setView(camera); // << Why are we doing this?
+
+        // Getting and passing the positions of the Spider to the Centipede for Seeking Algorithm
+        spiderPlayer.update2();
+        centipedeEnemy.update();
 
 
-    @Override
-    public void show() {
-
-    }
-
-    public void update(){
-        
-        centipedeEnemy.checkUserInput(currentMove); // Update with action
-        int index = clockWise.indexOf(currentMove);
-        if(index == 3){
-            index = 0;
+        //Centipede AOE timer and call ******************************************************
+        currentTime = millis();
+        if(currentTime > timerBurstShot){
+            centipedeEnemy.aoeShot2();
+            timerBurstShot = millis() + (20*1000);
+            aoeDelay=true;
         }else{
-            index++;
-        }
-        currentMove = clockWise.get(index);
-        Vector3 position = camera.position;
-        position.x = Math.round(centipedeEnemy.getHead().getPosition().x);
-        position.y = Math.round(centipedeEnemy.getHead().getPosition().y);
+            if(aoeDelay == true) { // Stop the centipede from moving so it can fire off its aoe
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        aoeDelay=false;
+                    }
+                }, 3);
+            }
+            else{
+                //centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
+            }
 
+        }
+        // update hud visuals
+        hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+
+
+    }
+
+    /**
+     * Method that will move the viewport camera around as the player is moving around the level
+     * Logic for this was taken from LibGDX tutorial:
+     * https://libgdx.com/wiki/graphics/2d/orthographic-camera
+     */
+    private void handleInput() {
+        Vector3 position = camera.position;
+        position.x = Math.round(spiderPlayer.getBody().getPosition().x);
+        position.y = Math.round(spiderPlayer.getBody().getPosition().y)+20;
         camera.position.set(position);
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
@@ -197,22 +242,30 @@ public class Game2 implements Screen {
         }
 
         // Stop the camera position so it doesn't go out of bounds
-        camera.position.x = MathUtils.clamp(camera.position.x, viewPortWidth/2f, 851-viewPortWidth/2f );
-        camera.position.y = MathUtils.clamp(camera.position.y, viewPortHeight/2f, 627-viewPortHeight/2f );
-
-        hud.update(centipedeEnemy.getHealth());
+        camera.position.x = MathUtils.clamp(camera.position.x, viewPortWidth/2f, mapWidth-viewPortWidth/2f );
+        camera.position.y = MathUtils.clamp(camera.position.y, viewPortHeight/2f, mapHeight );
 
 
     }
 
     @Override
+    public void show() {
+
+    }
+
+    /**
+     * Main render method for the player and enemy sprites, also checks if pause is requested and
+     * if game end state has been reached
+     * @param delta
+     */
+    @Override
     public void render(float delta) {
         if(isPaused){ // check if game is paused
+            delta =0;
             pause();
         }else {
-            update();
-            camera.update();
-            hudCamera.update();
+
+
             /**
              * World.step explanation
              * tells the physics engine that 1/60th of a second has passed every time you call it.
@@ -232,56 +285,61 @@ public class Game2 implements Screen {
              */
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             stateTime += Gdx.graphics.getDeltaTime();
-            // Render environment and setup cameras
-            batch.setProjectionMatrix(camera.combined);
-            hudBatch.setProjectionMatrix(hudCamera.combined);
-            orthoTileRender.setView(camera);
-            box2DBug.render(world, camera.combined);
+            // Render our tile map before the Assignment1 objects
             orthoTileRender.render();
-
+            //centipedeEnemy.moveBoss(spiderPlayer.getBody());
             // Get current frame of animation for the current stateTime
+            TextureRegion spiderFrame = walkAnimation.getKeyFrame(stateTime, true); // Spider Animation Walking
             centipedeFrame = centipedeMouthAnimation.getKeyFrame(stateTime, true);
-            // Get current frame of animation for the current stateTime
-            antFrame = antAnimation.getKeyFrame(stateTime, true);
 
-            if(centipedeEnemy.getHealth() <= 0.0){ // Player lost, rerun test
-                resetGame();
+            if(spiderPlayer.getHealth() <= 0.0){ // Player lost, run end game screen
+                hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+                centipedeEnemy.updateStop();
+                batch.begin();
+                centipedeRender();
+                batch.end();
+                currentState.loseStateRender();
+                handleEndGameInput();
 
             }else if(centipedeEnemy.getHealth() <= 0.0){ // Player wins, run end game screen
-
+                hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
+                centipedeEnemy.updateStop();
+                currentState.winStateRender(centipedeEnemy, centipedeBodies, camera.combined, stateTime);
+                handleEndGameInput();
 
 
             }else {
-                update();
+                this.update();
                 batch.begin();
                 // Draw Web Sac Pickups
                 webPickup1.render(batch);
                 webPickup2.render(batch);
                 webPickup3.render(batch);
 
-                // Render the Centipede (used in more then 1 location, therefore, made into a helper method)
+                // Web shooter spawn
+                spiderPlayer.render(batch);
+
+                // Centipede aoe Shot
+                centipedeEnemy.render2(batch);
+
+                // Render the Centipede (used in more then 1 location, therefore, made into a helper method
                 centipedeRender();
-                for(Ant ant: ants){ // Go through the Ant array and render all ants
-                    ant.update();
-                    antRender(ant);
-                }
 
+                // Draw spider player
+                int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
+                batch.draw(spiderFrame,
+                        spiderPlayer.getX(), // Position
+                        spiderPlayer.getY(), // Position
+                        spiderPlayer.getWidth() / 2, // Center of character
+                        spiderPlayer.getHeight() / 2, // Center of character
+                        spiderFrame.getRegionWidth(),
+                        spiderFrame.getRegionHeight(),
+                        1, //Resize
+                        1,
+                        position); // Rotation
                 batch.end();
-                // Remove all the dead ants
-                removeAnt();
-
             }
-            if((TimeUtils.millis()-startTime) > 10000){
-                if(ants.size != 1){
-                    createAnt();
-                }
 
-                startTime=TimeUtils.millis();
-                //startTime=TimeUtils.millis()*10;
-            }else{
-
-                //System.out.println(startTime);
-            }
 
             // ********* COMMENT THIS LINE OUT WHEN IN PROD ***********
             // commenting out will remove collision boxes
@@ -293,6 +351,7 @@ public class Game2 implements Screen {
             hudBatch.end();
         }
 
+
     }
 
     @Override
@@ -300,8 +359,13 @@ public class Game2 implements Screen {
 
     }
 
+    /**
+     * Pause menu caller
+     */
     @Override
     public void pause() {
+        handleInput();
+        pauseMenu.render();
 
     }
 
@@ -317,8 +381,33 @@ public class Game2 implements Screen {
 
     @Override
     public void dispose() {
+        batch.dispose();
+        spiderPlayer.dispose();
+        centipedeEnemy.dispose();
+        ani.dispose();
+        tileMapHelper.dispose();
+        allTextures.dispose();
+        webPickup1.dispose();
+        webPickup2.dispose();
+        webPickup3.dispose();
+        hudBatch.dispose();
+        pauseMenu.dispose();
 
     }
+
+    public World getWorld() {
+        return world;
+    }
+
+    public void setSpider (Spider spider){
+        this.spiderPlayer = spider;
+
+    }
+
+    public void setCentipede (Centipede centipede){
+        this.centipedeEnemy = centipede;
+    }
+
 
     /**
      * Helper function that will initiate the creation of Box2D's contact listener
@@ -328,11 +417,7 @@ public class Game2 implements Screen {
      * https://www.youtube.com/watch?v=pJ_M_fACtB8 by The Coding Train
      */
     private void createCollisionListener(){
-        CollisionListenerHelper2 colListen = new CollisionListenerHelper2(world, this);
-    }
-
-    public void setCentipede (Centipede2 centipede){
-        this.centipedeEnemy = centipede;
+        CollisionListenerHelper colListen = new CollisionListenerHelper(world);
     }
 
     /**
@@ -340,9 +425,20 @@ public class Game2 implements Screen {
      * in (RUNNING or LOSE). code put in helper method to unclog 'render' function
      */
     private void centipedeRender(){
+        //Draw centipede animation
+        batch.draw(centipedeFrame,
+                centipedeEnemy.getX() - 8, // Position
+                centipedeEnemy.getY() - 8, // Position
+                8, // Center of character
+                8, // Center of character
+                16,
+                16,
+                4, //Resize
+                4,
+                180); // Rotation
         // Draw centipede body
 
-        for (Body centipede : centipedeBodies) {
+        /*for (Body centipede : centipedeBodies) {
 
             batch.draw(centipedeBody,
                     centipede.getPosition().x, // Position
@@ -367,16 +463,8 @@ public class Game2 implements Screen {
                 2, //Resize
                 2,
                 0); // Rotation
-        batch.draw(centipedeFrame,
-                centipedeEnemy.getHead().getPosition().x - 8, // Position
-                centipedeEnemy.getHead().getPosition().y - 8, // Position
-                8, // Center of character
-                8, // Center of character
-                16,
-                16,
-                2, //Resize
-                2,
-                centipedeEnemy.getRotation()); // Rotation
+
+         */
     }
 
     /**
@@ -391,72 +479,5 @@ public class Game2 implements Screen {
         }
     }
 
-    public void antRender(Ant ant){
-        batch.draw(antFrame,
-                ant.getX(), // Position
-                ant.getY(), // Position
-                16, // Center of character
-                16, // Center of character
-                antFrame.getRegionWidth(),
-                antFrame.getRegionHeight(),
-                1, //Resize
-                1,
-                ant.getRotation()); // Rotation
-    }
 
-    public void createAnt(){
-
-        int x = random.nextInt((608-75)+75);
-        int y = random.nextInt((448-50)+50);
-        System.out.println(x + " " + y);
-        Body body = BodyHelperService.createBody(
-                x *2, // Position
-                y *2, // Position
-                24, // Box size
-                32, // Box size
-                0,
-                false,
-                world);
-
-        ants.add(new Ant(body));
-    }
-
-    public void addScore(){
-        hud.incrementCount();
-
-    }
-
-    public void removeAnt(){
-        for(int i =0; i < ants.size; i++ ) { // Go through and destroy any web bodies that may need to be
-            if (ants.get(i).isDeadAnt()) {
-                world.destroyBody(ants.get(i).getBody());
-                ants.removeIndex(i);
-            }
-        }
-
-    }
-
-    public void resetGame(){
-        // Remove WebSac bombs
-        webPickup1.removeSac();
-        webPickup2.removeSac();
-        webPickup3.removeSac();
-
-        // Generate Web Sac pickups
-        Body bodyWebSac1 = BodyHelperService.createWebSac(world);
-        Body bodyWebSac2 = BodyHelperService.createWebSac(world);
-        Body bodyWebSac3 = BodyHelperService.createWebSac(world);
-
-        webPickup1 = new WebSac(bodyWebSac1, world);
-        webPickup2 = new WebSac(bodyWebSac2, world);
-        webPickup3 = new WebSac(bodyWebSac3, world);
-
-        // Remove ants
-        ants.clear();
-
-        // Reset Centipede Position
-        centipedeEnemy.resetPosition(100);
-
-
-    }
 }

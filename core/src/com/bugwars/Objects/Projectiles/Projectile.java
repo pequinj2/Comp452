@@ -84,9 +84,6 @@ public class Projectile {
         acceleration.add(sep);
         acceleration.add(ali);
         acceleration.add(coh);
-
-
-
     }
 
     /**
@@ -234,4 +231,58 @@ public class Projectile {
     }
 
 
+    //*****************************************
+    // Assignment 3 game 2
+    public void flock2(ArrayList<Projectile> projArray){
+        //acceleration.scl(0);
+        // Return the vectors so it;s easier to multiply different weights to get different behaviors
+        Vector2 sep = separate(projArray);
+        Vector2 ali = align(projArray);
+        Vector2 coh = cohesion2(projArray);
+
+        // Multiply by a weight to get a different behavior
+        sep.scl(2);
+        ali.scl(0.7f);
+        coh.scl(1);
+
+        // Add all the effects to acceleration
+        acceleration.add(sep);
+        //acceleration.add(ali);
+        acceleration.add(coh);
+    }
+
+    /**
+     * Calculate the average location of the projectiles and use that as a new target
+     * Very similar to 'align' algorithm
+     * @param projArray
+     */
+    private Vector2 cohesion2(ArrayList<Projectile> projArray){
+        Vector2 sumLocations = new Vector2(0,0);
+        int sizeArr = projArray.size();
+        int count = 0;
+        // Go through projectile list and add up all the different velocities
+        for(Projectile p : projArray){
+            // Get the distance between current projectile and the others
+            Vector2 distanceDiff = projBod.getPosition().sub(p.projBod.getPosition());
+
+            // Check if the 2 projectiles are close together and NOT the same one (id)
+            if(distanceDiff.len() > 5.0 && id != p.id  && distanceDiff.len() > 0.0){
+                sumLocations.add(p.getBody().getPosition());
+                count++;
+            }
+
+        }
+
+        if (count > 0) {
+            sumLocations.x = sumLocations.x / sizeArr; // Average velocity
+            //sumLocations.y = sumLocations.y / sizeArr;
+            sumLocations.y = 900;
+            Vector2 newAcc = seek(sumLocations);
+
+            return newAcc;
+        }
+        else {
+            return new Vector2(0,0);
+        }
+    }
 }

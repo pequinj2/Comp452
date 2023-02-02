@@ -82,6 +82,13 @@ public class Spider extends Entity implements Health, Damage {
         checkUserInput();
 
     }
+    public void update2() {
+        clock += Gdx.graphics.getDeltaTime();
+        x = body.getPosition().x - getWidth() /2; // Will be the center of the body
+        y = body.getPosition().y - getHeight() /2;
+        checkUserInput2();
+
+    }
 
     /**
      * If a
@@ -106,24 +113,24 @@ public class Spider extends Entity implements Health, Damage {
 
         velX = 0;
         velY = 0;
-        if(Gdx.input.isKeyPressed(Input.Keys.D)&&body.getPosition().x<(608-width)){
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
             velX = 100;
             direcLR = false;
             rotation = -90;
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x>width){
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
             velX = -100;
             direcLR = true;
             direcUD = false;
             rotation = 90;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y<(448-height)){
+        if(Gdx.input.isKeyPressed(Input.Keys.W)){
             velY = 100;
             direcUD = false;
             rotation = 0;
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)&&body.getPosition().y>height){
+        if(Gdx.input.isKeyPressed(Input.Keys.S)){
             velY = -100;
             direcUD = true;
             rotation = -180;
@@ -182,11 +189,57 @@ public class Spider extends Entity implements Health, Damage {
 
     }
 
+    public void setSpeed(int speed){
+        this.speed = speed;
+    }
+
     public void dispose(){
         webShots.dispose();
     }
 
+    // *******************************************************************
+    // ASSIGNMENT 3 GAME 2
+    /**
+     * Get user input and direction for proper character texture animation and rotation
+     */
+    private void checkUserInput2() {
 
+        velX = 0;
+        velY = 0;
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            velX = 100;
+            direcLR = false;
+            rotation = -90;
+
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            velX = -100;
+            direcLR = true;
+            direcUD = false;
+            rotation = 90;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.W)&&body.getPosition().y < 260){
+            velY = 100;
+            direcUD = false;
+            rotation = 0;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+            velY = -100;
+            direcUD = true;
+            rotation = -180;
+        }
+
+        // Web shooter
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
+            // Fire web shooter in the direction character is facing
+            if(webShots.getArraySize() != 0){
+                webShots.fireWebbing();
+            }
+
+        }
+        body.setLinearVelocity(velX * speed, velY * speed);
+
+    }
 
 
 

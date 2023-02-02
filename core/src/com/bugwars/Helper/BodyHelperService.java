@@ -257,7 +257,7 @@ public class BodyHelperService {
      * Create the Assignment1 boarder boundaries
      * @param world
      */
-    public static void createGameBorder2(World world){
+    public static void createGameBorder2(World world, int width, int height){
 
         // ***** Left border
         BodyDef bodyDef = new BodyDef();
@@ -270,7 +270,7 @@ public class BodyHelperService {
         body.setUserData("Boarder");
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0, 627);
+        shape.setAsBox(0, height);
         // Create a fixture definition to apply our shape to
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -283,17 +283,17 @@ public class BodyHelperService {
         shape.dispose();
 
         // ***** Top border
-        bodyDef = new BodyDef();
+        /*bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
-        bodyDef.position.set(0, 627);
+        bodyDef.position.set(0, height);
 
         bodyDef.fixedRotation = false;
         body = world.createBody(bodyDef); // Create the body in our world
         body.setUserData("Boarder");
 
         shape = new PolygonShape();
-        shape.setAsBox(851, 0);
+        shape.setAsBox(width, 0);
         // Create a fixture definition to apply our shape to
         fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -304,19 +304,19 @@ public class BodyHelperService {
         // Remember to dispose of any shapes after you're done with them!
         // BodyDef and FixtureDef don't need disposing, but shapes do.
         shape.dispose();
-
+        */
         // ***** Right border
         bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
-        bodyDef.position.set(851, 0);
+        bodyDef.position.set(width, 0);
 
         bodyDef.fixedRotation = false;
         body = world.createBody(bodyDef); // Create the body in our world
         body.setUserData("Boarder");
 
         shape = new PolygonShape();
-        shape.setAsBox(0, 627);
+        shape.setAsBox(0, height);
         // Create a fixture definition to apply our shape to
         fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -339,7 +339,7 @@ public class BodyHelperService {
         body.setUserData("Boarder");
 
         shape = new PolygonShape();
-        shape.setAsBox(851, 0);
+        shape.setAsBox(width, 0);
         // Create a fixture definition to apply our shape to
         fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -358,19 +358,22 @@ public class BodyHelperService {
      * @param world
      * @return
      */
-    public static Body createWebSac2(World world){
+    public static Body createWebSac2(World world, int width, int height){
         BodyDef bodyDef = new BodyDef();
         // Create a static body that stays still or dynamic body so it moves around and is affected by forces
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
-        bodyDef.position.set((int)(Math.random()*851 + 8), (int)(Math.random()*627 + 8));
+        int x = (int)(Math.random()*width + 8);
+        int y = (int)(Math.random()*height + 8);
+        System.out.println("x: "+ x + "y: "+y);
+        bodyDef.position.set(x, y);
 
         // If the Body is NOT dynamic then turn rotation off
         bodyDef.fixedRotation = true;
         Body body = world.createBody(bodyDef); // Create the body in our world
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(10, 10);
+        shape.setAsBox(6, 6);
         // Create a fixture definition to apply our shape to
         FixtureDef fixtureDef = new FixtureDef();
 
@@ -392,4 +395,5 @@ public class BodyHelperService {
         return body;
 
     }
+
 }
