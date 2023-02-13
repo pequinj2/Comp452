@@ -52,11 +52,15 @@ public class CollisionListenerHelper {
                 if ((o1.getClass() == Spider.class || o2.getClass() == Spider.class)){
                     if(o1.getClass() == Centipede.class ) { // Player takes damage
                         // Centipede hit - player takes damage
+                        Centipede cent = (Centipede) o1;
+                        //cent.retractTail();
                         Spider sp = (Spider) o2;
                         sp.removeHealth(10);
                     }
                     else if(o2.getClass() == Centipede.class ){  // Player takes damage
                         // Centipede hit - player takes damage
+                        Centipede cent = (Centipede) o2;
+                        //cent.retractTail();
                         Spider sp = (Spider) o1;
                         sp.removeHealth(10);
                     }

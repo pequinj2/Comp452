@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.bugwars.Assignment3.Game2.AI.States.BossState;
 import com.bugwars.Assignment3.Game2.AI.States.StateManager;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.Beam;
+import com.bugwars.Assignment3.Game2.CentipedeAttacks.Lunge;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.Patrol;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.TailSwipe;
 import com.bugwars.Helper.BodyHelperService;
@@ -17,6 +18,9 @@ import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Player.Damage;
 import com.bugwars.Objects.Player.Health;
 import com.bugwars.Objects.Projectiles.SwarmShot;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 
 public class Centipede extends Entity implements Health, Damage {
@@ -29,6 +33,7 @@ public class Centipede extends Entity implements Health, Damage {
     private boolean delayStarting = true;
     private float maxSpeed = 100;
     private float linearDamping = 1.5f;
+    private float tailReturnY;
     private World world;
 
     // Burst Shot
@@ -37,15 +42,19 @@ public class Centipede extends Entity implements Health, Damage {
     // *********************************************************************************
     // ADDED FOR ASSIGNMENT 3 GAME 2
     private float velX, velY;
-    private boolean direcLR, direcUD;
+    private boolean tailHit = false;
+    private boolean tailRunning = false;
     private int rotation = 0;
-    private Beam beam;
-    private TailSwipe tail;
+
     private int distance;
-    private Vector2 result;
+    private Vector2 result, spiderLocation;
     private BossState bossState;
     private StateManager stateMachine;
-    private Patrol patrol;
+    public Patrol patrol;
+    private Beam beam;
+    public TailSwipe tail;
+    public Lunge lunge;
+    public Dictionary<BossState,Integer> attackSelector = new Hashtable<BossState,Integer>();
 
 
     // Implement constructor
@@ -65,8 +74,7 @@ public class Centipede extends Entity implements Health, Damage {
 
     @Override
     public void update() {
-        x = body.getPosition().x; // Will be the center of the body
-        y = body.getPosition().y;
+
     }
     public void updateStop() {
         body.setLinearVelocity(0,0);
@@ -75,7 +83,27 @@ public class Centipede extends Entity implements Health, Damage {
     }
 
     public void updateBehavior(){
+        bossState = stateMachine.getCurrentState();
+        bossState.Update();
+        x = body.getPosition().x; // Will be the center of the body
+        y = body.getPosition().y;
+        // Check butt
+        float varX = butt.getPosition().x;
 
+        if(varX>=355f){
+            // Tail did not hit the spider but hit the end of the screen so retract it
+            if(tailHit==false){
+                retractTail();
+                tailBasePosition();
+            }
+        }
+        else if(tailHit==true && tailRunning==true){
+            System.out.println("Both are true");
+            tailBasePosition();
+        }
+        if(varX<=-100f){
+            butt.setTransform(-90, tailReturnY, butt.getAngle());
+        }
     }
 
     @Override
@@ -301,6 +329,8 @@ public class Centipede extends Entity implements Health, Damage {
         centipedeBody.add(body3);
         centipedeBody.add(body4);
 
+
+
     }
 
     public void dispose(){
@@ -310,23 +340,67 @@ public class Centipede extends Entity implements Health, Damage {
     // ********************************************************
     // ASSIGNMENT 3 GAME 2
     public void initTail(){
-        body1 = BodyHelperService.createBody(
-                610 + 16, // Position
-                610 + 16, // Position
-                32, // Box size
-                32, // Box size
+        butt = BodyHelperService.createBody(
+                -90, // Position
+                200,
+                80, // Box size
+                80, // Box size
                 1,
                 false,
                 world);
+        butt.setUserData(this);
+        //body1.setActive(false);
+
+      /*  body1 = BodyHelperService.createBody(
+                -80, // Position
+                200, // Position
+                80, // Box size
+                80, // Box size
+                1,
+                true,
+                world);
         body1.setUserData(this);
-        body1.setActive(false);
-        tail = new TailSwipe(body1);
+        body2 = BodyHelperService.createBody(
+                -80, // Position
+                200,  // Position
+                80, // Box size
+                80, // Box size
+                1,
+                false,
+                world);
+        body2.setUserData(this);
+        body3 = BodyHelperService.createBody(
+                -80, // Position
+                200,
+                80, // Box size
+                80, // Box size
+                1,
+                false,
+                world);
+        body3.setUserData(this);*/
+        body4 = BodyHelperService.createBody(
+                -90, // Position
+                200,
+                80, // Box size
+                80, // Box size
+                1,
+                true,
+                world);
+        body4.setUserData(this);
+
+        centipedeBody.add(body1);
+        centipedeBody.add(body2);
+        centipedeBody.add(body3);
+        centipedeBody.add(body4);
+
+
+
     }
 
     public void moveBoss(Body spider){
         float timeToTarget = 0.1f;
-        Vector2 radiiPos = new Vector2(spider.getPosition().x,0); // Make coordinates proper Vector2s
-        Vector2 currentPos = new Vector2(body.getPosition().x,0);
+        Vector2 radiiPos = new Vector2(spider.getPosition().x,body.getPosition().y); // Make coordinates proper Vector2s
+        Vector2 currentPos = new Vector2(body.getPosition().x,body.getPosition().y);
 
         // Get displacement distance from enemy to target
         Vector2 newDirection = radiiPos.sub(currentPos);
@@ -334,46 +408,133 @@ public class Centipede extends Entity implements Health, Damage {
         Vector2 vel;
 
         float distance = newDirection.len();
-        float targetRadii = 16f;
+        float targetRadii = 8f;
         float largeRadii = 64f;
         float targetSpeed;
 
-        System.out.println(distance + " " + targetRadii);
+
         if(distance < targetRadii){
             result = temp.nor().scl(0); // At target, have no velocity
         }
         else {
 
             if (distance > largeRadii) {
-                targetSpeed = 50;
+                targetSpeed = 100;
 
             } else {
-                targetSpeed = 50 * (distance / largeRadii) ;
+                targetSpeed = 100 * (distance / largeRadii) ;
             }
 
             vel = temp.nor().scl(targetSpeed); // Target Velocity
-            Vector2 currentVelocity = body.getLinearVelocity(); // Current object velocity
 
-            result = vel.sub(currentVelocity);
-            result.scl(1 / timeToTarget);
-
-            // Throttle acceleration if too fast
-            if (result.len() > 50) {
-                result.nor();
-                result.scl(50);
-
-            }
-            body.setLinearVelocity(result);
+            result = vel;
 
         }
+        body.setLinearVelocity(result);
     }
 
+
+    public void tailAttack(Body spider){
+
+        if(tailRunning==false){
+            System.out.println("Tail running is false");
+            spiderLocation = new Vector2((int)(1216 * 0.3), spider.getPosition().y); // Only y position matters
+            butt.setTransform(0, spider.getPosition().y, butt.getAngle());
+
+            tailReturnY = spider.getPosition().y;
+            tailRunning = true;
+        }
+
+       System.out.println("Tail attack" +spiderLocation);
+
+        /*Vector2 newPosition = spiderLocation.sub(butt.getPosition()); // Displacement distance from enemy to target
+        System.out.println(newPosition);
+        newPosition.nor(); // Give the vector a proper direction
+        newPosition.scl(maxSpeed);*/
+
+        Vector2 temp = new Vector2(1216,0);
+        temp.nor(); // Give the vector a proper direction
+        temp.scl(maxSpeed);
+        butt.setLinearVelocity(temp);
+        //butt.applyLinearImpulse(-1,0,butt.getPosition().x, butt.getPosition().y, true);
+
+    }
+
+
+    /**
+     * Initialize all of the Centipede boss states and put them in a dictionary with an initial attack
+     * weight. 'Patrol' is a base state.
+     * @param spider
+     */
     public void setBehaviors(Body spider){
         stateMachine = new StateManager();
         patrol = new Patrol(this, spider, stateMachine);
+        tail = new TailSwipe(this, spider, stateMachine);
+        lunge = new Lunge(this, spider, stateMachine);
+        attackSelector.put(patrol, 5);
+        attackSelector.put(tail, 0);
+        attackSelector.put(lunge, 5);
         stateMachine.Initialize(patrol);
 
 
     }
 
+    /**
+     * The tail has either hit the spider or the game boarder, retract tail to end.
+     * Variable 'tailHit' is false until the conditions mentioned are met.
+     */
+    public void retractTail() {
+
+        tailHit = !tailHit;
+        /*if(tailHit== true){ // Tail hit is true therefore retract to position
+            tailReturnY = butt.getPosition().y;// Set tail's y position for constant value in tailBasePosition method
+        }*/
+    }
+
+    /**
+     * Return True or False if the tail strike has hit the target or the wall of the game
+     * @return
+     */
+    public boolean getRetractTail(){
+        return tailHit;
+    }
+
+    /**
+     * Put tail to regular position
+     */
+    public void tailBasePosition() {
+        Vector2 temp = new Vector2(-900,0);
+        temp.nor();
+        temp.scl(maxSpeed);
+        butt.setLinearVelocity(temp);
+        System.out.println("Tail retract " +temp);
+        if(butt.getPosition().x <= -100){
+            retractTail();
+            tailRunning=false;
+        }
+    }
+
+
+    public void lungeAttack(){
+        Vector2 attack = new Vector2(0,body.getPosition().y-80);
+        attack.nor();
+        attack.scl(-maxSpeed);
+        body.setLinearVelocity(attack);
+    }
+
+    public void lungeAttackReturn(){
+        if(body.getPosition().y < 310){
+            Vector2 attack = new Vector2(0,body.getPosition().y+180);
+            attack.nor();
+            attack.scl(maxSpeed);
+            body.setLinearVelocity(attack);
+        }else{
+            body.setTransform(body.getPosition().x, 310, 0);
+        }
+
+    }
+
+    public void bossStopMoving(){
+        body.setLinearVelocity(new Vector2(0,0));
+    }
 }

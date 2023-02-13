@@ -212,7 +212,7 @@ public class Spider extends Entity implements Health, Damage {
             rotation = -90;
 
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+        if(Gdx.input.isKeyPressed(Input.Keys.A)&&body.getPosition().x > 8){
             velX = -100;
             direcLR = true;
             direcUD = false;

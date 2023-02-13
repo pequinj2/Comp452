@@ -57,6 +57,10 @@ public class BodyHelperService {
             FixtureDef fixtureDef = new FixtureDef();
             fixtureDef.density = 10;
             fixtureDef.shape = shape;
+            if(width == 80){
+                fixtureDef.isSensor = true;
+            }
+
             // By setting the group index to -1 these specific objects won't collide
             // This works in our scenario because all circles are going to be the centipede body
             // If we have more circles we'd have to change how this is created
@@ -65,6 +69,7 @@ public class BodyHelperService {
 
             // Create our fixture and attach it to the body
             Fixture fixture = body.createFixture(fixtureDef);
+
 
             // Remember to dispose of any shapes after you're done with them!
             // BodyDef and FixtureDef don't need disposing, but shapes do.
@@ -260,7 +265,7 @@ public class BodyHelperService {
     public static void createGameBorder2(World world, int width, int height){
 
         // ***** Left border
-        BodyDef bodyDef = new BodyDef();
+        /*BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
         bodyDef.position.set(0, 0);
@@ -280,7 +285,7 @@ public class BodyHelperService {
 
         // Remember to dispose of any shapes after you're done with them!
         // BodyDef and FixtureDef don't need disposing, but shapes do.
-        shape.dispose();
+        shape.dispose();*/
 
         // ***** Top border
         /*bodyDef = new BodyDef();
@@ -306,23 +311,23 @@ public class BodyHelperService {
         shape.dispose();
         */
         // ***** Right border
-        bodyDef = new BodyDef();
+        BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
         // Set our body's starting position in the world
         bodyDef.position.set(width, 0);
 
         bodyDef.fixedRotation = false;
-        body = world.createBody(bodyDef); // Create the body in our world
+        Body body = world.createBody(bodyDef); // Create the body in our world
         body.setUserData("Boarder");
 
-        shape = new PolygonShape();
+        PolygonShape shape = new PolygonShape();
         shape.setAsBox(0, height);
         // Create a fixture definition to apply our shape to
-        fixtureDef = new FixtureDef();
+        FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
 
         // Create our fixture and attach it to the body
-        fixture = body.createFixture(fixtureDef);
+        Fixture fixture = body.createFixture(fixtureDef);
 
         // Remember to dispose of any shapes after you're done with them!
         // BodyDef and FixtureDef don't need disposing, but shapes do.

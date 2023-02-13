@@ -40,8 +40,11 @@ public class Game2 implements Screen {
     private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
     private Box2DDebugRenderer box2DBug;
     private OrthographicCamera camera, hudCamera;
+    /*private int viewPortWidth = 700;
+    private int viewPortHeight = 750;*/
     private int viewPortWidth = (int) (700*0.3);
     private int viewPortHeight = (int) (750*0.3);
+
     private int mapWidth = (int)(1216 * 0.3);
     private int mapHeight = (int)(896 *0.3);
     private float stateTime;
@@ -62,8 +65,7 @@ public class Game2 implements Screen {
     private TextureRegion centipedeBody, centipedeButt;
     private TextureAtlas allTextures;
 
-    // Character AI
-    private long timerBurstShot, currentTime;
+
 
     // Player Hud
     private PlayerHud hud;
@@ -71,8 +73,7 @@ public class Game2 implements Screen {
     // Web Sac Pickups
     private WebSac webPickup1, webPickup2, webPickup3;
 
-    // Centipede AOE
-    private boolean aoeDelay = false;
+
 
     // Pause Menu
     private BugWars game;
@@ -83,6 +84,7 @@ public class Game2 implements Screen {
     private EndState currentState;
     private boolean isEndGame = false;
 
+    private int centStartHealth = 100;
 
 
 
@@ -121,14 +123,20 @@ public class Game2 implements Screen {
         // Create Centipede enemy ***************************************************
         Body bodyEnemyHead = BodyHelperService.createBody(
                 350, // Position
-                550, // Position
+                620, // Position
                 80, // Box size
                 80, // Box size
                 1,
                 false,
                 world);
 
-        setCentipede(new Centipede(world,128, 128, bodyEnemyHead, 100));
+        /*Body bodyEnemyHead = BodyHelperService.createProjectiles(
+                world,
+                350, // Position
+                550, // Position
+                80 // Box size
+        );*/
+        setCentipede(new Centipede(world,128, 128, bodyEnemyHead, centStartHealth));
         centipedeEnemy.initTail(); // initialize the rest of the centipede body
         centipedeEnemy.setBehaviors(spiderPlayer.getBody());
 
@@ -166,8 +174,7 @@ public class Game2 implements Screen {
         webPickup2 = new WebSac(bodyWebSac2, world);
         webPickup3 = new WebSac(bodyWebSac3, world);
 
-        // Centipede burst shot
-        timerBurstShot = millis() + (10*1000);
+
 
         // Initialize the End Game
         currentState = new EndState();
@@ -195,29 +202,11 @@ public class Game2 implements Screen {
 
         // Getting and passing the positions of the Spider to the Centipede for Seeking Algorithm
         spiderPlayer.update2();
-        centipedeEnemy.update();
+        centipedeEnemy.updateBehavior();
+        //centipedeEnemy.update();
 
 
-        //Centipede AOE timer and call ******************************************************
-        currentTime = millis();
-        if(currentTime > timerBurstShot){
-            centipedeEnemy.aoeShot2();
-            timerBurstShot = millis() + (20*1000);
-            aoeDelay=true;
-        }else{
-            if(aoeDelay == true) { // Stop the centipede from moving so it can fire off its aoe
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        aoeDelay=false;
-                    }
-                }, 3);
-            }
-            else{
-                //centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
-            }
 
-        }
         // update hud visuals
         hud.update(spiderPlayer.getHealth(), centipedeEnemy.getHealth());
 
@@ -232,6 +221,7 @@ public class Game2 implements Screen {
     private void handleInput() {
         Vector3 position = camera.position;
         position.x = Math.round(spiderPlayer.getBody().getPosition().x);
+        //position.x = 0;
         position.y = Math.round(spiderPlayer.getBody().getPosition().y)+20;
         camera.position.set(position);
 
@@ -451,20 +441,40 @@ public class Game2 implements Screen {
                     2,
                     0); // Rotation
 
-        }
+        }*/
+        int bodyOffSets = 320;
+        float buttX = centipedeEnemy.getCentipedeButt().getPosition().x;
+        float buttY = centipedeEnemy.getCentipedeButt().getPosition().y;
+
         // Draw centipede butt
         batch.draw(centipedeButt,
-                centipedeEnemy.getCentipedeButt().getPosition().x, // Position
-                centipedeEnemy.getCentipedeButt().getPosition().y, // Position
-                16, // Center of character
-                16, // Center of character
-                centipedeButt.getRegionWidth(),
-                centipedeButt.getRegionHeight(),
-                2, //Resize
-                2,
-                0); // Rotation
+                buttX, // Position
+                buttY, // Position
+                8, // Center of character
+                8, // Center of character
+                16,
+                16,
+                4, //Resize
+                4,
+                90); // Rotation
 
-         */
+        for(int i =0; i<4; i++){
+            buttX = buttX-50;
+
+            batch.draw(centipedeBody,
+                    buttX, // Position
+                    buttY, // Position
+                    8, // Center of character
+                    8, // Center of character
+                    16,
+                    16,
+                    4, //Resize
+                    4,
+                    0); // Rotation
+        }
+
+
+
     }
 
     /**
@@ -479,5 +489,38 @@ public class Game2 implements Screen {
         }
     }
 
+    /**
+     * Based on the spider's location and centipede health, set the weights on the centipede's
+     * available attacks to make the proper decision.
+     */
+    private void weightCounter(){
+        float spidX = spiderPlayer.getBody().getPosition().x;
+        float spidY = spiderPlayer.getBody().getPosition().y;
+        float centX = centipedeEnemy.getBody().getPosition().x;
+        float centHealth = centipedeEnemy.getHealth();
 
+
+        if(spidY >= (mapHeight-90)){
+            // Check if the spider is directly below the Centipede - if so increase 'Lunge' attack weight
+            if((spidX <= centX && spidX >= (centX-80)) || (spidX >= centX && spidX <= (centX+80))){
+
+            }
+
+        }else if(spidY <= (mapHeight-180)){
+            //check if player is in lower half of the screen
+            if(centHealth <= (centStartHealth*0.7)){
+                // increase 'TailSwipe' attack weight
+            }
+            if(centHealth <= (centStartHealth*0.5)){
+                // increase 'Beam' attack weight
+            }
+
+        }else{
+
+        }
+
+
+
+
+    }
 }
