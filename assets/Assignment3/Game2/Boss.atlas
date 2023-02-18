@@ -1,0 +1,20 @@
+
+Boss.png
+size: 512, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Beam
+  rotate: false
+  xy: 2, 145
+  size: 218, 253
+  orig: 300, 300
+  offset: 49, 47
+  index: -1
+BeamEnd
+  rotate: false
+  xy: 2, 2
+  size: 297, 141
+  orig: 300, 300
+  offset: 2, 0
+  index: -1

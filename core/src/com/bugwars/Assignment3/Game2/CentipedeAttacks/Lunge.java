@@ -26,7 +26,7 @@ public class Lunge extends BossState {
     public void Exit() {
         super.Exit();
         attackOrReturn = 0;
-        boss.attackSelector.put(boss.lunge,4);
+        boss.attackSelector.put(boss.lunge,4f);
 
     }
 

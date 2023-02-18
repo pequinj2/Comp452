@@ -18,6 +18,7 @@ public class Patrol extends BossState {
     private long timerBurstShot, currentTime;
     // Centipede AOE
     private boolean aoeDelay = false;
+    private float threatBeam, threatTail;
 
     public Patrol(Centipede boss, Body spider, StateManager stateMachine) {
         super(boss, spider, stateMachine);
@@ -25,6 +26,8 @@ public class Patrol extends BossState {
         healthMid = (int)(boss.getHealth() * 0.7);
         // Centipede burst shot
         timerBurstShot = millis() + (10*1000);
+        threatBeam = 0;
+        threatTail = 0;
     }
 
 
@@ -79,6 +82,7 @@ public class Patrol extends BossState {
         // Check length of dictionary to see if attacks need to be added
         if (healthCheck <= healthFinal){
             // "Beam" attack added
+            System.out.println("Add Beam");
 
             //return;
         }
@@ -87,17 +91,18 @@ public class Patrol extends BossState {
             boss.attackSelector.put(boss.tail,boss.attackSelector.get(boss.tail) + 10);
             //return;
         }
+        // boss.getY()-100 = max Y distance the spider has to be in for lunge attack
         else if(spider.getPosition().y < boss.getY() && spider.getPosition().y > (boss.getY()-100) &&
                 spider.getPosition().x > (boss.getX()-40) && spider.getPosition().x < (boss.getX()+40)){
             boss.attackSelector.put(boss.lunge,boss.attackSelector.get(boss.lunge) + 10);
         }
         else{
-
             //return;
+
         }
 
         // Get state to run based on state weight
-        int keyValue = 0;
+        float keyValue = 0;
         BossState stateToCall = null;
         Enumeration<BossState> keys = boss.attackSelector.keys();
         while(keys.hasMoreElements()){
@@ -112,6 +117,23 @@ public class Patrol extends BossState {
         if(stateToCall != null ){
             stateMachine.ChangeState(stateToCall);
         }
+
+    }
+
+    public void Heuristic(){
+        float spidX = spider.getPosition().x;
+        float spidY = spider.getPosition().y;
+
+        float xValue = spidX/364;
+
+        float beamUtility = Math.max(Math.min((1-((boss.getHealth()-5)/(20-5)))*(1-xValue)+xValue,1),0);
+        // Because we want the inverse percentage of the X-axis for the tail swipe attack
+        xValue = Math.abs(1-xValue);
+        float tailUtility = Math.max(Math.min((1-((boss.getHealth()-5)/(20-5)))*(1-xValue)+xValue,1),0);
+
+        boss.attackSelector.put(boss.tail,tailUtility);
+        boss.attackSelector.put(boss.beam,beamUtility);
+
 
     }
 }

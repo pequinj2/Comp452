@@ -20,8 +20,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.bugwars.Assignment3.BeamObject;
 import com.bugwars.BugWars;
 import com.bugwars.Helper.Animator;
+import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Helper.CollisionListenerHelper;
 import com.bugwars.Helper.TileMapHelper;
@@ -40,10 +42,10 @@ public class Game2 implements Screen {
     private World world; //To store our box 2D bodies - *** May not need this? Sounds like its for gravity***
     private Box2DDebugRenderer box2DBug;
     private OrthographicCamera camera, hudCamera;
-    /*private int viewPortWidth = 700;
-    private int viewPortHeight = 750;*/
-    private int viewPortWidth = (int) (700*0.3);
-    private int viewPortHeight = (int) (750*0.3);
+    private int viewPortWidth = 700;
+    private int viewPortHeight = 750;
+    /*private int viewPortWidth = (int) (700*0.3);
+    private int viewPortHeight = (int) (750*0.3);*/
 
     private int mapWidth = (int)(1216 * 0.3);
     private int mapHeight = (int)(896 *0.3);
@@ -86,6 +88,9 @@ public class Game2 implements Screen {
 
     private int centStartHealth = 100;
 
+    private AssetManagerA3G2 assetMgr = new AssetManagerA3G2();
+    private BeamObject beam;
+
 
 
     public Game2(OrthographicCamera camera, BugWars game){
@@ -120,6 +125,9 @@ public class Game2 implements Screen {
         spiderPlayer.setSpeed(5);
         // **************************************************************************
 
+        // Initialize Special Boss Beam
+        beam = new BeamObject(assetMgr);
+
         // Create Centipede enemy ***************************************************
         Body bodyEnemyHead = BodyHelperService.createBody(
                 350, // Position
@@ -139,6 +147,7 @@ public class Game2 implements Screen {
         setCentipede(new Centipede(world,128, 128, bodyEnemyHead, centStartHealth));
         centipedeEnemy.initTail(); // initialize the rest of the centipede body
         centipedeEnemy.setBehaviors(spiderPlayer.getBody());
+        centipedeEnemy.setBeam(beam);
 
         // *************************************************************************
 
@@ -220,8 +229,8 @@ public class Game2 implements Screen {
      */
     private void handleInput() {
         Vector3 position = camera.position;
-        position.x = Math.round(spiderPlayer.getBody().getPosition().x);
-        //position.x = 0;
+        //position.x = Math.round(spiderPlayer.getBody().getPosition().x);
+        position.x = 0;
         position.y = Math.round(spiderPlayer.getBody().getPosition().y)+20;
         camera.position.set(position);
 
@@ -232,7 +241,7 @@ public class Game2 implements Screen {
         }
 
         // Stop the camera position so it doesn't go out of bounds
-        camera.position.x = MathUtils.clamp(camera.position.x, viewPortWidth/2f, mapWidth-viewPortWidth/2f );
+        //camera.position.x = MathUtils.clamp(camera.position.x, viewPortWidth/2f, mapWidth-viewPortWidth/2f );
         camera.position.y = MathUtils.clamp(camera.position.y, viewPortHeight/2f, mapHeight );
 
 
@@ -254,7 +263,8 @@ public class Game2 implements Screen {
             delta =0;
             pause();
         }else {
-
+            System.out.println(centipedeEnemy.getBody().getPosition());
+            System.out.println("Spider: "+spiderPlayer.getBody().getPosition());
 
             /**
              * World.step explanation
@@ -314,6 +324,12 @@ public class Game2 implements Screen {
 
                 // Render the Centipede (used in more then 1 location, therefore, made into a helper method
                 centipedeRender();
+
+                // If the beam has been fired render beam
+                if(beam.beamRunning()){
+                    //System.out.println("Render Beam");
+                    beam.renderBeam(batch);
+                }
 
                 // Draw spider player
                 int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
@@ -519,8 +535,10 @@ public class Game2 implements Screen {
 
         }
 
+    }
 
-
+    private void renderBeamShot(){
 
     }
+
 }

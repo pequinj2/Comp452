@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+import com.bugwars.Assignment3.BeamObject;
 import com.bugwars.Assignment3.Game2.AI.States.BossState;
 import com.bugwars.Assignment3.Game2.AI.States.StateManager;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.Beam;
@@ -51,10 +52,12 @@ public class Centipede extends Entity implements Health, Damage {
     private BossState bossState;
     private StateManager stateMachine;
     public Patrol patrol;
-    private Beam beam;
+    public Beam beam;
+    public BeamObject beamObj;
     public TailSwipe tail;
     public Lunge lunge;
-    public Dictionary<BossState,Integer> attackSelector = new Hashtable<BossState,Integer>();
+    public Dictionary<BossState, Float> attackSelector = new Hashtable<BossState,Float>();
+
 
 
     // Implement constructor
@@ -68,8 +71,9 @@ public class Centipede extends Entity implements Health, Damage {
         this.setHealth(health);
         body.setUserData(this);
         aoeAttack = new SwarmShot(world,body);
-        beam = new Beam();
+
         distance = 364-(int)width;
+
     }
 
     @Override
@@ -471,9 +475,11 @@ public class Centipede extends Entity implements Health, Damage {
         patrol = new Patrol(this, spider, stateMachine);
         tail = new TailSwipe(this, spider, stateMachine);
         lunge = new Lunge(this, spider, stateMachine);
-        attackSelector.put(patrol, 5);
-        attackSelector.put(tail, 0);
-        attackSelector.put(lunge, 5);
+        beam = new Beam(this, spider, stateMachine);
+        attackSelector.put(patrol, 5f);
+        attackSelector.put(tail, 0f);
+        attackSelector.put(lunge, 5f);
+        attackSelector.put(beam, 0f);
         stateMachine.Initialize(patrol);
 
 
@@ -536,5 +542,9 @@ public class Centipede extends Entity implements Health, Damage {
 
     public void bossStopMoving(){
         body.setLinearVelocity(new Vector2(0,0));
+    }
+
+    public void setBeam(BeamObject beam){
+        beamObj = beam;
     }
 }

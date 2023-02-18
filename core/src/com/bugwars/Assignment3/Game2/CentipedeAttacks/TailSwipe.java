@@ -38,7 +38,7 @@ public class TailSwipe extends BossState {
         super.DoCheck();
         if(boss.getRetractTail()){
             // Tail just ran so change the weight
-            boss.attackSelector.put(boss.tail,4);
+            boss.attackSelector.put(boss.tail,4f);
             stateMachine.ChangeState(boss.patrol);
         }
     }

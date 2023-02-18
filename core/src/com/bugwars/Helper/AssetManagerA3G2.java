@@ -15,6 +15,8 @@ public class AssetManagerA3G2 {
 
     public AssetManagerA3G2(){
         bossAtlas = new TextureAtlas((Gdx.files.internal("Assignment3/Game2/Boss.atlas")));
+        beamEnd = new TextureRegion(bossAtlas.findRegion("BeamEnd"));
+        beam = new TextureRegion(bossAtlas.findRegion("Beam"));
 
     }
 
@@ -26,5 +28,13 @@ public class AssetManagerA3G2 {
         bossHeadAnimation = new Animation<TextureRegion>(0.33f, bossAtlas.findRegions("Head"), Animation.PlayMode.LOOP);
 
         return bossHeadAnimation;
+    }
+
+    public TextureRegion getBeamEnd(){
+        return beamEnd;
+    }
+
+    public TextureRegion getBeam(){
+        return beam;
     }
 }
