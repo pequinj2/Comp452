@@ -20,13 +20,14 @@ public class Lunge extends BossState {
         boss.lungeAttack();
         System.out.println("Enter Lunge");
         returnY = boss.getY();
+        boss.playLunge();
     }
 
     @Override
     public void Exit() {
         super.Exit();
         attackOrReturn = 0;
-        boss.attackSelector.put(boss.lunge,4f);
+        boss.attackSelector.put(boss.lunge,0f);
 
     }
 
@@ -51,5 +52,10 @@ public class Lunge extends BossState {
         else if(boss.getY() == 310){ // At starting point change states
             stateMachine.ChangeState(boss.patrol);
         }
+    }
+
+    @Override
+    public void printState() {
+        System.out.println("Lunge State");
     }
 }

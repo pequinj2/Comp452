@@ -17,13 +17,14 @@ public class Beam extends BossState {
         super.Enter();
         boss.beamObj.readyBeam(boss.getBody());
         boss.getBody().setLinearVelocity(new Vector2(0,0));
+        boss.playBeam();
     }
 
     @Override
     public void Exit() {
         super.Exit();
         boss.beamObj.resetHeight();
-        boss.attackSelector.put(boss.beam,4f);
+        boss.attackSelector.put(boss.beam,0f);
         boss.beamObj.beamRunning = false;
     }
 
@@ -31,6 +32,7 @@ public class Beam extends BossState {
     public void Update() {
         super.Update();
         boss.beamObj.moveBeam();
+        boss.getBody().setLinearVelocity(new Vector2(0,0));
     }
 
     @Override
@@ -45,4 +47,8 @@ public class Beam extends BossState {
     }
 
 
+    @Override
+    public void printState() {
+        System.out.println("Beam State");
+    }
 }

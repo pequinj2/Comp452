@@ -17,6 +17,7 @@ public class TailSwipe extends BossState {
         super.Enter();
         boss.bossStopMoving();
         boss.tailAttack(spider);
+        boss.playTail();
     }
 
     @Override
@@ -29,6 +30,7 @@ public class TailSwipe extends BossState {
     @Override
     public void Update() {
         super.Update();
+        boss.bossStopMoving();
         boss.tailAttack(spider);
 
     }
@@ -38,8 +40,14 @@ public class TailSwipe extends BossState {
         super.DoCheck();
         if(boss.getRetractTail()){
             // Tail just ran so change the weight
-            boss.attackSelector.put(boss.tail,4f);
+            boss.attackSelector.put(boss.tail,0f);
             stateMachine.ChangeState(boss.patrol);
         }
+    }
+
+
+    @Override
+    public void printState() {
+        System.out.println("Tail Swipe State");
     }
 }

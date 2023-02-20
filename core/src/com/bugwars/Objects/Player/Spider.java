@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Projectiles.Web;
@@ -241,6 +242,9 @@ public class Spider extends Entity implements Health, Damage {
 
     }
 
+    public void setSound(AssetManagerA3G2 assetMgr){
+        webShots.setAssignmentThree(assetMgr);
+    }
 
 
 }

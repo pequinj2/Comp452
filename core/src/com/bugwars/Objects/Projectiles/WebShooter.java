@@ -1,9 +1,11 @@
 package com.bugwars.Objects.Projectiles;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Pickups.WebSac;
 import com.bugwars.Objects.Player.Spider;
@@ -26,6 +28,10 @@ public class WebShooter {
     //Bullets
     private ArrayList<Web> webs;
     private ArrayList<Web> websFired;
+
+    //*********** Assignment 3 **********************
+    private Boolean assignmentThree = false;
+    private Sound pop;
 
 
     public WebShooter(World world, Spider body){
@@ -196,6 +202,10 @@ public class WebShooter {
         radiiBodies.add(smallRadii);
         webs.add(new Web(world, sac, smallRadii, webs)); // add a new web object
 
+        if(assignmentThree){
+            pop.play();
+        }
+
 
     }
 
@@ -210,5 +220,9 @@ public class WebShooter {
         }
     }
 
+    public void setAssignmentThree(AssetManagerA3G2 assetMgr){
+        assignmentThree = true;
+        pop = assetMgr.getWebPickup();
+    }
 
 }

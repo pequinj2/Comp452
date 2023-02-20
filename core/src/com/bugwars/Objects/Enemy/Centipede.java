@@ -1,5 +1,6 @@
 package com.bugwars.Objects.Enemy;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -14,6 +15,7 @@ import com.bugwars.Assignment3.Game2.CentipedeAttacks.Beam;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.Lunge;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.Patrol;
 import com.bugwars.Assignment3.Game2.CentipedeAttacks.TailSwipe;
+import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Entity;
 import com.bugwars.Objects.Player.Damage;
@@ -44,7 +46,7 @@ public class Centipede extends Entity implements Health, Damage {
     // ADDED FOR ASSIGNMENT 3 GAME 2
     private float velX, velY;
     private boolean tailHit = false;
-    private boolean tailRunning = false;
+    public boolean tailRunning = false;
     private int rotation = 0;
 
     private int distance;
@@ -57,7 +59,7 @@ public class Centipede extends Entity implements Health, Damage {
     public TailSwipe tail;
     public Lunge lunge;
     public Dictionary<BossState, Float> attackSelector = new Hashtable<BossState,Float>();
-
+    private Sound tailSound, lungeSound, beamSound, aoeSound;
 
 
     // Implement constructor
@@ -94,6 +96,8 @@ public class Centipede extends Entity implements Health, Damage {
         // Check butt
         float varX = butt.getPosition().x;
 
+        System.out.println("In update behavior)");
+        System.out.println("Tail running? "+tailRunning + "Tail hit? " +tailHit);
         if(varX>=355f){
             // Tail did not hit the spider but hit the end of the screen so retract it
             if(tailHit==false){
@@ -101,6 +105,7 @@ public class Centipede extends Entity implements Health, Damage {
                 tailBasePosition();
             }
         }
+
         else if(tailHit==true && tailRunning==true){
             System.out.println("Both are true");
             tailBasePosition();
@@ -476,9 +481,9 @@ public class Centipede extends Entity implements Health, Damage {
         tail = new TailSwipe(this, spider, stateMachine);
         lunge = new Lunge(this, spider, stateMachine);
         beam = new Beam(this, spider, stateMachine);
-        attackSelector.put(patrol, 5f);
+        attackSelector.put(patrol, 1f);
         attackSelector.put(tail, 0f);
-        attackSelector.put(lunge, 5f);
+        attackSelector.put(lunge, 1f);
         attackSelector.put(beam, 0f);
         stateMachine.Initialize(patrol);
 
@@ -546,5 +551,28 @@ public class Centipede extends Entity implements Health, Damage {
 
     public void setBeam(BeamObject beam){
         beamObj = beam;
+    }
+
+    public void setSounds(AssetManagerA3G2 assetMgr){
+        tailSound = assetMgr.getTailAttack();
+        lungeSound = assetMgr.getLungeAttack();
+        beamSound = assetMgr.getBeamAttack();
+        aoeSound = assetMgr.getAoeAttack();
+    }
+
+    public void playTail(){
+        tailSound.play();
+    }
+
+    public void playLunge(){
+        lungeSound.play();
+    }
+
+    public void playBeam(){
+        beamSound.play();
+    }
+
+    public void playAOE(){
+        aoeSound.play();
     }
 }

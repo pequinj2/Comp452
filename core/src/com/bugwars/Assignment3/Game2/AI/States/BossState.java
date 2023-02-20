@@ -47,4 +47,11 @@ public abstract class BossState {
     public void DoCheck(){
 
     }
+
+    /**
+     * System print which state we're in - this is a gameplay testing function
+     */
+    public void printState(){
+
+    }
 }

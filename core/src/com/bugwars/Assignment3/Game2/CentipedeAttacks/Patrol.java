@@ -25,7 +25,7 @@ public class Patrol extends BossState {
         healthFinal = (int)(boss.getHealth() * 0.5);
         healthMid = (int)(boss.getHealth() * 0.7);
         // Centipede burst shot
-        timerBurstShot = millis() + (10*1000);
+        timerBurstShot = millis() + (5*1000);
         threatBeam = 0;
         threatTail = 0;
     }
@@ -51,6 +51,7 @@ public class Patrol extends BossState {
         currentTime = millis();
         if(currentTime > timerBurstShot){
             boss.aoeShot2();
+            boss.playAOE();
             timerBurstShot = millis() + (10*1000);
             aoeDelay=true;
         }else{
@@ -74,31 +75,14 @@ public class Patrol extends BossState {
         super.DoCheck();
         attackTime = System.currentTimeMillis();
         long getDiff = (attackTime-startTime) *1000; // make milliseconds into seconds
-        float healthCheck = boss.getHealth();
 
-        //System.out.println("Check Ys: "+spider.getPosition().y +" , "+ boss.getY() +"Check Xs: "+spider.getPosition().x +" , "+ boss.getX());
-
-        // If health is below a certain percentage introduce new boss attacks
-        // Check length of dictionary to see if attacks need to be added
-        if (healthCheck <= healthFinal){
-            // "Beam" attack added
-            System.out.println("Add Beam");
-
-            //return;
-        }
-        else if(healthCheck <= healthMid && (boss.attackSelector.get(boss.tail) ==0)){
-            // "Tail Swipe" added
-            boss.attackSelector.put(boss.tail,boss.attackSelector.get(boss.tail) + 10);
-            //return;
-        }
         // boss.getY()-100 = max Y distance the spider has to be in for lunge attack
-        else if(spider.getPosition().y < boss.getY() && spider.getPosition().y > (boss.getY()-100) &&
+        if(spider.getPosition().y < boss.getY() && spider.getPosition().y > (boss.getY()-100) &&
                 spider.getPosition().x > (boss.getX()-40) && spider.getPosition().x < (boss.getX()+40)){
             boss.attackSelector.put(boss.lunge,boss.attackSelector.get(boss.lunge) + 10);
         }
         else{
-            //return;
-
+            Heuristic();
         }
 
         // Get state to run based on state weight
@@ -107,7 +91,9 @@ public class Patrol extends BossState {
         Enumeration<BossState> keys = boss.attackSelector.keys();
         while(keys.hasMoreElements()){
             BossState checkState= keys.nextElement();
-            if(keyValue < boss.attackSelector.get(checkState)){
+            //checkState.printState();
+            //System.out.println(boss.attackSelector.get(checkState));
+            if(keyValue < boss.attackSelector.get(checkState) && checkState!=this){
                 stateToCall = checkState;
                 keyValue = boss.attackSelector.get(checkState);
             }
@@ -123,17 +109,34 @@ public class Patrol extends BossState {
     public void Heuristic(){
         float spidX = spider.getPosition().x;
         float spidY = spider.getPosition().y;
+        float healthCheck = boss.getHealth();
 
         float xValue = spidX/364;
 
-        float beamUtility = Math.max(Math.min((1-((boss.getHealth()-5)/(20-5)))*(1-xValue)+xValue,1),0);
+        float beamUtility = Math.max(Math.min((1-((healthCheck-5)/(20-5)))*(1-xValue)+xValue,1),0);
         // Because we want the inverse percentage of the X-axis for the tail swipe attack
         xValue = Math.abs(1-xValue);
-        float tailUtility = Math.max(Math.min((1-((boss.getHealth()-5)/(20-5)))*(1-xValue)+xValue,1),0);
+        float tailUtility = Math.max(Math.min((1-((healthCheck-5)/(20-5)))*(1-xValue)+xValue,1),0);
 
-        boss.attackSelector.put(boss.tail,tailUtility);
-        boss.attackSelector.put(boss.beam,beamUtility);
+        if (healthCheck <= healthFinal && boss.getBody().getPosition().x <= spidX+40 && boss.getBody().getPosition().x >= spidX-40){
+            boss.attackSelector.put(boss.beam,beamUtility);
+        }
+        else{
+            tailUtility = 0.85f;
+        }
+        if(healthCheck <= healthMid && !boss.tailRunning){
+            System.out.println(tailUtility);
+            boss.attackSelector.put(boss.tail,tailUtility);
+            return;
+        }
+        boss.attackSelector.put(boss.patrol,1f);
 
 
+    }
+
+
+    @Override
+    public void printState() {
+        System.out.println("PAtrol State");
     }
 }

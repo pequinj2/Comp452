@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Helper.BodyHelperService;
+import com.bugwars.Objects.Player.Spider;
 
 public class BeamObject {
 
@@ -15,10 +16,12 @@ public class BeamObject {
     private Rectangle rectangle;
     public float startingX, startingY, height;
     public boolean beamRunning = false;
-    private int speedOfBeam = 2;
+    private int speedOfBeam = 4;
+    private Spider spiderPlayer;
 
-    public BeamObject(AssetManagerA3G2 asstMgr){
+    public BeamObject(AssetManagerA3G2 asstMgr, Spider spiderPlayer){
         this.assetMgr = asstMgr;
+        this.spiderPlayer = spiderPlayer;
         end = assetMgr.getBeamEnd();
         beam = assetMgr.getBeam();
         rectangle = new Rectangle(-90,100,80,60);
@@ -35,11 +38,11 @@ public class BeamObject {
         if((spidX-16) <= (rectX+80) && (spidX-16) >= (rectX) &&
                 (spidY-16) <= (rectY+60) && (spidY-16) >= (rectY)){
             // Collision
-            System.out.println("Beam hit");
+            spiderPlayer.removeHealth(20);
         }else if((spidX+16) <= (rectX+80) && (spidX+16) >= (rectX) &&
                 (spidY+16) <= (rectY+60) && (spidY+16) >= (rectY)){
             // Collision
-            System.out.println("Beam hit");
+            spiderPlayer.removeHealth(20);
         }else{
             //keep moving
             //System.out.println("Beam miss");
@@ -56,13 +59,12 @@ public class BeamObject {
     }
 
     public void readyBeam(Body centipede){
-        startingX = centipede.getPosition().x;
-        startingY = centipede.getPosition().y-60;
+        startingX = centipede.getPosition().x-25;
+        startingY = centipede.getPosition().y-50;
         beamRunning = true;
     }
 
     public void renderBeam(SpriteBatch batch){
-        System.out.println("Render Beam");
         batch.draw(beam, startingX, startingY, 70, height);
         batch.draw(end, startingX-9, startingY-8, 90, 30);
 

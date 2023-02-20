@@ -123,10 +123,11 @@ public class Game2 implements Screen {
                 world);
         setSpider(new Spider(16, 16, body, 100, world));
         spiderPlayer.setSpeed(5);
+        spiderPlayer.setSound(assetMgr);
         // **************************************************************************
 
         // Initialize Special Boss Beam
-        beam = new BeamObject(assetMgr);
+        beam = new BeamObject(assetMgr, spiderPlayer);
 
         // Create Centipede enemy ***************************************************
         Body bodyEnemyHead = BodyHelperService.createBody(
@@ -159,7 +160,7 @@ public class Game2 implements Screen {
         allTextures = new TextureAtlas(Gdx.files.internal("maps/Assignment1TexturePack.atlas"));
         centipedeBody = new TextureRegion(allTextures.findRegion("Centipede_Body"));
         centipedeButt = new TextureRegion(allTextures.findRegion("Centipede_Butt"));
-
+        centipedeEnemy.setSounds(assetMgr);
 
         // Create world boarders
         BodyHelperService.createGameBorder2(world, mapWidth, mapHeight);
@@ -263,8 +264,8 @@ public class Game2 implements Screen {
             delta =0;
             pause();
         }else {
-            System.out.println(centipedeEnemy.getBody().getPosition());
-            System.out.println("Spider: "+spiderPlayer.getBody().getPosition());
+           // System.out.println(centipedeEnemy.getBody().getPosition());
+          //  System.out.println("Spider: "+spiderPlayer.getBody().getPosition());
 
             /**
              * World.step explanation
@@ -330,6 +331,7 @@ public class Game2 implements Screen {
                     //System.out.println("Render Beam");
                     beam.renderBeam(batch);
                 }
+
 
                 // Draw spider player
                 int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
