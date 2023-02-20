@@ -19,6 +19,7 @@ import com.bugwars.Assignment1.SpiderIntro;
 import com.bugwars.Assignment2.Game1.AntIntro;
 import com.bugwars.Assignment2.Game2.AntIntro2;
 import com.bugwars.Assignment3.Game1.Assignment3Game1Intro;
+import com.bugwars.Assignment3.Game2.Assignment3Game2Intro;
 import com.bugwars.Assignment3.Game2.Game2;
 import com.bugwars.Helper.FadeScreen;
 
@@ -173,7 +174,8 @@ public class MainMenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 //this.hide();
-                game.setScreen(new FadeScreen(game, mainMenu, new Game2(camera, game) ));
+                game.setScreen(new FadeScreen(game, mainMenu, new Assignment3Game2Intro(camera, game) ));
+                //game.setScreen(new FadeScreen(game, mainMenu, new Game2(camera, game) ));
             }
         });
 
