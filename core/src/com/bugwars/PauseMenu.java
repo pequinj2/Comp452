@@ -18,9 +18,8 @@ import com.bugwars.Assignment1.Assignment1;
 import com.bugwars.Assignment2.Game1.Game1;
 import com.bugwars.Assignment2.Game2.Game2;
 import com.bugwars.Assignment3.Game1.ChoseCharacter;
-import com.bugwars.BugWars;
 import com.bugwars.Helper.FadeScreen;
-import com.bugwars.MainMenuScreen;
+;
 
 /**
  * Pause menu and also end game menu that will have the buttons 'Retry and 'Quit'
@@ -210,7 +209,7 @@ public class PauseMenu {
         retry.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(new FadeScreen(game, assign , new Game2(camera, game) ));
+                game.setScreen(new FadeScreen(game, assign , new com.bugwars.Assignment3.Game2.Game2(camera, game) ));
             }
         });
 

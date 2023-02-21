@@ -1,6 +1,7 @@
 package com.bugwars.Helper;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -14,6 +15,7 @@ public class AssetManagerA3G2 {
 
     public Animation<TextureRegion> bossHeadAnimation;
     private Sound tailAttack, lungeAttack, spiderWin, beamAttack, webPickup, aoeAttack;
+    private Music bossMusic;
 
     public AssetManagerA3G2(){
         bossAtlas = new TextureAtlas((Gdx.files.internal("Assignment3/Game2/Boss.atlas")));
@@ -26,6 +28,8 @@ public class AssetManagerA3G2 {
         beamAttack = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/Boss_Spit_Blob_Barf.mp3"));
         webPickup = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/plop.mp3"));
         aoeAttack = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/Monster_Roar_2.mp3"));
+
+        bossMusic =  Gdx.audio.newMusic(Gdx.files.internal("Assignment3/Game2/Sounds/Tool - Vicarious (8 Bit).mp3"));
 
 
     }
@@ -70,5 +74,9 @@ public class AssetManagerA3G2 {
 
     public Sound getAoeAttack(){
         return aoeAttack;
+    }
+
+    public Music getBossMusic(){
+        return bossMusic;
     }
 }

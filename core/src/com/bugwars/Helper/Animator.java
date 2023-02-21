@@ -17,6 +17,7 @@ public class Animator {
     public Animation<TextureRegion> walkingAnimation;
     public Animation<TextureRegion> centipedeMouthAnimation, antAnimation;
     public Animation<TextureRegion> endGameTextures;
+    public Animation<TextureRegion> winAnimation;
 
 
     public Animation<TextureRegion> AnimatorSpider() {
@@ -94,6 +95,15 @@ public class Animator {
     public void setAntAtlas(){
         this.atlas = new TextureAtlas(Gdx.files.internal("Assignment3/Ant.atlas"));
 
+    }
+    public Animation<TextureRegion> gameTwoWinAnimator() {
+        setWinAtlas();
+        winAnimation = new Animation<TextureRegion>(.1f, atlas.findRegions("GameWinAnimation"), Animation.PlayMode.NORMAL);
+
+        return winAnimation;
+    }
+    public void setWinAtlas(){
+        this.atlas = new TextureAtlas(Gdx.files.internal("Assignment3/Game2/GameWin/GameWin.atlas"));
     }
 
 

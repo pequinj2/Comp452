@@ -96,18 +96,12 @@ public class Centipede extends Entity implements Health, Damage {
         // Check butt
         float varX = butt.getPosition().x;
 
-        System.out.println("In update behavior)");
-        System.out.println("Tail running? "+tailRunning + "Tail hit? " +tailHit);
-        if(varX>=355f){
+        if(varX>=355f && tailHit==false){
             // Tail did not hit the spider but hit the end of the screen so retract it
-            if(tailHit==false){
-                retractTail();
-                tailBasePosition();
-            }
+            retractTail();
+            tailBasePosition();
         }
-
         else if(tailHit==true && tailRunning==true){
-            System.out.println("Both are true");
             tailBasePosition();
         }
         if(varX<=-100f){
@@ -446,20 +440,12 @@ public class Centipede extends Entity implements Health, Damage {
     public void tailAttack(Body spider){
 
         if(tailRunning==false){
-            System.out.println("Tail running is false");
             spiderLocation = new Vector2((int)(1216 * 0.3), spider.getPosition().y); // Only y position matters
             butt.setTransform(0, spider.getPosition().y, butt.getAngle());
 
             tailReturnY = spider.getPosition().y;
             tailRunning = true;
         }
-
-       System.out.println("Tail attack" +spiderLocation);
-
-        /*Vector2 newPosition = spiderLocation.sub(butt.getPosition()); // Displacement distance from enemy to target
-        System.out.println(newPosition);
-        newPosition.nor(); // Give the vector a proper direction
-        newPosition.scl(maxSpeed);*/
 
         Vector2 temp = new Vector2(1216,0);
         temp.nor(); // Give the vector a proper direction
@@ -518,7 +504,6 @@ public class Centipede extends Entity implements Health, Damage {
         temp.nor();
         temp.scl(maxSpeed);
         butt.setLinearVelocity(temp);
-        System.out.println("Tail retract " +temp);
         if(butt.getPosition().x <= -100){
             retractTail();
             tailRunning=false;

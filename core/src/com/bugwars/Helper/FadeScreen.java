@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.bugwars.BugWars;
 
-
 /**
  * This class is used to give a fade animation effect to the screen transitions
  * Code for this class was taken from:
@@ -31,8 +30,6 @@ public class FadeScreen implements Screen {
         this.current = current;
         this.next = next;
         shapeRenderer = new ShapeRenderer();
-
-
     }
 
     @Override
@@ -66,19 +63,12 @@ public class FadeScreen implements Screen {
 
         if (change > 1){
             fade = false;
-
             current.dispose(); // Dispose of previous screen asset
         }
         else if (change <= 0 && fade == false) {
-
             game.setScreen(next); // fade is done, set screen to next screen
-
         }
         change += fade == true ? 0.02 : -0.02;
-
-
-
-
     }
 
     @Override

@@ -1,0 +1,1010 @@
+
+GameWin.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+GameWinAnimation
+  rotate: false
+  xy: 2, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 47
+GameWinAnimation
+  rotate: false
+  xy: 2, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 49
+GameWinAnimation
+  rotate: false
+  xy: 2, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 73
+GameWinAnimation
+  rotate: false
+  xy: 484, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 86
+GameWinAnimation
+  rotate: false
+  xy: 2, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 122
+GameWinAnimation
+  rotate: false
+  xy: 484, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 99
+GameWinAnimation
+  rotate: false
+  xy: 966, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 109
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 135
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 134
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 141
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 137
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 136
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 138
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 139
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 140
+GameWinAnimation
+  rotate: false
+  xy: 484, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 13
+GameWinAnimation
+  rotate: false
+  xy: 966, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 3
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 26
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 52
+GameWinAnimation
+  rotate: false
+  xy: 484, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 39
+GameWinAnimation
+  rotate: false
+  xy: 966, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 65
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 101
+GameWinAnimation
+  rotate: false
+  xy: 2, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 91
+GameWinAnimation
+  rotate: false
+  xy: 484, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 114
+GameWinAnimation
+  rotate: false
+  xy: 966, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 78
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 127
+GameWinAnimation
+  rotate: false
+  xy: 2, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 31
+GameWinAnimation
+  rotate: false
+  xy: 484, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 18
+GameWinAnimation
+  rotate: false
+  xy: 966, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 8
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 44
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 45
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 46
+GameWinAnimation
+  rotate: false
+  xy: 484, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 70
+GameWinAnimation
+  rotate: false
+  xy: 966, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 57
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 83
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 84
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 85
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 82
+GameWinAnimation
+  rotate: false
+  xy: 966, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 106
+GameWinAnimation
+  rotate: false
+  xy: 1448, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 132
+GameWinAnimation
+  rotate: false
+  xy: 1448, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 96
+
+GameWin2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+GameWinAnimation
+  rotate: false
+  xy: 2, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 119
+GameWinAnimation
+  rotate: false
+  xy: 2, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 10
+GameWinAnimation
+  rotate: false
+  xy: 484, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 23
+GameWinAnimation
+  rotate: false
+  xy: 2, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 36
+GameWinAnimation
+  rotate: false
+  xy: 484, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 62
+GameWinAnimation
+  rotate: false
+  xy: 966, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 75
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 111
+GameWinAnimation
+  rotate: false
+  xy: 484, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 88
+GameWinAnimation
+  rotate: false
+  xy: 966, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 124
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 15
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 41
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 43
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 42
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 50
+GameWinAnimation
+  rotate: false
+  xy: 484, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 5
+GameWinAnimation
+  rotate: false
+  xy: 966, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 28
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 54
+GameWinAnimation
+  rotate: false
+  xy: 2, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 80
+GameWinAnimation
+  rotate: false
+  xy: 484, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 103
+GameWinAnimation
+  rotate: false
+  xy: 966, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 67
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 93
+GameWinAnimation
+  rotate: false
+  xy: 2, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 116
+GameWinAnimation
+  rotate: false
+  xy: 484, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 129
+GameWinAnimation
+  rotate: false
+  xy: 966, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 20
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 33
+GameWinAnimation
+  rotate: false
+  xy: 484, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 72
+GameWinAnimation
+  rotate: false
+  xy: 966, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 59
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 121
+GameWinAnimation
+  rotate: false
+  xy: 966, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 108
+GameWinAnimation
+  rotate: false
+  xy: 1448, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 98
+GameWinAnimation
+  rotate: false
+  xy: 1448, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 12
+
+GameWin3.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+GameWinAnimation
+  rotate: false
+  xy: 2, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 2
+GameWinAnimation
+  rotate: false
+  xy: 2, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 25
+GameWinAnimation
+  rotate: false
+  xy: 484, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 51
+GameWinAnimation
+  rotate: false
+  xy: 2, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 38
+GameWinAnimation
+  rotate: false
+  xy: 484, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 64
+GameWinAnimation
+  rotate: false
+  xy: 966, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 100
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 90
+GameWinAnimation
+  rotate: false
+  xy: 484, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 113
+GameWinAnimation
+  rotate: false
+  xy: 966, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 77
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 126
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 30
+GameWinAnimation
+  rotate: false
+  xy: 484, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 17
+GameWinAnimation
+  rotate: false
+  xy: 966, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 7
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 56
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 55
+GameWinAnimation
+  rotate: false
+  xy: 2, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 69
+GameWinAnimation
+  rotate: false
+  xy: 484, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 105
+GameWinAnimation
+  rotate: false
+  xy: 966, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 131
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 95
+GameWinAnimation
+  rotate: false
+  xy: 2, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 118
+GameWinAnimation
+  rotate: false
+  xy: 484, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 22
+GameWinAnimation
+  rotate: false
+  xy: 966, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 35
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 61
+GameWinAnimation
+  rotate: false
+  xy: 484, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 110
+GameWinAnimation
+  rotate: false
+  xy: 966, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 74
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 87
+GameWinAnimation
+  rotate: false
+  xy: 966, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 123
+GameWinAnimation
+  rotate: false
+  xy: 1448, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 14
+GameWinAnimation
+  rotate: false
+  xy: 1448, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 4
+
+GameWin4.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+GameWinAnimation
+  rotate: false
+  xy: 2, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 40
+GameWinAnimation
+  rotate: false
+  xy: 2, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 27
+GameWinAnimation
+  rotate: false
+  xy: 484, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 53
+GameWinAnimation
+  rotate: false
+  xy: 2, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 102
+GameWinAnimation
+  rotate: false
+  xy: 484, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 66
+GameWinAnimation
+  rotate: false
+  xy: 966, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 92
+GameWinAnimation
+  rotate: false
+  xy: 2, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 115
+GameWinAnimation
+  rotate: false
+  xy: 484, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 79
+GameWinAnimation
+  rotate: false
+  xy: 966, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 128
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1634
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 32
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 19
+GameWinAnimation
+  rotate: false
+  xy: 484, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 71
+GameWinAnimation
+  rotate: false
+  xy: 966, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 9
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1362
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 58
+GameWinAnimation
+  rotate: false
+  xy: 2, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 120
+GameWinAnimation
+  rotate: false
+  xy: 484, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 107
+GameWinAnimation
+  rotate: false
+  xy: 966, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 133
+GameWinAnimation
+  rotate: false
+  xy: 1448, 1090
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 97
+GameWinAnimation
+  rotate: false
+  xy: 2, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 1
+GameWinAnimation
+  rotate: false
+  xy: 484, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 11
+GameWinAnimation
+  rotate: false
+  xy: 966, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 24
+GameWinAnimation
+  rotate: false
+  xy: 1448, 818
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 37
+GameWinAnimation
+  rotate: false
+  xy: 484, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 63
+GameWinAnimation
+  rotate: false
+  xy: 966, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 76
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 112
+GameWinAnimation
+  rotate: false
+  xy: 966, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 125
+GameWinAnimation
+  rotate: false
+  xy: 1448, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 89
+GameWinAnimation
+  rotate: false
+  xy: 1448, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 16
+
+GameWin5.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+GameWinAnimation
+  rotate: false
+  xy: 2, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 6
+GameWinAnimation
+  rotate: false
+  xy: 2, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 29
+GameWinAnimation
+  rotate: false
+  xy: 484, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 81
+GameWinAnimation
+  rotate: false
+  xy: 2, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 68
+GameWinAnimation
+  rotate: false
+  xy: 484, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 104
+GameWinAnimation
+  rotate: false
+  xy: 966, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 130
+GameWinAnimation
+  rotate: false
+  xy: 484, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 94
+GameWinAnimation
+  rotate: false
+  xy: 966, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 117
+GameWinAnimation
+  rotate: false
+  xy: 1448, 546
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 21
+GameWinAnimation
+  rotate: false
+  xy: 966, 2
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 34
+GameWinAnimation
+  rotate: false
+  xy: 1448, 274
+  size: 480, 270
+  orig: 480, 270
+  offset: 0, 0
+  index: 60

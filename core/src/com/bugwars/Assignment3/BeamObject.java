@@ -4,11 +4,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.World;
 import com.bugwars.Helper.AssetManagerA3G2;
-import com.bugwars.Helper.BodyHelperService;
 import com.bugwars.Objects.Player.Spider;
 
+/**
+ * Controller class that initializes the Centipede's beam shot, moves it, renders it and checks
+ * for collision. This simple collision was done instead of Box 2d because the beam shape will
+ * change shape was it is being shot - box2D does not like bodies changing after they've been
+ * initialized.
+ */
 public class BeamObject {
 
     private AssetManagerA3G2 assetMgr;
@@ -29,6 +33,10 @@ public class BeamObject {
 
     }
 
+    /**
+     * Check if the beam has hit the spider player or not
+     * @param spider
+     */
     public void checkCollision(Body spider){
         float spidX = spider.getPosition().x;
         float spidY = spider.getPosition().y;
@@ -50,6 +58,9 @@ public class BeamObject {
 
     }
 
+    /**
+     * Beam has been fired so move it down starting from the position of the centipede's head
+     */
     public void moveBeam(){
         startingY -= speedOfBeam;
         height += speedOfBeam;
@@ -58,8 +69,12 @@ public class BeamObject {
 
     }
 
+    /**
+     * initialize the starting coordinates for beam attack
+     * @param centipede
+     */
     public void readyBeam(Body centipede){
-        startingX = centipede.getPosition().x-25;
+        startingX = centipede.getPosition().x-30;
         startingY = centipede.getPosition().y-50;
         beamRunning = true;
     }
@@ -70,6 +85,9 @@ public class BeamObject {
 
     }
 
+    /**
+     * We're resetting the height so the beam will be small and start at the top when fired again
+     */
     public void resetHeight(){
         height = 20;
     }
