@@ -15,7 +15,6 @@ import java.util.Enumeration;
  */
 public class Patrol extends BossState {
 
-    private long attackTime, startTime;
     private int healthFinal, healthMid;
     // Character AI
     private long timerBurstShot, currentTime;
@@ -29,14 +28,12 @@ public class Patrol extends BossState {
         healthMid = (int)(boss.getHealth() * 0.7);
         // Centipede burst shot
         timerBurstShot = millis() + (5*1000);
-
     }
 
 
     @Override
     public void Enter() {
         super.Enter();
-        startTime = System.currentTimeMillis();
 
     }
 
@@ -65,9 +62,6 @@ public class Patrol extends BossState {
                     }
                 }, 3);
             }
-            else{
-                //centipedeEnemy.seekTarget(spiderPlayer.getBody().getPosition(), centipedeEnemy.getBody().getPosition());
-            }
 
         }
     }
@@ -75,13 +69,10 @@ public class Patrol extends BossState {
     @Override
     public void DoCheck() {
         super.DoCheck();
-        attackTime = System.currentTimeMillis();
-
-
         // boss.getY()-100 = max Y distance the spider has to be in for lunge attack
         if(spider.getPosition().y < boss.getY() && spider.getPosition().y > (boss.getY()-100) &&
                 spider.getPosition().x > (boss.getX()-40) && spider.getPosition().x < (boss.getX()+40)){
-            boss.attackSelector.put(boss.lunge,boss.attackSelector.get(boss.lunge) + 10);
+            stateMachine.ChangeState(boss.lunge);
         }
         else{
             Heuristic();
@@ -108,7 +99,7 @@ public class Patrol extends BossState {
     }
 
     /**
-     * This is the hueristic that is used to calculate which attack the boss should do next.
+     * This is the heuristic that is used to calculate which attack the boss should do next.
      * It uses Utility Theory to calculate the threat level that the boss is at. Example:
      * If the boss is low health the threat level will be high to try and defeat the player.
      */
@@ -128,6 +119,7 @@ public class Patrol extends BossState {
         // is in approximation of the beam
         if (healthCheck <= healthFinal && boss.getBody().getPosition().x <= spidX+40 && boss.getBody().getPosition().x >= spidX-40){
             boss.attackSelector.put(boss.beam,beamUtility);
+
         }
         else{ // If beam is not considered then set tail probability high
             tailUtility = 0.85f;
@@ -141,12 +133,11 @@ public class Patrol extends BossState {
         // else keep patrolling
         boss.attackSelector.put(boss.patrol,1f);
 
-
     }
 
 
     @Override
     public void printState() {
-        System.out.println("PAtrol State");
+        System.out.println("Patrol State");
     }
 }

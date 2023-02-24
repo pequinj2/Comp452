@@ -8,7 +8,7 @@ import com.bugwars.Helper.AssetManagerA3G2;
 import com.bugwars.Objects.Player.Spider;
 
 /**
- * Controller class that initializes the Centipede's beam shot, moves it, renders it and checks
+ * Object class that initializes the Centipede's beam shot, moves it, renders it and checks
  * for collision. This simple collision was done instead of Box 2d because the beam shape will
  * change shape was it is being shot - box2D does not like bodies changing after they've been
  * initialized.
@@ -44,16 +44,15 @@ public class BeamObject {
         float rectY = rectangle.y;
 
         if((spidX-16) <= (rectX+80) && (spidX-16) >= (rectX) &&
-                (spidY-16) <= (rectY+60) && (spidY-16) >= (rectY)){
+                (spidY-16) <= (rectY+height) && (spidY-16) >= (rectY)){
             // Collision
             spiderPlayer.removeHealth(20);
-        }else if((spidX+16) <= (rectX+80) && (spidX+16) >= (rectX) &&
-                (spidY+16) <= (rectY+60) && (spidY+16) >= (rectY)){
+            return;
+        }
+        if((spidX+16) <= (rectX+80) && (spidX+16) >= (rectX) &&
+                (spidY+16) <= (rectY+height) && (spidY+16) >= (rectY)){
             // Collision
             spiderPlayer.removeHealth(20);
-        }else{
-            //keep moving
-            //System.out.println("Beam miss");
         }
 
     }

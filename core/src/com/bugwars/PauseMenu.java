@@ -93,6 +93,7 @@ public class PauseMenu {
     }
 
     public void endScreenMenu(){
+        Gdx.input.setInputProcessor(stg);
         pauseBatch.begin();
         pauseBatch.draw(endGameBackground, 260, 130, 700, 700);
         pauseBatch.end();

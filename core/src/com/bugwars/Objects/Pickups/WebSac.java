@@ -30,7 +30,7 @@ public class WebSac {
     private long timer, currentTime;
     private Body sac;
     private World world;
-    private int origin = 12;
+    private int origin = 6;
     private int height = 6;
     private int width = 6;
 

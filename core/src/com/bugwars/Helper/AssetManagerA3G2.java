@@ -14,7 +14,7 @@ public class AssetManagerA3G2 {
             gameBoard, yellowDisk;
 
     public Animation<TextureRegion> bossHeadAnimation;
-    private Sound tailAttack, lungeAttack, spiderWin, beamAttack, webPickup, aoeAttack;
+    private Sound tailAttack, lungeAttack, spiderWin, beamAttack, webPickup, aoeAttack, spiderAttackHit, spiderHit;
     private Music bossMusic;
 
     public AssetManagerA3G2(){
@@ -28,6 +28,8 @@ public class AssetManagerA3G2 {
         beamAttack = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/Boss_Spit_Blob_Barf.mp3"));
         webPickup = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/plop.mp3"));
         aoeAttack = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/Monster_Roar_2.mp3"));
+        spiderAttackHit = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/Death_Burst_Small_0.mp3"));
+        spiderHit = Gdx.audio.newSound(Gdx.files.internal("Assignment3/Game2/Sounds/leech2.mp3"));
 
         bossMusic =  Gdx.audio.newMusic(Gdx.files.internal("Assignment3/Game2/Sounds/Tool - Vicarious (8 Bit).mp3"));
 
@@ -74,6 +76,14 @@ public class AssetManagerA3G2 {
 
     public Sound getAoeAttack(){
         return aoeAttack;
+    }
+
+    public Sound getSpiderAttackHit(){
+        return spiderAttackHit;
+    }
+
+    public Sound getSpiderHit(){
+        return spiderHit;
     }
 
     public Music getBossMusic(){

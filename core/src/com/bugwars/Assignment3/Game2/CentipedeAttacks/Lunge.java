@@ -5,9 +5,12 @@ import com.bugwars.Assignment3.Game2.AI.States.BossState;
 import com.bugwars.Assignment3.Game2.AI.States.StateManager;
 import com.bugwars.Objects.Enemy.Centipede;
 
+/**
+ * This state will preform a lunge attack at the player if the spider is too close to the
+ * Centipede's head
+ */
 public class Lunge extends BossState {
 
-    private float returnY;
     private int attackOrReturn = 0;
 
     public Lunge(Centipede boss, Body spider, StateManager stateMachine) {
@@ -18,8 +21,6 @@ public class Lunge extends BossState {
     public void Enter() {
         super.Enter();
         boss.lungeAttack();
-        System.out.println("Enter Lunge");
-        returnY = boss.getY();
         boss.playLunge();
     }
 
@@ -34,7 +35,7 @@ public class Lunge extends BossState {
     @Override
     public void Update() {
         super.Update();
-        //boss.lungeAttack();
+        // If boss head has reached the max length its allowed to travel then return to original position
         if (attackOrReturn == 0) {
             boss.lungeAttack();
         }else{

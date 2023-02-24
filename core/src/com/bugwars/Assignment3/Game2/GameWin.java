@@ -3,7 +3,6 @@ package com.bugwars.Assignment3.Game2;
 import static com.badlogic.gdx.utils.TimeUtils.millis;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +14,6 @@ import com.bugwars.BugWars;
 import com.bugwars.Helper.Animator;
 import com.bugwars.Helper.FadeScreen;
 import com.bugwars.MainMenuScreen;
-import com.bugwars.PauseMenu;
 
 /**
  * This class will display the final winning screen for Assignment 3 Game 2

@@ -59,7 +59,7 @@ public class Centipede extends Entity implements Health, Damage {
     public TailSwipe tail;
     public Lunge lunge;
     public Dictionary<BossState, Float> attackSelector = new Hashtable<BossState,Float>();
-    private Sound tailSound, lungeSound, beamSound, aoeSound;
+    private Sound tailSound, lungeSound, beamSound, aoeSound, hitTaken;
 
 
     // Implement constructor
@@ -80,7 +80,8 @@ public class Centipede extends Entity implements Health, Damage {
 
     @Override
     public void update() {
-
+        x = body.getPosition().x; // Will be the center of the body
+        y = body.getPosition().y;
     }
     public void updateStop() {
         body.setLinearVelocity(0,0);
@@ -88,6 +89,11 @@ public class Centipede extends Entity implements Health, Damage {
         y = body.getPosition().y;
     }
 
+    /**
+     * Centipede update for Assignment 3 Game 2.
+     * This update is used to call whatever behavior is currently running and to make sure the tail
+     * goes back to its position outside of the game screen
+     */
     public void updateBehavior(){
         bossState = stateMachine.getCurrentState();
         bossState.Update();
@@ -133,6 +139,9 @@ public class Centipede extends Entity implements Health, Damage {
     @Override
     public void removeHealth(float damage) {
         float newHealth = health - damage;
+        if(hitTaken != null){
+            playHit();
+        }
         setHealth(newHealth);
 
     }
@@ -400,8 +409,12 @@ public class Centipede extends Entity implements Health, Damage {
 
     }
 
+    /**
+     * Moving the boss uses Arrive behavior to follow the player and slow down when it gets to the
+     * player's position.
+     * @param spider
+     */
     public void moveBoss(Body spider){
-        float timeToTarget = 0.1f;
         Vector2 radiiPos = new Vector2(spider.getPosition().x,body.getPosition().y); // Make coordinates proper Vector2s
         Vector2 currentPos = new Vector2(body.getPosition().x,body.getPosition().y);
 
@@ -427,9 +440,7 @@ public class Centipede extends Entity implements Health, Damage {
             } else {
                 targetSpeed = 100 * (distance / largeRadii) ;
             }
-
             vel = temp.nor().scl(targetSpeed); // Target Velocity
-
             result = vel;
 
         }
@@ -437,10 +448,16 @@ public class Centipede extends Entity implements Health, Damage {
     }
 
 
+    /**
+     * Run the tail swipe attack by moving the 'butt' body along the x-axis of the player's current
+     * position. Function gets called multiple times until the tail has reached the end of the game
+     * field.
+     * @param spider
+     */
     public void tailAttack(Body spider){
 
         if(tailRunning==false){
-            spiderLocation = new Vector2((int)(1216 * 0.3), spider.getPosition().y); // Only y position matters
+            //spiderLocation = new Vector2((int)(1216 * 0.3), spider.getPosition().y); // Only y position matters
             butt.setTransform(0, spider.getPosition().y, butt.getAngle());
 
             tailReturnY = spider.getPosition().y;
@@ -451,7 +468,6 @@ public class Centipede extends Entity implements Health, Damage {
         temp.nor(); // Give the vector a proper direction
         temp.scl(maxSpeed);
         butt.setLinearVelocity(temp);
-        //butt.applyLinearImpulse(-1,0,butt.getPosition().x, butt.getPosition().y, true);
 
     }
 
@@ -511,6 +527,9 @@ public class Centipede extends Entity implements Health, Damage {
     }
 
 
+    /**
+     * Move Centipede head to attack spider
+     */
     public void lungeAttack(){
         Vector2 attack = new Vector2(0,body.getPosition().y-80);
         attack.nor();
@@ -518,6 +537,9 @@ public class Centipede extends Entity implements Health, Damage {
         body.setLinearVelocity(attack);
     }
 
+    /**
+     * Lunge attack has reached max depth so return to original position
+     */
     public void lungeAttackReturn(){
         if(body.getPosition().y < 310){
             Vector2 attack = new Vector2(0,body.getPosition().y+180);
@@ -530,19 +552,31 @@ public class Centipede extends Entity implements Health, Damage {
 
     }
 
+    /**
+     * Stop moving centipede head, used when firing attacks at player
+     */
     public void bossStopMoving(){
         body.setLinearVelocity(new Vector2(0,0));
     }
 
+    /**
+     * Give reference to the beam object
+     * @param beam
+     */
     public void setBeam(BeamObject beam){
         beamObj = beam;
     }
 
+    /**
+     * Apply sounds to the centipede's attacks
+     * @param assetMgr
+     */
     public void setSounds(AssetManagerA3G2 assetMgr){
         tailSound = assetMgr.getTailAttack();
         lungeSound = assetMgr.getLungeAttack();
         beamSound = assetMgr.getBeamAttack();
         aoeSound = assetMgr.getAoeAttack();
+        hitTaken = assetMgr.getSpiderAttackHit();
     }
 
     public void playTail(){
@@ -559,5 +593,9 @@ public class Centipede extends Entity implements Health, Damage {
 
     public void playAOE(){
         aoeSound.play();
+    }
+
+    private void playHit(){
+        hitTaken.play();
     }
 }

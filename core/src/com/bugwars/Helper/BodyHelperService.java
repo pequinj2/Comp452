@@ -370,7 +370,7 @@ public class BodyHelperService {
         // Set our body's starting position in the world
         int x = (int)(Math.random()*width + 8);
         int y = (int)(Math.random()*height + 8);
-        System.out.println("x: "+ x + "y: "+y);
+
         bodyDef.position.set(x, y);
 
         // If the Body is NOT dynamic then turn rotation off

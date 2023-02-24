@@ -2,6 +2,7 @@ package com.bugwars.Objects.Player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,6 +32,8 @@ public class Spider extends Entity implements Health, Damage {
 
     // Damage buffer
     private float clock = 0;
+
+    private Sound hitTaken;
 
     // Implement constructor
     public Spider(float width, float height, Body body, float health, World world) {
@@ -64,8 +67,10 @@ public class Spider extends Entity implements Health, Damage {
      */
     @Override
     public void removeHealth(float damage) {
-
         if(clock > 2) { // 2 second cooldown from the when the user takes damage so the user doesn't get insta killed
+            if(hitTaken != null){
+                hitTaken.play();
+            }
             float newHealth = health - damage;
             setHealth(newHealth);
             clock = 0;
@@ -244,6 +249,7 @@ public class Spider extends Entity implements Health, Damage {
 
     public void setSound(AssetManagerA3G2 assetMgr){
         webShots.setAssignmentThree(assetMgr);
+        hitTaken = assetMgr.getSpiderHit();
     }
 
 

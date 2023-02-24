@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -168,9 +169,9 @@ public class Game2 implements Screen {
         hud = new PlayerHud(spiderPlayer.getHealth(),centipedeEnemy.getHealth());
 
         // Generate Web Sac pickups
-        Body bodyWebSac1 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
-        Body bodyWebSac2 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
-        Body bodyWebSac3 = BodyHelperService.createWebSac2(world, mapWidth, mapHeight);
+        Body bodyWebSac1 = BodyHelperService.createWebSac2(world, mapWidth-32, mapHeight-32);
+        Body bodyWebSac2 = BodyHelperService.createWebSac2(world, mapWidth-32, mapHeight-32);
+        Body bodyWebSac3 = BodyHelperService.createWebSac2(world, mapWidth-32, mapHeight-32);
 
         webPickup1 = new WebSac(bodyWebSac1, world);
         webPickup2 = new WebSac(bodyWebSac2, world);
@@ -192,6 +193,8 @@ public class Game2 implements Screen {
         handleInput();
         if(centipedeEnemy.getHealth() <= 0.0) { // Player wins, run end game screen
             showWin=true;
+            Sound win = assetMgr.getSpiderWin();
+            win.play();
             game.setScreen(new FadeScreen(game, this, new GameWin(camera, game) ));
         }
         camera.update();
@@ -228,8 +231,8 @@ public class Game2 implements Screen {
 
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)){
-            //isPaused = !isPaused;
-            centipedeEnemy.removeHealth(100);
+            isPaused = !isPaused;
+            //centipedeEnemy.removeHealth(100);
         }
 
         // Stop the camera position so it doesn't go out of bounds
@@ -297,6 +300,10 @@ public class Game2 implements Screen {
             }else {
                 this.update();
                 batch.begin();
+                // If the beam has been fired render beam
+                if(beam.beamRunning()){
+                    beam.renderBeam(batch);
+                }
                 // Draw Web Sac Pickups
                 webPickup1.render(batch);
                 webPickup2.render(batch);
@@ -311,11 +318,7 @@ public class Game2 implements Screen {
                 // Render the Centipede (used in more then 1 location, therefore, made into a helper method
                 centipedeRender();
 
-                // If the beam has been fired render beam
-                if(beam.beamRunning()){
-                    //System.out.println("Render Beam");
-                    beam.renderBeam(batch);
-                }
+
 
                 // Draw spider player
                 int position = spiderPlayer.getRotation(); // Holds the rotation value so the player sprite is facing the right way
