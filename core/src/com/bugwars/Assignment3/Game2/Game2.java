@@ -338,7 +338,7 @@ public class Game2 implements Screen {
 
             // ********* COMMENT THIS LINE OUT WHEN IN PROD ***********
             // commenting out will remove collision boxes
-            box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
+            //box2DBug.render(world, camera.combined);//<<- PPM = Pixel Per Meters
 
             // Render player and enemy health bars
             hudBatch.begin();
