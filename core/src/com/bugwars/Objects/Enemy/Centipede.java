@@ -34,7 +34,7 @@ public class Centipede extends Entity implements Health, Damage {
     private Array<Body> centipedeBody = new Array<Body>();
     private DistanceJointDef joint1, joint2, joint3, joint4, joint5;
     private boolean delayStarting = true;
-    private float maxSpeed = 100;
+    private float maxSpeed = 80;
     private float linearDamping = 1.5f;
     private float tailReturnY;
     private World world;
