@@ -15,7 +15,7 @@ The executable will be in "Comp452\desktop\builds\libs"
 
 # Assignment Overviews:
 
-The following is just breif assignment overviews of what was basically required in each game that was developed.
+The following is just brief assignment overviews of what was basically required in each game that was developed.
 
 ## Assignment 1:
 
